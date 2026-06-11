@@ -206,6 +206,12 @@ body {
     justify-content: space-between;
 }
 
+.card-header-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .card-header-row {
     display: flex;
     align-items: center;
@@ -226,7 +232,6 @@ body {
     font-size: 0.85rem;
     color: var(--text-muted);
     line-height: 1.4;
-    margin-top: -10px;
 }
 
 /* Grid de Inputs */
