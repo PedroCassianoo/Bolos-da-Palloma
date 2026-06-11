@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolos da Palloma - Cardápio Digital</title>
+    <meta name="description" content="Peça os melhores bolos caseiros, confeitados e sobremesas da Palloma diretamente pelo WhatsApp. Prático, rápido e delicioso!">
+    
+    <!-- Google Fonts: Cherry Swash para o subtítulo retro e Plus Jakarta Sans para corpo e títulos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Container do Aplicativo (Simulador de Celular em Desktop, Tela Cheia em Mobile) -->
+    <div class="app-container">
+        
+        <!-- Cabeçalho (Header) -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand-logo-container">
+                    <h1 class="sr-only">Bolos da Palloma</h1>
+                    <img class="brand-logo-icon" src="assets/images/logo_icon.png" alt="Bolos da Palloma Ícone">
+                    <img class="brand-logo-img" src="assets/images/logo.png" alt="Bolos da Palloma Logo">
+                </div>
+                <p class="brand-subtitle">Feitos com amor para adoçar os seus momentos</p>
+                <div class="contact-info">
+                    <span class="delivery-time">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+                        Encomendas com 24h de antecedência
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Barra de Categorias (Navegação Horizontal por Abas) -->
+        <nav class="categories-nav" id="categories-tabs">
+            <button class="category-btn active" data-category="all" id="btn-cat-all">Tudo</button>
+            <button class="category-btn" data-category="caseiros" id="btn-cat-caseiros">Caseiros</button>
+            <button class="category-btn" data-category="confeitados" id="btn-cat-confeitados">Confeitados</button>
+            <button class="category-btn" data-category="doces" id="btn-cat-doces">Doces & Sobremesas</button>
+        </nav>
+
+        <!-- Conteúdo Principal / Cardápio -->
+        <main class="menu-content">
+            <div class="menu-grid" id="menu-items-container">
+                <!-- Os itens serão gerados dinamicamente via JS -->
+                <div class="loading-placeholder">Carregando cardápio...</div>
+            </div>
+        </main>
+
+        <!-- Barra de Navegação Inferior (Estilo App Nativo) -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" id="nav-btn-menu">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 4.8c1.3 0 2.3 1 2.3 2.3s-1 2.3-2.3 2.3-2.3-1-2.3-2.3 1-2.3 2.3-2.3zM7.5 18c0-2 2-3 4.5-3s4.5 1 4.5 3h-9z"/></svg>
+                <span>Cardápio</span>
+            </button>
+            
+            <button class="nav-item cart-nav-btn" id="nav-btn-cart">
+                <div class="cart-icon-wrapper">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.9 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    <span class="cart-badge hidden" id="cart-badge-count">0</span>
+                </div>
+                <span>Meu Carrinho</span>
+            </button>
+            
+            <button class="nav-item" id="nav-btn-info">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Info & Horários</span>
+            </button>
+        </nav>
+
+        <!-- Painel Deslizante do Carrinho de Compras (Bottom Sheet / Drawer) -->
+        <div class="cart-drawer-overlay" id="cart-overlay"></div>
+        <div class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+            <div class="drawer-header">
+                <div class="drawer-handle"></div>
+                <div class="drawer-title-row">
+                    <h2 id="cart-title">Seu Carrinho</h2>
+                    <button class="close-drawer-btn" id="close-cart-btn" aria-label="Fechar carrinho">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="drawer-body">
+                <!-- Lista de Itens no Carrinho -->
+                <div class="cart-items-list" id="cart-items-list">
+                    <!-- Gerado dinamicamente -->
+                    <div class="empty-cart-message">
+                        <svg viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm0 10c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/></svg>
+                        <p>O seu carrinho está vazio</p>
+                        <button type="button" class="btn-primary" onclick="backToMenu()">Ver Bolos deliciosos</button>
+                    </div>
+                </div>
+
+                <!-- Formulário de Checkout (Exibido apenas quando há itens) -->
+                <form class="checkout-form hidden" id="checkout-form">
+                    <hr class="divider">
+                    <h3>Dados do Pedido</h3>
+                    
+                    <div class="form-group">
+                        <label for="client-name">Seu Nome *</label>
+                        <input type="text" id="client-name" required placeholder="Digite seu nome completo" maxlength="80">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="order-date">Data da Encomenda *</label>
+                        <input type="date" id="order-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Como deseja receber? *</label>
+                        <div class="radio-toggle-group">
+                            <input type="radio" id="method-delivery" name="delivery-method" value="delivery" checked class="sr-only">
+                            <label for="method-delivery" class="radio-label">Entrega</label>
+                            
+                            <input type="radio" id="method-pickup" name="delivery-method" value="pickup" class="sr-only">
+                            <label for="method-pickup" class="radio-label">Retirar no Local</label>
+                        </div>
+                    </div>
+
+                    <!-- Campos Condicionais para Entrega -->
+                    <div id="delivery-fields" class="conditional-fields">
+                        <div class="form-group">
+                            <label for="delivery-address">Endereço de Entrega *</label>
+                            <input type="text" id="delivery-address" placeholder="Rua, número, bairro e apto/casa" maxlength="200">
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery-reference">Ponto de Referência</label>
+                            <input type="text" id="delivery-reference" placeholder="Ex: Próximo à padaria central" maxlength="150">
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery-time">Horário Desejado para Entrega *</label>
+                            <input type="time" id="delivery-time">
+                        </div>
+                        <p class="delivery-notice">
+                            <svg class="info-title-icon" style="width: 14px; height: 14px; fill: var(--text-muted);" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            A taxa de entrega será calculada e combinada no WhatsApp de acordo com seu bairro.
+                        </p>
+                    </div>
+
+                    <!-- Campos Condicionais para Retirada -->
+                    <div id="pickup-fields" class="conditional-fields hidden">
+                        <p class="pickup-notice">
+                            <svg class="info-title-icon" style="width: 14px; height: 14px; fill: var(--primary);" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            Local para retirada: <strong>Rua das Flores, 456 - Vila Mimosa, Campinas/SP</strong>
+                        </p>
+                        <div class="form-group">
+                            <label for="pickup-time">Horário Previsto para Retirada *</label>
+                            <input type="time" id="pickup-time">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Forma de Pagamento *</label>
+                        <select id="payment-method" required>
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            <option value="pix">Pix (Chave informada no WhatsApp)</option>
+                            <option value="cartao">Cartão de Crédito / Débito (Máquina na entrega)</option>
+                            <option value="dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo Adicional para Dinheiro (Troco) -->
+                    <div id="change-field" class="conditional-fields hidden">
+                        <div class="form-group">
+                            <label for="change-amount">Precisa de troco para quanto?</label>
+                            <input type="text" id="change-amount" placeholder="Ex: Troco para R$ 50,00" maxlength="50">
+                        </div>
+                    </div>
+
+                    <!-- Resumo dos Valores -->
+                    <div class="order-summary-box">
+                        <div class="summary-line">
+                            <span>Subtotal:</span>
+                            <span id="summary-subtotal">R$ 0,00</span>
+                        </div>
+                        <div class="summary-line delivery-summary-line">
+                            <span>Taxa de Entrega:</span>
+                            <span id="summary-delivery">A combinar</span>
+                        </div>
+                        <div class="summary-line total-line">
+                            <span>Total Estimado:</span>
+                            <span id="summary-total">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Ação Principal -->
+                    <div class="sticky-checkout-container">
+                        <button type="submit" class="btn-whatsapp" id="btn-submit-order">
+                            Finalizar Pedido no WhatsApp
+                        </button>
+                        <p class="lgpd-notice">
+                            🔒 <strong>Segurança & Privacidade:</strong> Seus dados são processados temporariamente no navegador apenas para estruturar a mensagem do WhatsApp. Não salvamos nenhuma informação sua.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Painel de Informações e Horários (Modal) -->
+        <div class="info-modal-overlay" id="info-overlay"></div>
+        <div class="info-modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-title">
+            <div class="modal-header">
+                <h2 id="info-title">Informações de Contato</h2>
+                <button class="close-modal-btn" id="close-info-btn" aria-label="Fechar informações">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>
+                        <svg class="info-title-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        Horários de Atendimento
+                    </h3>
+                    <p><strong>Segunda a Sábado:</strong> 09h às 19h</p>
+                    <p><strong>Domingo:</strong> 09h às 13h</p>
+                    <span class="notice-highlight">
+                        <svg class="info-title-icon" style="fill: var(--primary-dark); width: 16px; height: 16px;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Faça sua encomenda com pelo menos 24h de antecedência.
+                    </span>
+                </div>
+
+                <div class="info-section">
+                    <h3>
+                        <svg class="info-title-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        Localização para Retirada
+                    </h3>
+                    <p>Rua das Flores, 456 - Vila Mimosa, Campinas/SP</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>
+                        <svg class="info-title-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                        Formas de Pagamento
+                    </h3>
+                    <p>• Pix</p>
+                    <p>• Cartões de Crédito e Débito (Visa, Mastercard, Elo, Hipercard)</p>
+                    <p>• Dinheiro</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>
+                        <svg class="info-title-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                        Redes & Contatos
+                    </h3>
+                    <p class="contact-link-wrapper">
+                        <a href="https://wa.me/5519982354323" target="_blank" rel="noopener noreferrer" class="contact-link">
+                            <svg class="contact-icon-small" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.967 14.12 .94 11.5 1.008 6.071 1.008 1.64 5.378 1.637 10.807c-.001 1.716.455 3.393 1.32 4.887l-.99 3.613 3.69-.974zm13.102-6.52c-.313-.156-1.85-.911-2.136-1.014-.286-.103-.494-.156-.702.156-.208.312-.807 1.014-.988 1.222-.182.208-.364.234-.678.078-2.613-1.306-4.04-2.18-5.63-4.912-.132-.227.132-.211.378-.702.072-.143.036-.266-.018-.372-.054-.107-.494-1.192-.678-1.635-.178-.429-.36-.37-.494-.377-.127-.006-.273-.007-.417-.007-.146 0-.38.054-.58.267-.2.214-.76.742-.76 1.809 0 1.067.776 2.097.884 2.244.108.146 1.527 2.33 3.7 3.268 1.808.78 2.176.624 2.9.558.724-.066 1.85-.755 2.11-1.451.26-.696.26-1.294.182-1.422-.078-.128-.286-.208-.6-.364z"/></svg>
+                            WhatsApp: (19) 98235-4323
+                        </a>
+                    </p>
+                    <p class="contact-link-wrapper">
+                        <a href="https://instagram.com/bolosdapalloma" target="_blank" rel="noopener noreferrer" class="contact-link">
+                            <svg class="contact-icon-small" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                            Instagram: @bolosdapalloma
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Lógica -->
+    <script src="app.js"></script>
+</body>
+</html>
