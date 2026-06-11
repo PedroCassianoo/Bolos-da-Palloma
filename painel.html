@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolos da Palloma - Painel de Gestão</title>
+    <meta name="description" content="Painel interativo de custos, capacidade e metas para gestão interna da confeitaria Bolos da Palloma.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans para interface limpa e moderna, Cherry Swash para toques especiais -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="painel.css">
+</head>
+<body>
+
+    <!-- Container Principal do Painel (Otimizado para Desktop) -->
+    <div class="dashboard-container">
+        
+        <!-- Cabeçalho (Header) -->
+        <header class="dashboard-header">
+            <div class="header-main">
+                <div class="brand-group">
+                    <img class="brand-logo-icon" src="assets/images/logo_icon.png" alt="Bolos da Palloma Ícone">
+                    <div class="brand-text">
+                        <h1>Bolos da Palloma</h1>
+                        <p class="brand-subtitle">Painel de Gestão & Precificação</p>
+                    </div>
+                </div>
+                <div class="header-badge">
+                    <span>Espaço da Empreendedora 🍰</span>
+                </div>
+            </div>
+            
+            <!-- Abas de Navegação (Menu Principal) -->
+            <nav class="dashboard-tabs">
+                <button class="tab-btn active" data-tab="custo-preco">
+                    <svg class="tab-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 6h-2v2h2v2h-2v2h-2v-2H9v-2h2V9H9V7h2V5h2v2h2v2z"/></svg>
+                    Custo & preço
+                </button>
+                <button class="tab-btn" data-tab="capacidade">
+                    <svg class="tab-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    Capacidade
+                </button>
+                <button class="tab-btn" data-tab="clientes">
+                    <svg class="tab-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    Clientes
+                </button>
+                <button class="tab-btn" data-tab="metas">
+                    <svg class="tab-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                    Metas
+                </button>
+            </nav>
+        </header>
+
+        <!-- Conteúdo do Painel -->
+        <main class="dashboard-content">
+
+            <!-- ================= ABA 1: CUSTO & PREÇO ================= -->
+            <section class="tab-content active" id="tab-custo-preco">
+                <div class="grid-2col">
+                    
+                    <!-- Formulário de Entradas de Custos -->
+                    <div class="card panel-card">
+                        <div class="card-header-row">
+                            <span class="card-icon">🧮</span>
+                            <h2>Calculadora de custo por bolo</h2>
+                        </div>
+                        <p class="card-desc">Insira o custo dos ingredientes reais, despesas de gás, embalagem e tempo trabalhado.</p>
+                        
+                        <div class="inputs-grid">
+                            <div class="form-group">
+                                <label for="input-farinha">Farinha (R$)</label>
+                                <input type="number" id="input-farinha" min="0" step="0.01" value="4.00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-ovos">Ovos (R$)</label>
+                                <input type="number" id="input-ovos" min="0" step="0.01" value="3.00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-acucar-manteiga">Açúcar + manteiga (R$)</label>
+                                <input type="number" id="input-acucar-manteiga" min="0" step="0.01" value="3.50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-outros">Outros ingredientes (R$)</label>
+                                <input type="number" id="input-outros" min="0" step="0.01" value="5.00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-gas">Gás (rateado por bolo, R$)</label>
+                                <input type="number" id="input-gas" min="0" step="0.01" value="1.50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-embalagem">Embalagem (R$)</label>
+                                <input type="number" id="input-embalagem" min="0" step="0.01" value="2.50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-tempo">Seu tempo por bolo (minutos)</label>
+                                <input type="number" id="input-tempo" min="0" step="1" value="60">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="input-valor-hora">Valor da sua hora (R$)</label>
+                                <input type="number" id="input-valor-hora" min="0" step="0.10" value="20.00">
+                            </div>
+                        </div>
+
+                        <!-- Mini Cards de Custo Parcial -->
+                        <div class="results-subgrid text-center">
+                            <div class="result-tile bg-green-light">
+                                <span class="tile-label">Ingredientes</span>
+                                <span class="tile-value text-green" id="calc-ingredientes">R$ 15,50</span>
+                            </div>
+                            <div class="result-tile bg-green-light">
+                                <span class="tile-label">Operacional</span>
+                                <span class="tile-value text-green" id="calc-operacional">R$ 4,00</span>
+                            </div>
+                            <div class="result-tile bg-green-light">
+                                <span class="tile-label">Mão de obra</span>
+                                <span class="tile-value text-green" id="calc-mao-de-obra">R$ 20,00</span>
+                            </div>
+                            <div class="result-tile bg-gold-light highlight-tile">
+                                <span class="tile-label">Custo total por bolo</span>
+                                <span class="tile-value text-gold" id="calc-custo-total">R$ 39,50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Precificação por Margem de Lucro -->
+                    <div class="card panel-card flex-between">
+                        <div>
+                            <div class="card-header-row">
+                                <span class="card-icon">📈</span>
+                                <h2>Precificação por margem desejada</h2>
+                            </div>
+                            <p class="card-desc">Arraste o slider para calcular qual deve ser o preço sugerido do bolo e ver o retorno gerado.</p>
+                            
+                            <!-- Slider de Margem -->
+                            <div class="slider-container">
+                                <div class="slider-header">
+                                    <span class="slider-label">Margem de lucro desejada</span>
+                                    <span class="slider-value" id="margin-value">30%</span>
+                                </div>
+                                <input type="range" id="input-margin" min="0" max="90" step="1" value="30" class="custom-slider">
+                            </div>
+                        </div>
+
+                        <!-- Destaque de Precificação e Lucratividade -->
+                        <div class="results-subgrid text-center">
+                            <div class="result-tile bg-gold-light highlight-tile">
+                                <span class="tile-label">Preço sugerido</span>
+                                <span class="tile-value text-gold" id="price-sugerido">R$ 56,43</span>
+                            </div>
+                            <div class="result-tile bg-gold-light">
+                                <span class="tile-label">Lucro por bolo</span>
+                                <span class="tile-value text-gold" id="price-lucro-bolo">R$ 16,93</span>
+                            </div>
+                            <div class="result-tile bg-green-light">
+                                <span class="tile-label">Lucro em 30 bolos/mês</span>
+                                <span class="tile-value text-green" id="price-lucro-mensal">R$ 508</span>
+                            </div>
+                        </div>
+
+                        <!-- Nota Explicativa -->
+                        <div class="info-note">
+                            <p>💡 <strong>Aha Moment:</strong> Repare que ao definir o <em>Valor da sua hora</em> e o <em>Tempo por bolo</em>, a sua mão de obra é remunerada separadamente do lucro da empresa. Lucro é o dinheiro que fica para a confeitaria crescer, não é o seu salário!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= ABA 2: CAPACIDADE ================= -->
+            <section class="tab-content" id="tab-capacidade">
+                <div class="grid-2col">
+                    
+                    <!-- Simulador de Capacidade -->
+                    <div class="card panel-card flex-between">
+                        <div>
+                            <div class="card-header-row">
+                                <span class="card-icon">⚙️</span>
+                                <h2>Simulador de produção mensal</h2>
+                            </div>
+                            <p class="card-desc">Ajuste os parâmetros abaixo para simular a capacidade de produção e faturamento da Palloma.</p>
+                            
+                            <!-- Sliders de Capacidade -->
+                            <div class="slider-container">
+                                <div class="slider-header">
+                                    <span class="slider-label">Dias de trabalho / semana</span>
+                                    <span class="slider-value" id="val-dias-trabalho">4 dias</span>
+                                </div>
+                                <input type="range" id="input-dias-trabalho" min="1" max="7" step="1" value="4" class="custom-slider">
+                            </div>
+
+                            <div class="slider-container">
+                                <div class="slider-header">
+                                    <span class="slider-label">Bolos produzidos por dia</span>
+                                    <span class="slider-value" id="val-bolos-dia">9 bolos</span>
+                                </div>
+                                <input type="range" id="input-bolos-dia" min="1" max="30" step="1" value="9" class="custom-slider">
+                            </div>
+
+                            <div class="slider-container">
+                                <div class="slider-header">
+                                    <span class="slider-label">Preço médio por bolo</span>
+                                    <span class="slider-value" id="val-preco-medio">R$ 45</span>
+                                </div>
+                                <input type="range" id="input-preco-medio" min="10" max="150" step="5" value="45" class="custom-slider">
+                            </div>
+                        </div>
+
+                        <!-- Indicadores Finais -->
+                        <div class="capacity-results-grid text-center">
+                            <div class="result-tile bg-dark">
+                                <span class="tile-label">Bolos / semana</span>
+                                <span class="tile-value text-white" id="out-bolos-semana">36</span>
+                            </div>
+                            <div class="result-tile bg-dark">
+                                <span class="tile-label">Bolos / mês</span>
+                                <span class="tile-value text-white" id="out-bolos-mes">144</span>
+                            </div>
+                            <div class="result-tile bg-gold highlight-tile">
+                                <span class="tile-label">Faturamento bruto / mês</span>
+                                <span class="tile-value text-white" id="out-faturamento-mensal">R$ 6.480</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cenários de Crescimento -->
+                    <div class="card panel-card">
+                        <div class="card-header-row">
+                            <span class="card-icon">🚀</span>
+                            <h2>Cenários de crescimento</h2>
+                        </div>
+                        <p class="card-desc">Compare o faturamento bruto estimado de acordo com a progressão de vendas físicas até o iFood ativo (calculado com base no preço médio atual do slider).</p>
+                        
+                        <div class="scenarios-list">
+                            <!-- Fase atual -->
+                            <div class="scenario-item">
+                                <div class="scenario-info">
+                                    <span class="scenario-dot dot-atual"></span>
+                                    <div>
+                                        <div class="scenario-title">Fase atual (colegas)</div>
+                                        <div class="scenario-meta">Foco em encomendas informais com pessoas próximas</div>
+                                    </div>
+                                </div>
+                                <div class="scenario-numbers">
+                                    <span class="scenario-qty">20 bolos</span>
+                                    <span class="scenario-val" id="scen-atual">R$ 900/mês</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Início 2026 -->
+                            <div class="scenario-item">
+                                <div class="scenario-info">
+                                    <span class="scenario-dot dot-inicio"></span>
+                                    <div>
+                                        <div class="scenario-title">Início 2026 (só bolos)</div>
+                                        <div class="scenario-meta">Marca profissionalizada e foco exclusivo na expansão de encomendas</div>
+                                    </div>
+                                </div>
+                                <div class="scenario-numbers">
+                                    <span class="scenario-qty">80 bolos</span>
+                                    <span class="scenario-val" id="scen-inicio">R$ 3.600/mês</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Eventos Corporativos -->
+                            <div class="scenario-item">
+                                <div class="scenario-info">
+                                    <span class="scenario-dot dot-eventos"></span>
+                                    <div>
+                                        <div class="scenario-title">Com eventos corporativos</div>
+                                        <div class="scenario-meta">Entrada no segmento empresarial de coffee breaks</div>
+                                    </div>
+                                </div>
+                                <div class="scenario-numbers">
+                                    <span class="scenario-qty">120 bolos</span>
+                                    <span class="scenario-val" id="scen-eventos">R$ 5.400/mês</span>
+                                </div>
+                            </div>
+                            
+                            <!-- iFood ativo -->
+                            <div class="scenario-item">
+                                <div class="scenario-info">
+                                    <span class="scenario-dot dot-ifood"></span>
+                                    <div>
+                                        <div class="scenario-title">iFood ativo</div>
+                                        <div class="scenario-meta">Ponto físico operando com pronta-entrega no delivery</div>
+                                    </div>
+                                </div>
+                                <div class="scenario-numbers">
+                                    <span class="scenario-qty">200 bolos</span>
+                                    <span class="scenario-val" id="scen-ifood">R$ 9.000/mês</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= ABA 3: CLIENTES ================= -->
+            <section class="tab-content" id="tab-clientes">
+                <div class="grid-2col">
+                    
+                    <!-- Segmentos de Clientes -->
+                    <div class="card panel-card">
+                        <div class="card-header-row">
+                            <span class="card-icon">👥</span>
+                            <h2>Segmentação atual e metas</h2>
+                        </div>
+                        <p class="card-desc">Arraste os controles para simular e visualizar a distribuição ideal da receita entre os canais de clientes. O gráfico se atualiza automaticamente para que a soma seja sempre 100%.</p>
+                        
+                        <div class="segments-interactive-container">
+                            <!-- Segmento 1 -->
+                            <div class="segment-slider-item">
+                                <div class="segment-slider-header">
+                                    <span class="segment-name">Colegas de trabalho (atual)</span>
+                                    <span class="segment-pct" id="pct-colegas">100%</span>
+                                </div>
+                                <input type="range" id="input-pct-colegas" min="0" max="100" step="1" value="100" class="custom-slider segment-input">
+                                <div class="progress-bar-wrapper">
+                                    <div class="progress-bar bg-colegas" id="bar-colegas" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Segmento 2 -->
+                            <div class="segment-slider-item">
+                                <div class="segment-slider-header">
+                                    <span class="segment-name">Eventos empresariais (meta)</span>
+                                    <span class="segment-pct" id="pct-eventos">0%</span>
+                                </div>
+                                <input type="range" id="input-pct-eventos" min="0" max="100" step="1" value="0" class="custom-slider segment-input">
+                                <div class="progress-bar-wrapper">
+                                    <div class="progress-bar bg-eventos" id="bar-eventos" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Segmento 3 -->
+                            <div class="segment-slider-item">
+                                <div class="segment-slider-header">
+                                    <span class="segment-name">iFood / vendas online (meta)</span>
+                                    <span class="segment-pct" id="pct-ifood">0%</span>
+                                </div>
+                                <input type="range" id="input-pct-ifood" min="0" max="100" step="1" value="0" class="custom-slider segment-input">
+                                <div class="progress-bar-wrapper">
+                                    <div class="progress-bar bg-ifood" id="bar-ifood" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alerta Dinâmico -->
+                        <div class="validation-message" id="segment-validation" style="display: none;">
+                            A soma dos segmentos deve ser de exatamente 100%!
+                        </div>
+                    </div>
+
+                    <!-- Lista de Registro & Dica para Eventos -->
+                    <div class="card panel-card flex-between">
+                        <div>
+                            <div class="card-header-row">
+                                <span class="card-icon">📌</span>
+                                <h2>Primeiros clientes a registrar</h2>
+                            </div>
+                            <p class="card-desc">Planejamento e ações necessárias para cada canal de aquisição mapeado no briefing.</p>
+                            
+                            <div class="channels-list">
+                                <div class="channel-card">
+                                    <div class="channel-avatar avatar-colegas">CP</div>
+                                    <div class="channel-details">
+                                        <h3>Colegas da empresa</h3>
+                                        <p>Canal atual · Vendas de boca a boca · Facilidade na logística (entrega direta no trabalho).</p>
+                                    </div>
+                                </div>
+                                <div class="channel-card">
+                                    <div class="channel-avatar avatar-eventos">EV</div>
+                                    <div class="channel-details">
+                                        <h3>Eventos corporativos</h3>
+                                        <p>Próximo canal · Como cobrar: estabelecer valor fechado por bandeja ou por pessoa (fatia).</p>
+                                    </div>
+                                </div>
+                                <div class="channel-card">
+                                    <div class="channel-avatar avatar-ifood">IF</div>
+                                    <div class="channel-details">
+                                        <h3>iFood / online</h3>
+                                        <p>Canal futuro · Requer profissionalização da marca, embalagem customizada e parceiros logísticos.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Banner de Dica Destacada -->
+                        <div class="tip-banner">
+                            <span class="tip-icon">💡</span>
+                            <div class="tip-text">
+                                <strong>Precificação para eventos:</strong> Um bolo serve aproximadamente 10 fatias. Se você cobra R$ 60 por bolo inteiro, isso equivale a apenas <strong>R$ 6,00 por pessoa</strong> — um valor extremamente competitivo e atrativo para coffee breaks corporativos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= ABA 4: METAS ================= -->
+            <section class="tab-content" id="tab-metas">
+                <div class="grid-2col">
+                    
+                    <!-- Objetivos de 12 Meses -->
+                    <div class="card panel-card">
+                        <div class="card-header-row">
+                            <span class="card-icon">🎯</span>
+                            <h2>Objetivos para os próximos 12 meses</h2>
+                        </div>
+                        <p class="card-desc">Mapeamento dos marcos estratégicos descritos na visão geral da confeitaria.</p>
+                        
+                        <div class="goals-timeline">
+                            <div class="goal-item-card border-green bg-green-light-soft">
+                                <div class="goal-icon icon-green">✓</div>
+                                <div class="goal-content text-dark">
+                                    <h3>Clareza de custo</h3>
+                                    <p>Saber exatamente quanto custa cada bolo antes de pensar em escalar as vendas.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="goal-item-card border-blue bg-blue-light-soft">
+                                <div class="goal-icon icon-blue">📅</div>
+                                <div class="goal-content text-dark">
+                                    <h3>Verba disponível (~R$ 3.000)</h3>
+                                    <p>Reservado para identidade visual da marca, embalagens personalizadas e taxa de entrada no iFood em <strong>janeiro de 2026</strong>.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="goal-item-card border-orange bg-orange-light-soft">
+                                <div class="goal-icon icon-orange">👥</div>
+                                <div class="goal-content text-dark">
+                                    <h3>Primeiro evento corporativo</h3>
+                                    <p>Utilizar a rede de contatos dos colegas de trabalho para conseguir uma oportunidade de teste em coffee break.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Três Perguntas Não Respondidas -->
+                    <div class="card panel-card flex-between">
+                        <div>
+                            <div class="card-header-row">
+                                <span class="card-icon">❓</span>
+                                <h2>Perguntas Estratégicas Essenciais</h2>
+                            </div>
+                            <p class="card-desc">Estas são as lacunas que o painel e os dados atuais ainda não respondem, mas que são fundamentais para o sucesso a longo prazo.</p>
+                            
+                            <div class="questions-stack">
+                                <div class="question-box question-highlight">
+                                    <span class="question-number">1</span>
+                                    <div class="question-text">
+                                        <h4>Por que alguém compraria da Palloma e não da concorrência?</h4>
+                                        <p>Esta resposta ficou em branco no briefing inicial. Definir o diferencial competitivo claro é vital para justificar preços premium.</p>
+                                    </div>
+                                </div>
+                                <div class="question-box">
+                                    <span class="question-number">2</span>
+                                    <div class="question-text">
+                                        <h4>Qual é o canal de aquisição de clientes com maior margem líquida?</h4>
+                                        <p>Entender se a margem de eventos compensa em relação à comissão cobrada pela plataforma do iFood.</p>
+                                    </div>
+                                </div>
+                                <div class="question-box">
+                                    <span class="question-number">3</span>
+                                    <div class="question-text">
+                                        <h4>Como gerenciar o estoque de insumos ao escalar?</h4>
+                                        <p>Planejar as compras de farinha, ovos e embalagens em grande escala para conseguir preços melhores com fornecedores e não paralisar o caixa.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- Rodapé do Dashboard -->
+        <footer class="dashboard-footer">
+            <p>Criado para <strong>Bolos da Palloma</strong> — Todos os cálculos são feitos de forma local e automática.</p>
+        </footer>
+
+    </div>
+
+    <!-- Script de Lógica e Cálculos Dinâmicos -->
+    <script src="painel.js"></script>
+</body>
+</html>
