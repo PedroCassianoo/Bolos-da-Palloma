@@ -448,6 +448,15 @@ body {
 
 .bg-dark {
     background-color: var(--text-dark);
+    color: var(--white);
+}
+
+.bg-dark .tile-label {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.bg-dark .tile-value {
+    color: var(--white);
 }
 
 .text-white {
@@ -456,6 +465,15 @@ body {
 
 .bg-gold {
     background-color: var(--primary);
+    color: var(--white);
+}
+
+.bg-gold .tile-label {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.bg-gold .tile-value {
+    color: var(--white);
 }
 
 /* Lista de Cenários de Crescimento */
