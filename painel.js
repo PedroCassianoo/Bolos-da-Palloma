@@ -209,11 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const pctEventos = document.getElementById('pct-eventos');
     const pctIfood = document.getElementById('pct-ifood');
 
-    // Barras de Progresso Visuais
-    const barColegas = document.getElementById('bar-colegas');
-    const barEventos = document.getElementById('bar-eventos');
-    const barIfood = document.getElementById('bar-ifood');
-
     // Lógica para balancear os sliders para que a soma seja sempre 100%
     function balanceSliders(changedInput) {
         let valColegas = parseInt(inputPctColegas.value) || 0;
@@ -267,10 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
         pctEventos.textContent = `${valEventos}%`;
         pctIfood.textContent = `${valIfood}%`;
 
-        // Update progress bars widths
-        barColegas.style.width = `${valColegas}%`;
-        barEventos.style.width = `${valEventos}%`;
-        barIfood.style.width = `${valIfood}%`;
+
 
         // Atualizar preenchimento de track para os três sliders
         updateSliderTrack(inputPctColegas);
