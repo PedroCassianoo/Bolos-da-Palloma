@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cherry+Swash:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="painel.css?v=1.0.1">
+    <link rel="stylesheet" href="painel.css?v=1.1.0">
 </head>
 <body>
 
@@ -165,9 +165,9 @@
                                 <span class="tile-label">Lucro por bolo</span>
                                 <span class="tile-value text-gold" id="price-lucro-bolo">R$ 16,93</span>
                             </div>
-                            <div class="result-tile bg-green-light">
-                                <span class="tile-label">Lucro em 30 bolos/mês</span>
-                                <span class="tile-value text-green" id="price-lucro-mensal">R$ 508</span>
+                            <div class="result-tile bg-green-light span-2col">
+                                <span class="tile-label" id="label-lucro-mensal">Lucro em 144 bolos/mês</span>
+                                <span class="tile-value text-green" id="price-lucro-mensal">R$ 2.438</span>
                             </div>
                         </div>
 
@@ -363,11 +363,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Alerta Dinâmico -->
-                        <div class="validation-message" id="segment-validation" style="display: none;">
-                            A soma dos segmentos deve ser de exatamente 100%!
-                        </div>
                     </div>
 
                     <!-- Lista de Registro & Dica para Eventos -->
@@ -507,6 +502,6 @@
     </div>
 
     <!-- Script de Lógica e Cálculos Dinâmicos -->
-    <script src="painel.js"></script>
+    <script src="painel.js?v=1.1.0"></script>
 </body>
 </html>

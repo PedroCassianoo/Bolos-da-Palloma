@@ -20,11 +20,44 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
-    // HELPER DE FORMATAÇÃO DE MOEDA (REAL)
+    // HELPERS DE FORMATAÇÃO DE MOEDA (REAL)
     // ==========================================
+    // Formatação padrão com decimais (ex: R$ 15,50)
     function formatCurrency(value) {
         return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
+
+    // Formatação para valores inteiros limpos (ex: R$ 6.480)
+    function formatCurrencyWhole(value) {
+        return value.toLocaleString('pt-BR', { 
+            style: 'currency', 
+            currency: 'BRL',
+            maximumFractionDigits: 0 
+        });
+    }
+
+    // ==========================================
+    // HELPER PARA ATUALIZAR O RASTRO DO SLIDER (PROGRESSO VISUAL)
+    // ==========================================
+    function updateSliderTrack(slider) {
+        const min = parseFloat(slider.min) || 0;
+        const max = parseFloat(slider.max) || 100;
+        const value = parseFloat(slider.value) || 0;
+        const percent = ((value - min) / (max - min)) * 100;
+        
+        let color = 'var(--primary)'; // Padrão chocolate
+        if (slider.id === 'input-pct-colegas') color = 'var(--status-green)';
+        else if (slider.id === 'input-pct-eventos') color = 'var(--color-eventos)';
+        
+        slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percent}%, rgba(77, 43, 15, 0.1) ${percent}%, rgba(77, 43, 15, 0.1) 100%)`;
+    }
+
+    // Inicializar rastros para todos os sliders range da página
+    const allSliders = document.querySelectorAll('input[type="range"]');
+    allSliders.forEach(slider => {
+        updateSliderTrack(slider);
+        slider.addEventListener('input', () => updateSliderTrack(slider));
+    });
 
     // ==========================================
     // 2. ABA 1: CUSTO & PREÇO
@@ -48,18 +81,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const priceSugerido = document.getElementById('price-sugerido');
     const priceLucroBolo = document.getElementById('price-lucro-bolo');
     const priceLucroMensal = document.getElementById('price-lucro-mensal');
+    const labelLucroMensal = document.getElementById('label-lucro-mensal');
+
+    // Retorna a capacidade mensal em bolos com base na Aba 2
+    function getVolumeMes() {
+        const diasTrabalho = Math.max(0, parseInt(inputDiasTrabalho.value) || 0);
+        const bolosDia = Math.max(0, parseInt(inputBolosDia.value) || 0);
+        return diasTrabalho * bolosDia * 4;
+    }
 
     function calculateCostAndPrice() {
-        // Obter valores numéricos limpando entradas inválidas
-        const farinha = parseFloat(inputFarinha.value) || 0;
-        const ovos = parseFloat(inputOvos.value) || 0;
-        const acucarManteiga = parseFloat(inputAcucarManteiga.value) || 0;
-        const outros = parseFloat(inputOutros.value) || 0;
-        const gas = parseFloat(inputGas.value) || 0;
-        const embalagem = parseFloat(inputEmbalagem.value) || 0;
-        const tempo = parseFloat(inputTempo.value) || 0;
-        const valorHora = parseFloat(inputValorHora.value) || 0;
-        const margemPercentual = parseFloat(inputMargin.value) || 0;
+        // Obter valores numéricos limpando entradas inválidas e negativas (Math.max(0))
+        const farinha = Math.max(0, parseFloat(inputFarinha.value) || 0);
+        const ovos = Math.max(0, parseFloat(inputOvos.value) || 0);
+        const acucarManteiga = Math.max(0, parseFloat(inputAcucarManteiga.value) || 0);
+        const outros = Math.max(0, parseFloat(inputOutros.value) || 0);
+        const gas = Math.max(0, parseFloat(inputGas.value) || 0);
+        const embalagem = Math.max(0, parseFloat(inputEmbalagem.value) || 0);
+        const tempo = Math.max(0, parseFloat(inputTempo.value) || 0);
+        const valorHora = Math.max(0, parseFloat(inputValorHora.value) || 0);
+        const margemPercentual = Math.max(0, parseFloat(inputMargin.value) || 0);
 
         // Cálculos
         const totalIngredientes = farinha + ovos + acucarManteiga + outros;
@@ -67,11 +108,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalMaoDeObra = (tempo / 60) * valorHora;
         const custoTotal = totalIngredientes + totalOperacional + totalMaoDeObra;
 
-        // Precificação (Fórmula de Markup correspondente ao rascunho)
-        const margemDecimal = margemPercentual / 100;
-        const precoSugerido = custoTotal * (1 + margemDecimal);
+        // Precificação (Fórmula de Margem de Lucro Real)
+        const margemDecimal = Math.min(0.99, margemPercentual / 100);
+        const precoSugerido = custoTotal / (1 - margemDecimal);
         const lucroBolo = precoSugerido - custoTotal;
-        const lucroMensal = lucroBolo * 30;
+        
+        // Integrado dinamicamente com a capacidade definida na Aba 2
+        const volumeMes = getVolumeMes();
+        const lucroMensal = lucroBolo * volumeMes;
 
         // Atualizar interface
         calcIngredientes.textContent = formatCurrency(totalIngredientes);
@@ -82,7 +126,10 @@ document.addEventListener('DOMContentLoaded', function() {
         marginValueText.textContent = `${margemPercentual}%`;
         priceSugerido.textContent = formatCurrency(precoSugerido);
         priceLucroBolo.textContent = formatCurrency(lucroBolo);
-        priceLucroMensal.textContent = formatCurrency(Math.round(lucroMensal));
+        
+        // Atualizar texto do rótulo e valor de lucro mensal integrado
+        labelLucroMensal.textContent = `Lucro em ${volumeMes} bolos/mês`;
+        priceLucroMensal.textContent = formatCurrencyWhole(Math.round(lucroMensal));
     }
 
     // Adicionar escuta nos inputs da calculadora
@@ -116,9 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const scenIfood = document.getElementById('scen-ifood');
 
     function calculateCapacity() {
-        const diasTrabalho = parseInt(inputDiasTrabalho.value) || 0;
-        const bolosDia = parseInt(inputBolosDia.value) || 0;
-        const precoMedio = parseFloat(inputPrecoMedio.value) || 0;
+        const diasTrabalho = Math.max(0, parseInt(inputDiasTrabalho.value) || 0);
+        const bolosDia = Math.max(0, parseInt(inputBolosDia.value) || 0);
+        const precoMedio = Math.max(0, parseFloat(inputPrecoMedio.value) || 0);
 
         // Cálculos de capacidade
         const bolosSemana = diasTrabalho * bolosDia;
@@ -128,18 +175,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Atualizar textos dos sliders
         valDiasTrabalho.textContent = `${diasTrabalho} ${diasTrabalho === 1 ? 'dia' : 'dias'}`;
         valBolosDia.textContent = `${bolosDia} ${bolosDia === 1 ? 'bolo' : 'bolos'}`;
-        valPrecoMedio.textContent = formatCurrency(precoMedio).replace(',00', '');
+        valPrecoMedio.textContent = formatCurrencyWhole(precoMedio);
 
         // Atualizar cards de resultado
         outBolosSemana.textContent = bolosSemana;
         outBolosMes.textContent = bolosMes;
-        outFaturamentoMensal.textContent = formatCurrency(faturamentoMensal).replace(',00', '');
+        outFaturamentoMensal.textContent = formatCurrencyWhole(faturamentoMensal);
 
         // Atualizar cenários de crescimento baseados no preço médio
-        scenAtual.textContent = `${formatCurrency(20 * precoMedio).replace(',00', '')}/mês`;
-        scenInicio.textContent = `${formatCurrency(80 * precoMedio).replace(',00', '')}/mês`;
-        scenEventos.textContent = `${formatCurrency(120 * precoMedio).replace(',00', '')}/mês`;
-        scenIfood.textContent = `${formatCurrency(200 * precoMedio).replace(',00', '')}/mês`;
+        scenAtual.textContent = `${formatCurrencyWhole(20 * precoMedio)}/mês`;
+        scenInicio.textContent = `${formatCurrencyWhole(80 * precoMedio)}/mês`;
+        scenEventos.textContent = `${formatCurrencyWhole(120 * precoMedio)}/mês`;
+        scenIfood.textContent = `${formatCurrencyWhole(200 * precoMedio)}/mês`;
+
+        // Recalcular custos também, pois a quantidade mensal mudou
+        calculateCostAndPrice();
     }
 
     const capacityInputs = [inputDiasTrabalho, inputBolosDia, inputPrecoMedio];
@@ -221,6 +271,11 @@ document.addEventListener('DOMContentLoaded', function() {
         barColegas.style.width = `${valColegas}%`;
         barEventos.style.width = `${valEventos}%`;
         barIfood.style.width = `${valIfood}%`;
+
+        // Atualizar preenchimento de track para os três sliders
+        updateSliderTrack(inputPctColegas);
+        updateSliderTrack(inputPctEventos);
+        updateSliderTrack(inputPctIfood);
     }
 
     const segmentInputs = [inputPctColegas, inputPctEventos, inputPctIfood];
@@ -233,6 +288,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // EXECUÇÃO INICIAL
     // ==========================================
-    calculateCostAndPrice();
-    calculateCapacity();
+    calculateCapacity(); // Executa primeiro para definir o volumeMes inicial para o calculateCostAndPrice()
 });
