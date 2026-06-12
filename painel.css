@@ -575,29 +575,14 @@ body {
 }
 
 /* Cores específicas de segmentos */
-#pct-colegas, #bar-colegas { color: var(--status-green); }
+#pct-colegas { color: var(--status-green); }
 .bg-colegas { background-color: var(--status-green); }
 
-#pct-eventos, #bar-eventos { color: var(--color-eventos); }
+#pct-eventos { color: var(--color-eventos); }
 .bg-eventos { background-color: var(--color-eventos); }
 
-#pct-ifood, #bar-ifood { color: var(--primary); }
+#pct-ifood { color: var(--primary); }
 .bg-ifood { background-color: var(--primary); }
-
-.progress-bar-wrapper {
-    height: 6px;
-    border-radius: var(--radius-full);
-    background-color: rgba(77, 43, 15, 0.06);
-    overflow: hidden;
-    margin-top: 2px;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: var(--radius-full);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 .validation-message {
     font-size: 0.8rem;
