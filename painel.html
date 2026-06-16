@@ -59,121 +59,153 @@
 
             <!-- ================= ABA 1: CUSTO & PREÇO ================= -->
             <section class="tab-content active" id="tab-custo-preco">
-                <div class="grid-2col">
-                    
-                    <!-- Formulário de Entradas de Custos -->
-                    <div class="card panel-card">
-                        <div class="card-header-group">
-                            <div class="card-header-row">
-                                <span class="card-icon">🧮</span>
-                                <h2>Calculadora de custo por bolo</h2>
-                            </div>
-                            <p class="card-desc">Insira o custo dos ingredientes reais, despesas de gás, embalagem e tempo trabalhado.</p>
-                        </div>
-                        
-                        <div class="inputs-grid">
-                            <div class="form-group">
-                                <label for="input-farinha">Farinha (R$)</label>
-                                <input type="number" id="input-farinha" min="0" step="0.01" value="4.00">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-ovos">Ovos (R$)</label>
-                                <input type="number" id="input-ovos" min="0" step="0.01" value="3.00">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-acucar-manteiga">Açúcar + manteiga (R$)</label>
-                                <input type="number" id="input-acucar-manteiga" min="0" step="0.01" value="3.50">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-outros">Outros ingredientes (R$)</label>
-                                <input type="number" id="input-outros" min="0" step="0.01" value="5.00">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-gas">Gás (rateado por bolo, R$)</label>
-                                <input type="number" id="input-gas" min="0" step="0.01" value="1.50">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-embalagem">Embalagem (R$)</label>
-                                <input type="number" id="input-embalagem" min="0" step="0.01" value="2.50">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-tempo">Seu tempo por bolo (minutos)</label>
-                                <input type="number" id="input-tempo" min="0" step="1" value="60">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="input-valor-hora">Valor da sua hora (R$)</label>
-                                <input type="number" id="input-valor-hora" min="0" step="0.10" value="20.00">
-                            </div>
-                        </div>
+                <!-- Subview: Lista de Bolos (Grid) -->
+                <div id="subview-cake-list" class="subview">
+                    <div class="cakes-grid">
+                        <!-- Bolos serão renderizados dinamicamente pelo JS -->
+                    </div>
+                </div>
 
-                        <!-- Mini Cards de Custo Parcial -->
-                        <div class="results-subgrid text-center">
-                            <div class="result-tile bg-green-light">
-                                <span class="tile-label">Ingredientes</span>
-                                <span class="tile-value text-green" id="calc-ingredientes">R$ 15,50</span>
-                            </div>
-                            <div class="result-tile bg-green-light">
-                                <span class="tile-label">Operacional</span>
-                                <span class="tile-value text-green" id="calc-operacional">R$ 4,00</span>
-                            </div>
-                            <div class="result-tile bg-green-light">
-                                <span class="tile-label">Mão de obra</span>
-                                <span class="tile-value text-green" id="calc-mao-de-obra">R$ 20,00</span>
-                            </div>
-                            <div class="result-tile bg-gold-light highlight-tile">
-                                <span class="tile-label">Custo total por bolo</span>
-                                <span class="tile-value text-gold" id="calc-custo-total">R$ 39,50</span>
+                <!-- Subview: Calculadora e Detalhes do Bolo (Oculto por padrão) -->
+                <div id="subview-cake-details" class="subview hidden">
+                    <!-- Botão de Voltar e Cabeçalho do Bolo Ativo -->
+                    <div class="cake-details-header">
+                        <button id="btn-back-to-list" class="btn-back">
+                            <svg class="back-icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                            Voltar para a lista de bolos
+                        </button>
+                        <div class="active-cake-info">
+                            <img id="active-cake-image" src="assets/images/logo_icon.png" alt="Imagem do Bolo" class="active-cake-img">
+                            <div class="active-cake-text">
+                                <h3 id="active-cake-name">Nome do Bolo</h3>
+                                <span class="active-cake-badge" id="active-cake-category">Categoria</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Precificação por Margem de Lucro -->
-                    <div class="card panel-card flex-between">
-                        <div>
+                    <div class="grid-2col">
+                        <!-- Formulário de Entradas de Custos -->
+                        <div class="card panel-card">
                             <div class="card-header-group">
                                 <div class="card-header-row">
-                                    <span class="card-icon">📈</span>
-                                    <h2>Precificação por margem desejada</h2>
+                                    <span class="card-icon">🧮</span>
+                                    <h2>Calculadora de custo por bolo</h2>
                                 </div>
-                                <p class="card-desc">Arraste o slider para calcular qual deve ser o preço sugerido do bolo e ver o retorno gerado.</p>
+                                <p class="card-desc">Insira o custo dos ingredientes reais, despesas de gás, embalagem e tempo trabalhado.</p>
                             </div>
                             
-                            <!-- Slider de Margem -->
-                            <div class="slider-container">
-                                <div class="slider-header">
-                                    <span class="slider-label">Margem de lucro desejada</span>
-                                    <span class="slider-value" id="margin-value">30%</span>
+                            <div class="inputs-grid">
+                                <div class="form-group">
+                                    <label for="input-farinha">Farinha (R$)</label>
+                                    <input type="number" id="input-farinha" min="0" step="0.01" value="4.00">
                                 </div>
-                                <input type="range" id="input-margin" min="0" max="90" step="1" value="30" class="custom-slider">
+                                
+                                <div class="form-group">
+                                    <label for="input-ovos">Ovos (R$)</label>
+                                    <input type="number" id="input-ovos" min="0" step="0.01" value="3.00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-acucar-manteiga">Açúcar + manteiga (R$)</label>
+                                    <input type="number" id="input-acucar-manteiga" min="0" step="0.01" value="3.50">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-outros">Outros ingredientes (R$)</label>
+                                    <input type="number" id="input-outros" min="0" step="0.01" value="5.00">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-gas">Gás (rateado por bolo, R$)</label>
+                                    <input type="number" id="input-gas" min="0" step="0.01" value="1.50">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-embalagem">Embalagem (R$)</label>
+                                    <input type="number" id="input-embalagem" min="0" step="0.01" value="2.50">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-tempo">Seu tempo por bolo (minutos)</label>
+                                    <input type="number" id="input-tempo" min="0" step="1" value="60">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-valor-hora">Valor da sua hora (R$)</label>
+                                    <input type="number" id="input-valor-hora" min="0" step="0.10" value="20.00">
+                                </div>
+                            </div>
+
+                            <!-- Mini Cards de Custo Parcial -->
+                            <div class="results-subgrid text-center">
+                                <div class="result-tile bg-green-light">
+                                    <span class="tile-label">Ingredientes</span>
+                                    <span class="tile-value text-green" id="calc-ingredientes">R$ 15,50</span>
+                                </div>
+                                <div class="result-tile bg-green-light">
+                                    <span class="tile-label">Operacional</span>
+                                    <span class="tile-value text-green" id="calc-operacional">R$ 4,00</span>
+                                </div>
+                                <div class="result-tile bg-green-light">
+                                    <span class="tile-label">Mão de obra</span>
+                                    <span class="tile-value text-green" id="calc-mao-de-obra">R$ 20,00</span>
+                                </div>
+                                <div class="result-tile bg-gold-light highlight-tile">
+                                    <span class="tile-label">Custo total por bolo</span>
+                                    <span class="tile-value text-gold" id="calc-custo-total">R$ 39,50</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Destaque de Precificação e Lucratividade -->
-                        <div class="results-subgrid text-center">
-                            <div class="result-tile bg-gold-light highlight-tile">
-                                <span class="tile-label">Preço sugerido</span>
-                                <span class="tile-value text-gold" id="price-sugerido">R$ 56,43</span>
+                        <!-- Precificação por Margem de Lucro -->
+                        <div class="card panel-card flex-between">
+                            <div>
+                                <div class="card-header-group">
+                                    <div class="card-header-row">
+                                        <span class="card-icon">📈</span>
+                                        <h2>Precificação por margem desejada</h2>
+                                    </div>
+                                    <p class="card-desc">Arraste o slider para calcular qual deve ser o preço sugerido do bolo e ver o retorno gerado.</p>
+                                </div>
+                                
+                                <!-- Slider de Margem -->
+                                <div class="slider-container">
+                                    <div class="slider-header">
+                                        <span class="slider-label">Margem de lucro desejada</span>
+                                        <span class="slider-value" id="margin-value">30%</span>
+                                    </div>
+                                    <input type="range" id="input-margin" min="0" max="90" step="1" value="30" class="custom-slider">
+                                </div>
                             </div>
-                            <div class="result-tile bg-gold-light">
-                                <span class="tile-label">Lucro por bolo</span>
-                                <span class="tile-value text-gold" id="price-lucro-bolo">R$ 16,93</span>
-                            </div>
-                            <div class="result-tile bg-green-light span-2col">
-                                <span class="tile-label" id="label-lucro-mensal">Lucro em 144 bolos/mês</span>
-                                <span class="tile-value text-green" id="price-lucro-mensal">R$ 2.438</span>
-                            </div>
-                        </div>
 
-                        <!-- Nota Explicativa -->
-                        <div class="info-note">
-                            <p>💡 <strong>Aha Moment:</strong> Repare que ao definir o <em>Valor da sua hora</em> e o <em>Tempo por bolo</em>, a sua mão de obra é remunerada separadamente do lucro da empresa. Lucro é o dinheiro que fica para a confeitaria crescer, não é o seu salário!</p>
+                            <!-- Destaque de Precificação e Lucratividade -->
+                            <div class="results-subgrid text-center">
+                                <div class="result-tile bg-gold-light highlight-tile">
+                                    <span class="tile-label">Preço sugerido</span>
+                                    <span class="tile-value text-gold" id="price-sugerido">R$ 56,43</span>
+                                </div>
+                                <div class="result-tile bg-gold-light">
+                                    <span class="tile-label">Lucro por bolo</span>
+                                    <span class="tile-value text-gold" id="price-lucro-bolo">R$ 16,93</span>
+                                </div>
+                                <div class="result-tile bg-green-light span-2col">
+                                    <span class="tile-label" id="label-lucro-mensal">Lucro em 144 bolos/mês</span>
+                                    <span class="tile-value text-green" id="price-lucro-mensal">R$ 2.438</span>
+                                </div>
+                            </div>
+
+                            <!-- Botão de Salvar Novo Preço -->
+                            <div class="save-actions">
+                                <button id="btn-save-price" class="btn-save">
+                                    <svg class="btn-icon" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                                    Salvar Novo Preço
+                                </button>
+                            </div>
+
+                            <!-- Nota Explicativa -->
+                            <div class="info-note">
+                                <p>💡 <strong>Aha Moment:</strong> Repare que ao definir o <em>Valor da sua hora</em> e o <em>Tempo por bolo</em>, a sua mão de obra é remunerada separadamente do lucro da empresa. Lucro é o dinheiro que fica para a confeitaria crescer, não é o seu salário!</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -491,6 +523,9 @@
         </footer>
 
     </div>
+
+    <!-- Container de Notificação Toast -->
+    <div id="toast-container" class="toast-container"></div>
 
     <!-- Script de Lógica e Cálculos Dinâmicos -->
     <script src="painel.js?v=1.1.2"></script>

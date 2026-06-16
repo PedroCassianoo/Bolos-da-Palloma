@@ -1,6 +1,187 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ==========================================
+    // NOTIFICAÇÕES TOAST
+    // ==========================================
+    function showToast(message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<span>✨</span><span>${message}</span>`;
+        container.appendChild(toast);
+        
+        // Remove após 3 segundos
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    // ==========================================
+    // DATASET DE BOLOS (PRODUTOS) E CUSTOS REALISTAS
+    // ==========================================
+    const DEFAULT_CAKES = {
+        'cenoura-chocolate': {
+            id: 'cenoura-chocolate',
+            name: 'Bolo de Cenoura com Brigadeiro',
+            category: 'caseiros',
+            image: 'assets/images/bolo_cenoura.png',
+            tag: 'Mais vendido',
+            price: 28.00,
+            farinha: 2.00,
+            ovos: 1.50,
+            acucarManteiga: 2.10,
+            outros: 3.00,
+            gas: 1.00,
+            embalagem: 2.00,
+            tempo: 30,
+            valorHora: 16.00,
+            margin: 30
+        },
+        'vulcao-ninho-nutella': {
+            id: 'vulcao-ninho-nutella',
+            name: 'Bolo Vulcão de Ninho com Nutella',
+            category: 'caseiros',
+            image: 'assets/images/bolo_vulcao.png',
+            tag: 'Destaque',
+            price: 38.00,
+            farinha: 2.50,
+            ovos: 2.00,
+            acucarManteiga: 2.60,
+            outros: 5.50,
+            gas: 1.00,
+            embalagem: 3.00,
+            tempo: 30,
+            valorHora: 20.00,
+            margin: 30
+        },
+        'fuba-goiabada': {
+            id: 'fuba-goiabada',
+            name: 'Bolo de Fubá com Goiabada',
+            category: 'caseiros',
+            image: 'assets/images/bolo_cenoura.png',
+            tag: 'Caseirinho',
+            price: 24.00,
+            farinha: 1.50,
+            ovos: 1.50,
+            acucarManteiga: 1.80,
+            outros: 2.00,
+            gas: 1.00,
+            embalagem: 2.00,
+            tempo: 30,
+            valorHora: 14.00,
+            margin: 30
+        },
+        'trufado-chocolate': {
+            id: 'trufado-chocolate',
+            name: 'Bolo Trufado de Chocolate',
+            category: 'confeitados',
+            image: 'assets/images/bolo_morango.png',
+            tag: 'Festa',
+            price: 75.00,
+            farinha: 4.00,
+            ovos: 3.00,
+            acucarManteiga: 4.50,
+            outros: 12.00,
+            gas: 1.50,
+            embalagem: 4.50,
+            tempo: 60,
+            valorHora: 23.00,
+            margin: 30
+        },
+        'ninho-morango': {
+            id: 'ninho-morango',
+            name: 'Bolo Ninho com Morangos Frescos',
+            category: 'confeitados',
+            image: 'assets/images/bolo_morango.png',
+            tag: 'Campeão de Pedidos',
+            price: 80.00,
+            farinha: 4.00,
+            ovos: 3.00,
+            acucarManteiga: 4.50,
+            outros: 14.00,
+            gas: 1.50,
+            embalagem: 5.00,
+            tempo: 60,
+            valorHora: 24.00,
+            margin: 30
+        },
+        'red-velvet-cream': {
+            id: 'red-velvet-cream',
+            name: 'Bolo Red Velvet',
+            category: 'confeitados',
+            image: 'assets/images/bolo_morango.png',
+            tag: 'Premium',
+            price: 85.00,
+            farinha: 4.50,
+            ovos: 3.50,
+            acucarManteiga: 5.00,
+            outros: 17.50,
+            gas: 1.50,
+            embalagem: 5.50,
+            tempo: 60,
+            valorHora: 22.00,
+            margin: 30
+        },
+        'copo-felicidade-ninho': {
+            id: 'copo-felicidade-ninho',
+            name: 'Copo da Felicidade de Morango',
+            category: 'doces',
+            image: 'assets/images/copo_felicidade.png',
+            tag: 'Sobremesa',
+            price: 18.00,
+            farinha: 1.00,
+            ovos: 1.00,
+            acucarManteiga: 1.60,
+            outros: 3.00,
+            gas: 0.50,
+            embalagem: 1.50,
+            tempo: 15,
+            valorHora: 16.00,
+            margin: 30
+        },
+        'brownie-supremo': {
+            id: 'brownie-supremo',
+            name: 'Brownie Supremo',
+            category: 'doces',
+            image: 'assets/images/copo_felicidade.png',
+            tag: 'Individual',
+            price: 12.00,
+            farinha: 0.80,
+            ovos: 0.80,
+            acucarManteiga: 1.30,
+            outros: 1.50,
+            gas: 0.50,
+            embalagem: 1.00,
+            tempo: 15,
+            valorHora: 10.00,
+            margin: 30
+        }
+    };
+
+    let cakesData = {};
+    try {
+        const saved = localStorage.getItem('bolos_da_palloma_cakes');
+        if (saved) {
+            cakesData = JSON.parse(saved);
+            // Garantir que todos os bolos padrão existam se algum novo for adicionado
+            Object.keys(DEFAULT_CAKES).forEach(key => {
+                if (!cakesData[key]) {
+                    cakesData[key] = { ...DEFAULT_CAKES[key] };
+                }
+            });
+        } else {
+            cakesData = JSON.parse(JSON.stringify(DEFAULT_CAKES));
+        }
+    } catch (e) {
+        console.error("Erro ao ler dados do localStorage:", e);
+        cakesData = JSON.parse(JSON.stringify(DEFAULT_CAKES));
+    }
+
+    let activeCakeId = null;
+
+    // ==========================================
     // 1. GERENCIAMENTO DE ABAS
     // ==========================================
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -16,18 +197,23 @@ document.addEventListener('DOMContentLoaded', function() {
             button.classList.add('active');
             const targetTab = button.getAttribute('data-tab');
             document.getElementById(`tab-${targetTab}`).classList.add('active');
+
+            // Voltar para a lista se alternar para a aba de Custo & Preço
+            if (targetTab === 'custo-preco') {
+                activeCakeId = null;
+                document.getElementById('subview-cake-details').classList.add('hidden');
+                document.getElementById('subview-cake-list').classList.remove('hidden');
+            }
         });
     });
 
     // ==========================================
     // HELPERS DE FORMATAÇÃO DE MOEDA (REAL)
     // ==========================================
-    // Formatação padrão com decimais (ex: R$ 15,50)
     function formatCurrency(value) {
         return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    // Formatação para valores inteiros limpos (ex: R$ 6.480)
     function formatCurrencyWhole(value) {
         return value.toLocaleString('pt-BR', { 
             style: 'currency', 
@@ -60,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
-    // 2. ABA 1: CUSTO & PREÇO
+    // 2. ABA 1: CUSTO & PREÇO (SUBVIEWS E CÁLCULOS)
     // ==========================================
     const inputFarinha = document.getElementById('input-farinha');
     const inputOvos = document.getElementById('input-ovos');
@@ -91,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function calculateCostAndPrice() {
-        // Obter valores numéricos limpando entradas inválidas e negativas (Math.max(0))
+        // Obter valores numéricos
         const farinha = Math.max(0, parseFloat(inputFarinha.value) || 0);
         const ovos = Math.max(0, parseFloat(inputOvos.value) || 0);
         const acucarManteiga = Math.max(0, parseFloat(inputAcucarManteiga.value) || 0);
@@ -113,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const precoSugerido = custoTotal / (1 - margemDecimal);
         const lucroBolo = precoSugerido - custoTotal;
         
-        // Integrado dinamicamente com a capacidade definida na Aba 2
+        // Integrado dinamicamente com a capacidade
         const volumeMes = getVolumeMes();
         const lucroMensal = lucroBolo * volumeMes;
 
@@ -127,12 +313,11 @@ document.addEventListener('DOMContentLoaded', function() {
         priceSugerido.textContent = formatCurrency(precoSugerido);
         priceLucroBolo.textContent = formatCurrency(lucroBolo);
         
-        // Atualizar texto do rótulo e valor de lucro mensal integrado
         labelLucroMensal.textContent = `Lucro em ${volumeMes} bolos/mês`;
         priceLucroMensal.textContent = formatCurrencyWhole(Math.round(lucroMensal));
     }
 
-    // Adicionar escuta nos inputs da calculadora
+    // Escuta nos inputs da calculadora
     const costInputs = [
         inputFarinha, inputOvos, inputAcucarManteiga, inputOutros,
         inputGas, inputEmbalagem, inputTempo, inputValorHora, inputMargin
@@ -140,6 +325,166 @@ document.addEventListener('DOMContentLoaded', function() {
     costInputs.forEach(input => {
         input.addEventListener('input', calculateCostAndPrice);
     });
+
+    // Renderizar a grade de bolos
+    const cakesGrid = document.querySelector('.cakes-grid');
+    function renderCakesGrid() {
+        if (!cakesGrid) return;
+        cakesGrid.innerHTML = '';
+        
+        Object.keys(cakesData).forEach(key => {
+            const cake = cakesData[key];
+            
+            // Calcular margem de lucro real atual
+            const ingredientsCost = cake.farinha + cake.ovos + cake.acucarManteiga + cake.outros;
+            const operationalCost = cake.gas + cake.embalagem;
+            const laborCost = (cake.tempo / 60) * cake.valorHora;
+            const totalCost = ingredientsCost + operationalCost + laborCost;
+            
+            const price = cake.price;
+            let profitPercent = 0;
+            let profitClass = 'profit-none';
+            let profitText = 'Sem lucro';
+            
+            if (price > 0) {
+                const profitAmount = price - totalCost;
+                profitPercent = Math.round((profitAmount / price) * 100);
+                if (profitPercent > 0) {
+                    profitClass = 'profit-positive';
+                    profitText = `+${profitPercent}% de Lucro`;
+                } else if (profitPercent < 0) {
+                    profitClass = 'profit-negative';
+                    profitText = `${profitPercent}% de Prejuízo`;
+                }
+            }
+            
+            const card = document.createElement('div');
+            card.className = 'cake-card';
+            card.dataset.id = cake.id;
+            
+            card.innerHTML = `
+                <div class="cake-card-img-wrapper">
+                    ${cake.tag ? `<span class="cake-card-tag">${cake.tag}</span>` : ''}
+                    <img src="${cake.image}" alt="${cake.name}" class="cake-card-img" onerror="this.src='assets/images/logo_icon.png'">
+                </div>
+                <div class="cake-card-content">
+                    <span class="cake-card-category">${cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce'}</span>
+                    <h4 class="cake-card-title">${cake.name}</h4>
+                    <div class="cake-card-footer">
+                        <span class="cake-card-price">${formatCurrency(cake.price)}</span>
+                        <span class="profit-badge ${profitClass}">${profitText}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                selectCake(cake.id);
+            });
+            
+            cakesGrid.appendChild(card);
+        });
+        
+        // Adicionar card especial 'TOTAL DO DIA'
+        const totalCard = document.createElement('div');
+        totalCard.className = 'cake-card cake-card-total';
+        totalCard.id = 'card-total-dia';
+        totalCard.innerHTML = `
+            <div class="total-card-icon">📊</div>
+            <h4 class="total-card-title">TOTAL DO DIA</h4>
+            <p class="total-card-subtext">Atualizar diariamente as vendas</p>
+        `;
+        totalCard.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showToast('Função de Sumário de Faturamento será liberada em breve!');
+        });
+        cakesGrid.appendChild(totalCard);
+    }
+
+    // Selecionar um bolo e abrir subview de detalhes
+    function selectCake(cakeId) {
+        const cake = cakesData[cakeId];
+        if (!cake) return;
+        
+        activeCakeId = cakeId;
+        
+        // Alternar subviews
+        document.getElementById('subview-cake-list').classList.add('hidden');
+        document.getElementById('subview-cake-details').classList.remove('hidden');
+        
+        // Preencher informações do cabeçalho
+        document.getElementById('active-cake-name').textContent = cake.name;
+        document.getElementById('active-cake-image').src = cake.image;
+        document.getElementById('active-cake-category').textContent = cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce';
+        
+        // Preencher inputs do formulário
+        inputFarinha.value = cake.farinha.toFixed(2);
+        inputOvos.value = cake.ovos.toFixed(2);
+        inputAcucarManteiga.value = cake.acucarManteiga.toFixed(2);
+        inputOutros.value = cake.outros.toFixed(2);
+        inputGas.value = cake.gas.toFixed(2);
+        inputEmbalagem.value = cake.embalagem.toFixed(2);
+        inputTempo.value = cake.tempo;
+        inputValorHora.value = cake.valorHora.toFixed(2);
+        inputMargin.value = cake.margin;
+        
+        // Atualizar rastro do slider da margem
+        updateSliderTrack(inputMargin);
+        
+        // Recalcular custos e precificação sugerida
+        calculateCostAndPrice();
+    }
+
+    // Botão de Voltar para a lista
+    const btnBackToList = document.getElementById('btn-back-to-list');
+    if (btnBackToList) {
+        btnBackToList.addEventListener('click', () => {
+            activeCakeId = null;
+            document.getElementById('subview-cake-details').classList.add('hidden');
+            document.getElementById('subview-cake-list').classList.remove('hidden');
+        });
+    }
+
+    // Botão de Salvar Novo Preço
+    const btnSavePrice = document.getElementById('btn-save-price');
+    if (btnSavePrice) {
+        btnSavePrice.addEventListener('click', () => {
+            if (!activeCakeId) return;
+            
+            const farinha = Math.max(0, parseFloat(inputFarinha.value) || 0);
+            const ovos = Math.max(0, parseFloat(inputOvos.value) || 0);
+            const acucarManteiga = Math.max(0, parseFloat(inputAcucarManteiga.value) || 0);
+            const outros = Math.max(0, parseFloat(inputOutros.value) || 0);
+            const gas = Math.max(0, parseFloat(inputGas.value) || 0);
+            const embalagem = Math.max(0, parseFloat(inputEmbalagem.value) || 0);
+            const tempo = Math.max(0, parseFloat(inputTempo.value) || 0);
+            const valorHora = Math.max(0, parseFloat(inputValorHora.value) || 0);
+            const margemPercentual = Math.max(0, parseFloat(inputMargin.value) || 0);
+            
+            const totalCost = farinha + ovos + acucarManteiga + outros + gas + embalagem + (tempo / 60) * valorHora;
+            const margemDecimal = Math.min(0.99, margemPercentual / 100);
+            const suggested = totalCost / (1 - margemDecimal);
+            
+            // Atualizar base local
+            cakesData[activeCakeId].farinha = farinha;
+            cakesData[activeCakeId].ovos = ovos;
+            cakesData[activeCakeId].acucarManteiga = acucarManteiga;
+            cakesData[activeCakeId].outros = outros;
+            cakesData[activeCakeId].gas = gas;
+            cakesData[activeCakeId].embalagem = embalagem;
+            cakesData[activeCakeId].tempo = tempo;
+            cakesData[activeCakeId].valorHora = valorHora;
+            cakesData[activeCakeId].margin = margemPercentual;
+            cakesData[activeCakeId].price = parseFloat(suggested.toFixed(2));
+            
+            // Persistir no localStorage
+            localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(cakesData));
+            
+            showToast('Preço atualizado com sucesso!');
+            
+            // Recalcular e renderizar lista novamente
+            renderCakesGrid();
+        });
+    }
 
     // ==========================================
     // 3. ABA 2: CAPACIDADE
@@ -167,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const bolosDia = Math.max(0, parseInt(inputBolosDia.value) || 0);
         const precoMedio = Math.max(0, parseFloat(inputPrecoMedio.value) || 0);
 
-        // Cálculos de capacidade
+        // Cálculos
         const bolosSemana = diasTrabalho * bolosDia;
         const bolosMes = bolosSemana * 4;
         const faturamentoMensal = bolosMes * precoMedio;
@@ -182,13 +527,13 @@ document.addEventListener('DOMContentLoaded', function() {
         outBolosMes.textContent = bolosMes;
         outFaturamentoMensal.textContent = formatCurrencyWhole(faturamentoMensal);
 
-        // Atualizar cenários de crescimento baseados no preço médio
+        // Atualizar cenários de crescimento
         scenAtual.textContent = `${formatCurrencyWhole(20 * precoMedio)}/mês`;
         scenInicio.textContent = `${formatCurrencyWhole(80 * precoMedio)}/mês`;
         scenEventos.textContent = `${formatCurrencyWhole(120 * precoMedio)}/mês`;
         scenIfood.textContent = `${formatCurrencyWhole(200 * precoMedio)}/mês`;
 
-        // Recalcular custos também, pois a quantidade mensal mudou
+        // Recalcular custos e faturamento da aba 1 se houver bolo ativo
         calculateCostAndPrice();
     }
 
@@ -204,12 +549,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputPctEventos = document.getElementById('input-pct-eventos');
     const inputPctIfood = document.getElementById('input-pct-ifood');
 
-    // Textos de Porcentagem
     const pctColegas = document.getElementById('pct-colegas');
     const pctEventos = document.getElementById('pct-eventos');
     const pctIfood = document.getElementById('pct-ifood');
 
-    // Lógica para balancear os sliders para que a soma seja sempre 100%
     function balanceSliders(changedInput) {
         let valColegas = parseInt(inputPctColegas.value) || 0;
         let valEventos = parseInt(inputPctEventos.value) || 0;
@@ -220,7 +563,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (id === 'input-pct-colegas') {
             const rem = 100 - valColegas;
             const currentOthersSum = valEventos + valIfood;
-            
             if (currentOthersSum > 0) {
                 valEventos = Math.round(rem * (valEventos / currentOthersSum));
                 valIfood = rem - valEventos;
@@ -231,7 +573,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (id === 'input-pct-eventos') {
             const rem = 100 - valEventos;
             const currentOthersSum = valColegas + valIfood;
-            
             if (currentOthersSum > 0) {
                 valColegas = Math.round(rem * (valColegas / currentOthersSum));
                 valIfood = rem - valColegas;
@@ -242,7 +583,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (id === 'input-pct-ifood') {
             const rem = 100 - valIfood;
             const currentOthersSum = valColegas + valEventos;
-            
             if (currentOthersSum > 0) {
                 valColegas = Math.round(rem * (valColegas / currentOthersSum));
                 valEventos = rem - valColegas;
@@ -252,19 +592,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Set values back to inputs
         inputPctColegas.value = valColegas;
         inputPctEventos.value = valEventos;
         inputPctIfood.value = valIfood;
 
-        // Update displays
         pctColegas.textContent = `${valColegas}%`;
         pctEventos.textContent = `${valEventos}%`;
         pctIfood.textContent = `${valIfood}%`;
 
-
-
-        // Atualizar preenchimento de track para os três sliders
         updateSliderTrack(inputPctColegas);
         updateSliderTrack(inputPctEventos);
         updateSliderTrack(inputPctIfood);
@@ -280,5 +615,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
     // EXECUÇÃO INICIAL
     // ==========================================
-    calculateCapacity(); // Executa primeiro para definir o volumeMes inicial para o calculateCostAndPrice()
+    calculateCapacity();
+    renderCakesGrid();
 });
