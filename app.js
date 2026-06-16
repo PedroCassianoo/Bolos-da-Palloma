@@ -74,6 +74,21 @@ const PRODUCTS = [
     }
 ];
 
+// Sobrescreve os preços padrão com os customizados do localStorage se existirem
+try {
+    const customCakes = localStorage.getItem('bolos_da_palloma_cakes');
+    if (customCakes) {
+        const customCakesData = JSON.parse(customCakes);
+        PRODUCTS.forEach(product => {
+            if (customCakesData[product.id] && typeof customCakesData[product.id].price === 'number') {
+                product.price = customCakesData[product.id].price;
+            }
+        });
+    }
+} catch (e) {
+    console.error('Erro ao carregar preços customizados no cardápio:', e);
+}
+
 // WhatsApp oficial da Palloma
 const WHATSAPP_NUMBER = '5519982354323';
 
