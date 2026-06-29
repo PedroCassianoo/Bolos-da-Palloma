@@ -160,24 +160,88 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // ==========================================
+    // CONFIGURAÇÃO DO SUPABASE
+    // ==========================================
+    const SUPABASE_URL = 'https://iqakaoawviocutlcqnho.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_f9bxbWX2lzgkCNLkFzaYkw_hlubeV3U';
+    let supabaseClient = null;
+
+    if (typeof supabase !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+
     let cakesData = {};
-    try {
-        const saved = localStorage.getItem('bolos_da_palloma_cakes');
-        if (saved) {
-            cakesData = JSON.parse(saved);
-            // Garantir que todos os bolos padrão existam se algum novo for adicionado
-            Object.keys(DEFAULT_CAKES).forEach(key => {
-                if (!cakesData[key]) {
-                    cakesData[key] = { ...DEFAULT_CAKES[key] };
-                }
-            });
-        } else {
+
+    function loadLocalCakesData() {
+        try {
+            const saved = localStorage.getItem('bolos_da_palloma_cakes');
+            if (saved) {
+                cakesData = JSON.parse(saved);
+                // Garantir que todos os bolos padrão existam se algum novo for adicionado
+                Object.keys(DEFAULT_CAKES).forEach(key => {
+                    if (!cakesData[key]) {
+                        cakesData[key] = { ...DEFAULT_CAKES[key] };
+                    }
+                });
+            } else {
+                cakesData = JSON.parse(JSON.stringify(DEFAULT_CAKES));
+            }
+        } catch (e) {
+            console.error("Erro ao ler dados do localStorage:", e);
             cakesData = JSON.parse(JSON.stringify(DEFAULT_CAKES));
         }
-    } catch (e) {
-        console.error("Erro ao ler dados do localStorage:", e);
-        cakesData = JSON.parse(JSON.stringify(DEFAULT_CAKES));
     }
+
+    async function loadRemoteCakesData() {
+        if (!supabaseClient) return;
+        try {
+            const { data, error } = await supabaseClient
+                .from('Custos & Preços')
+                .select('value')
+                .eq('key', 'bolos_da_palloma_cakes')
+                .maybeSingle();
+
+            if (error) throw error;
+
+            if (data && data.value) {
+                cakesData = data.value;
+                // Garantir que todos os bolos padrão existam
+                Object.keys(DEFAULT_CAKES).forEach(key => {
+                    if (!cakesData[key]) {
+                        cakesData[key] = { ...DEFAULT_CAKES[key] };
+                    }
+                });
+                // Salvar no localStorage local
+                localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(cakesData));
+                
+                // Recalcular faturamento e renderizar com dados atualizados
+                calculateCapacity();
+                renderCakesGrid();
+            }
+        } catch (e) {
+            console.error("Erro ao buscar dados do Supabase:", e);
+        }
+    }
+
+    async function saveRemoteCakesData() {
+        if (!supabaseClient) return;
+        try {
+            const { error } = await supabaseClient
+                .from('Custos & Preços')
+                .upsert({ key: 'bolos_da_palloma_cakes', value: cakesData });
+
+            if (error) throw error;
+        } catch (e) {
+            console.error("Erro ao salvar dados no Supabase:", e);
+            showToast("Erro ao sincronizar com a nuvem!");
+        }
+    }
+
+    // Carrega local imediatamente (para evitar flash de tela em branco)
+    loadLocalCakesData();
+    // Busca dados atualizados da nuvem de forma assíncrona
+    loadRemoteCakesData();
 
     let activeCakeId = null;
 
@@ -478,6 +542,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Persistir no localStorage
             localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(cakesData));
+            
+            // Persistir no Supabase
+            saveRemoteCakesData();
             
             showToast('Preço atualizado com sucesso!');
             

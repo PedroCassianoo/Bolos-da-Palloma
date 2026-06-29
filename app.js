@@ -74,19 +74,58 @@ const PRODUCTS = [
     }
 ];
 
-// Sobrescreve os preços padrão com os customizados do localStorage se existirem
-try {
-    const customCakes = localStorage.getItem('bolos_da_palloma_cakes');
-    if (customCakes) {
-        const customCakesData = JSON.parse(customCakes);
-        PRODUCTS.forEach(product => {
-            if (customCakesData[product.id] && typeof customCakesData[product.id].price === 'number') {
-                product.price = customCakesData[product.id].price;
-            }
-        });
+// Configuração do Supabase
+const SUPABASE_URL = 'https://iqakaoawviocutlcqnho.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_f9bxbWX2lzgkCNLkFzaYkw_hlubeV3U';
+let supabaseClient = null;
+
+if (typeof supabase !== 'undefined') {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+// 1. Carrega do localStorage imediatamente (síncrono) para evitar flashes de preços antigos
+function loadLocalPrices() {
+    try {
+        const customCakes = localStorage.getItem('bolos_da_palloma_cakes');
+        if (customCakes) {
+            const customCakesData = JSON.parse(customCakes);
+            PRODUCTS.forEach(product => {
+                if (customCakesData[product.id] && typeof customCakesData[product.id].price === 'number') {
+                    product.price = customCakesData[product.id].price;
+                }
+            });
+        }
+    } catch (e) {
+        console.error('Erro ao carregar preços locais no cardápio:', e);
     }
-} catch (e) {
-    console.error('Erro ao carregar preços customizados no cardápio:', e);
+}
+loadLocalPrices();
+
+// 2. Carrega do Supabase para atualizar com a versão mais recente da nuvem
+async function loadRemotePrices() {
+    if (!supabaseClient) return;
+    try {
+        const { data, error } = await supabaseClient
+            .from('Custos & Preços')
+            .select('value')
+            .eq('key', 'bolos_da_palloma_cakes')
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (data && data.value) {
+            const customCakesData = data.value;
+            PRODUCTS.forEach(product => {
+                if (customCakesData[product.id] && typeof customCakesData[product.id].price === 'number') {
+                    product.price = customCakesData[product.id].price;
+                }
+            });
+            // Atualiza o cache local
+            localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(customCakesData));
+        }
+    } catch (e) {
+        console.error('Erro ao carregar preços remotos do Supabase:', e);
+    }
 }
 
 // WhatsApp oficial da Palloma
@@ -133,7 +172,9 @@ const summaryTotal = document.getElementById('summary-total');
 const btnSubmitOrder = document.getElementById('btn-submit-order');
 
 // Inicialização da Página
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Carrega preços atualizados da nuvem antes de renderizar
+    await loadRemotePrices();
     renderMenu('all');
     setupEventListeners();
     updateCartUI();
