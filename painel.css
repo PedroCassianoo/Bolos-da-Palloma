@@ -846,7 +846,8 @@ body {
 .cake-card-img-wrapper {
     position: relative;
     width: 100%;
-    height: 160px;
+    aspect-ratio: 16 / 9;
+    height: auto;
     background-color: #fbf8f3;
     overflow: hidden;
     display: flex;
@@ -1143,4 +1144,79 @@ body {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+
+/* Responsividade para telas grandes (Desktop >= 1024px) */
+@media (min-width: 1024px) {
+    body {
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .dashboard-container {
+        width: 100%;
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+
+    .dashboard-header {
+        height: 150px;
+        padding: 16px 32px 8px 32px;
+        box-sizing: border-box;
+    }
+
+    .dashboard-tabs {
+        margin-top: 16px;
+    }
+
+    .dashboard-footer {
+        height: 50px;
+        padding: 12px 16px;
+        box-sizing: border-box;
+    }
+
+    .dashboard-content {
+        height: calc(100vh - 200px); /* 150px header + 50px footer = 200px */
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    /* Custom Scrollbar for dashboard content on desktop */
+    .dashboard-content::-webkit-scrollbar {
+        width: 8px;
+    }
+    .dashboard-content::-webkit-scrollbar-track {
+        background: var(--bg-cream);
+    }
+    .dashboard-content::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: var(--radius-full);
+    }
+
+    /* Ajustes das Sub-grades para espalhar harmoniosamente no desktop */
+    .results-subgrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .results-subgrid .span-2col {
+        grid-column: span 2;
+    }
+
+    .capacity-results-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .capacity-results-grid .highlight-tile {
+        grid-column: span 1;
+    }
+
+    /* Distribuição igual ao cardápio de clientes no desktop */
+    .cakes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
 

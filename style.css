@@ -171,6 +171,7 @@ body.no-scroll {
     overflow-x: auto;
     white-space: nowrap;
     background-color: var(--bg-cream);
+    position: relative;
     z-index: 10;
     scrollbar-width: none; /* Firefox */
 }
@@ -203,10 +204,18 @@ body.no-scroll {
     box-shadow: 0 4px 12px rgba(201, 122, 62, 0.2);
 }
 
-/* Main Content area */
-.menu-content {
+/* Scrollable Content Wrapper */
+.scrollable-content {
     flex: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-cream);
+}
+
+/* Main Content area */
+.menu-content {
+    overflow-y: visible;
     padding: 0 20px 100px 20px; /* Margem inferior para nao cortar conteudo atras da barra nav */
 }
 
@@ -995,4 +1004,218 @@ a:focus-visible {
 
 .hidden {
     display: none !important;
+}
+
+/* Responsividade Desktop (Width >= 1024px) */
+@media (min-width: 1024px) {
+    /* Custom Scrollbar for cardápio content on desktop */
+    .scrollable-content::-webkit-scrollbar {
+        width: 8px;
+    }
+    .scrollable-content::-webkit-scrollbar-track {
+        background: var(--bg-cream);
+    }
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: var(--radius-full);
+    }
+
+    /* App Container to occupy full screen */
+    .app-container {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* Scaling Header */
+    .app-header {
+        padding: 32px 40px;
+    }
+    .brand-logo-icon {
+        height: 90px;
+    }
+    .brand-logo-img {
+        height: 40px;
+    }
+    .brand-subtitle {
+        font-size: 1.1rem;
+    }
+    .contact-info {
+        font-size: 0.95rem;
+    }
+
+    /* Centering and Scaling Categories Navigation */
+    .categories-nav {
+        justify-content: center;
+        gap: 16px;
+        padding: 20px;
+    }
+    .category-btn {
+        font-size: 1rem;
+        padding: 12px 24px;
+    }
+
+    /* Scaling Main Content and Grid */
+    .menu-content {
+        padding: 20px 40px 120px 40px;
+    }
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Scaling Product Cards */
+    .product-image-wrapper {
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+    .product-title {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+    .product-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 18px;
+    }
+    .product-price {
+        font-size: 1.3rem;
+    }
+    .btn-primary {
+        font-size: 0.95rem;
+        height: 40px;
+        padding: 0 22px;
+    }
+    .quantity-selector {
+        height: 40px;
+    }
+    .qty-btn {
+        width: 40px;
+        height: 40px;
+    }
+    .qty-number {
+        font-size: 1rem;
+    }
+
+    /* Centered Info Modal on Desktop */
+    .info-modal {
+        max-width: 550px;
+        width: 90%;
+        max-height: 85%;
+    }
+    .info-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    .info-section p {
+        font-size: 0.9rem;
+        padding-left: 32px;
+    }
+    .contact-link-wrapper {
+        padding-left: 32px;
+    }
+    .contact-link {
+        font-size: 0.95rem;
+    }
+    .notice-highlight {
+        font-size: 0.85rem;
+        padding: 10px 14px;
+    }
+    .modal-header h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Bottom Nav Centering & Scaling */
+    .bottom-nav {
+        justify-content: center;
+        gap: 80px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        min-height: 80px;
+    }
+    .nav-item {
+        flex: none;
+        width: 120px;
+        font-size: 0.85rem;
+        gap: 6px;
+    }
+    .nav-icon {
+        width: 26px;
+        height: 26px;
+    }
+    .cart-badge {
+        font-size: 0.75rem;
+        min-width: 20px;
+        height: 20px;
+        top: -8px;
+        right: -12px;
+    }
+
+    /* Cart Drawer Sliding from Right on Desktop */
+    .cart-drawer {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: auto;
+        width: 450px;
+        height: 100%;
+        border-radius: 0;
+        border-left: 1px solid rgba(181, 111, 51, 0.15);
+        transform: translateX(100%);
+    }
+    .cart-drawer.active {
+        transform: translateX(0);
+    }
+    .drawer-header {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .drawer-handle {
+        display: none;
+    }
+
+    /* Scaling Cart Drawer Elements */
+    .drawer-title-row h2 {
+        font-size: 1.5rem;
+    }
+    .cart-item-name {
+        font-size: 1rem;
+    }
+    .cart-item-price {
+        font-size: 0.9rem;
+    }
+    .checkout-form h3 {
+        font-size: 1.25rem;
+    }
+    .form-group label {
+        font-size: 0.85rem;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="time"],
+    .form-group select {
+        font-size: 0.95rem;
+        padding: 14px 18px;
+    }
+    .radio-label {
+        font-size: 0.95rem;
+        padding: 12px 0;
+    }
+    .delivery-notice, .pickup-notice {
+        font-size: 0.8rem;
+    }
+    .summary-line {
+        font-size: 0.95rem;
+    }
+    .summary-line.total-line {
+        font-size: 1.2rem;
+    }
+    .btn-whatsapp {
+        padding: 16px;
+        font-size: 1.05rem;
+    }
 }
