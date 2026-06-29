@@ -103,7 +103,7 @@ loadLocalPrices();
 
 // 2. Carrega do Supabase para atualizar com a versão mais recente da nuvem
 async function loadRemotePrices() {
-    if (!supabaseClient) return;
+    if (!supabaseClient) return false;
     try {
         const { data, error } = await supabaseClient
             .from('Custos & Preços')
@@ -115,17 +115,25 @@ async function loadRemotePrices() {
 
         if (data && data.value) {
             const customCakesData = data.value;
+            let pricesChanged = false;
             PRODUCTS.forEach(product => {
                 if (customCakesData[product.id] && typeof customCakesData[product.id].price === 'number') {
-                    product.price = customCakesData[product.id].price;
+                    if (product.price !== customCakesData[product.id].price) {
+                        product.price = customCakesData[product.id].price;
+                        pricesChanged = true;
+                    }
                 }
             });
-            // Atualiza o cache local
-            localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(customCakesData));
+            if (pricesChanged) {
+                // Atualiza o cache local
+                localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(customCakesData));
+                return true;
+            }
         }
     } catch (e) {
         console.error('Erro ao carregar preços remotos do Supabase:', e);
     }
+    return false;
 }
 
 // WhatsApp oficial da Palloma
@@ -171,14 +179,35 @@ const summaryDelivery = document.getElementById('summary-delivery');
 const summaryTotal = document.getElementById('summary-total');
 const btnSubmitOrder = document.getElementById('btn-submit-order');
 
+// Atualização pontual de preços no DOM para evitar re-renderização completa e perda de estado (A11y/CLS)
+function updateDOMPrices() {
+    PRODUCTS.forEach(product => {
+        const cards = document.querySelectorAll(`.product-card[data-id="${product.id}"]`);
+        cards.forEach(card => {
+            const priceEl = card.querySelector('.product-price');
+            if (priceEl) {
+                priceEl.textContent = product.price.toFixed(2).replace('.', ',');
+            }
+        });
+    });
+}
+
 // Inicialização da Página
-document.addEventListener('DOMContentLoaded', async () => {
-    // Carrega preços atualizados da nuvem antes de renderizar
-    await loadRemotePrices();
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Renderiza o menu imediatamente com os preços locais (TTI instantâneo e 0 CLS)
     renderMenu('all');
     setupEventListeners();
     updateCartUI();
     setupMinDateConstraint();
+
+    // 2. Carrega e sincroniza dados em segundo plano (background thread simulation)
+    loadRemotePrices().then(changed => {
+        if (changed) {
+            // Se houve mudança real, atualiza os preços no DOM pontualmente e a UI do carrinho
+            updateDOMPrices();
+            updateCartUI();
+        }
+    });
 });
 
 // Define a restrição de data mínima para amanhã (antecedência mínima de 24h)

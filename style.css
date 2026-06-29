@@ -55,6 +55,7 @@ body.no-scroll {
 .app-container {
     width: 100%;
     max-width: 480px;
+    height: 100vh;
     height: 100dvh;
     background-color: var(--bg-cream);
     box-shadow: var(--shadow-lg);
@@ -174,6 +175,7 @@ body.no-scroll {
     position: relative;
     z-index: 10;
     scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling iOS */
 }
 
 .categories-nav::-webkit-scrollbar {
@@ -187,10 +189,14 @@ body.no-scroll {
     font-family: var(--font-sans);
     font-weight: 600;
     font-size: 0.85rem;
-    padding: 10px 18px;
+    padding: 0 18px;
+    min-height: 44px;
     border-radius: var(--radius-full);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .category-btn:active {
@@ -211,6 +217,7 @@ body.no-scroll {
     display: flex;
     flex-direction: column;
     background-color: var(--bg-cream);
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling iOS */
 }
 
 /* Main Content area */
@@ -220,9 +227,15 @@ body.no-scroll {
 }
 
 .menu-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 16px;
+}
+@media (min-width: 480px) {
+    .menu-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
 }
 
 /* Product Card */
@@ -240,7 +253,7 @@ body.no-scroll {
 .product-image-wrapper {
     position: relative;
     width: 100%;
-    height: 180px;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
@@ -318,7 +331,7 @@ body.no-scroll {
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 0.85rem;
-    height: 36px;
+    height: 44px;
     padding: 0 18px;
     border-radius: var(--radius-full);
     cursor: pointer;
@@ -341,7 +354,7 @@ body.no-scroll {
     gap: 8px;
     background-color: var(--accent-soft);
     border-radius: var(--radius-full);
-    height: 36px;
+    height: 44px;
     padding: 0 8px;
     box-sizing: border-box;
 }
@@ -349,8 +362,8 @@ body.no-scroll {
 .qty-btn {
     background: none;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background-color: var(--white);
     color: var(--primary);
@@ -536,8 +549,8 @@ body.no-scroll {
 .close-drawer-btn {
     background: none;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background-color: var(--bg-card);
     display: flex;
@@ -645,6 +658,7 @@ body.no-scroll {
 }
 
 .form-group input[type="text"],
+.form-group input[type="date"],
 .form-group input[type="time"],
 .form-group select {
     width: 100%;
@@ -654,7 +668,7 @@ body.no-scroll {
     background-color: var(--white);
     color: var(--text-dark);
     font-family: var(--font-sans);
-    font-size: 0.9rem;
+    font-size: 16px; /* Evita zoom automático no iOS Safari */
     outline: none;
     transition: border-color 0.3s ease;
 }
@@ -884,8 +898,8 @@ a:focus-visible {
 .close-modal-btn {
     background: none;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background-color: var(--bg-card);
     display: flex;
@@ -1062,18 +1076,12 @@ a:focus-visible {
         padding: 20px 40px 120px 40px;
     }
     .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 24px;
         max-width: 1200px;
         margin: 0 auto;
     }
 
     /* Scaling Product Cards */
-    .product-image-wrapper {
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
     .product-title {
         font-size: 1.4rem;
         margin-bottom: 8px;
@@ -1088,15 +1096,15 @@ a:focus-visible {
     }
     .btn-primary {
         font-size: 0.95rem;
-        height: 40px;
+        height: 44px;
         padding: 0 22px;
     }
     .quantity-selector {
-        height: 40px;
+        height: 44px;
     }
     .qty-btn {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
     }
     .qty-number {
         font-size: 1rem;
