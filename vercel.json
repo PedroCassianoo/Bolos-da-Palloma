@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "painel-bolos-da-palloma.vercel.app"
+        }
+      ],
+      "destination": "/painel.html"
+    }
+  ]
+}
