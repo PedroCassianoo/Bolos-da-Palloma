@@ -1064,7 +1064,7 @@ a:focus-visible {
     .categories-nav {
         justify-content: center;
         gap: 16px;
-        padding: 20px;
+        padding: 32px 20px 20px 20px;
     }
     .category-btn {
         font-size: 1rem;
