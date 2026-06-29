@@ -205,19 +205,28 @@ document.addEventListener('DOMContentLoaded', function() {
             if (error) throw error;
 
             if (data && data.value) {
-                cakesData = data.value;
+                const remoteCakes = data.value;
                 // Garantir que todos os bolos padrão existam
                 Object.keys(DEFAULT_CAKES).forEach(key => {
-                    if (!cakesData[key]) {
-                        cakesData[key] = { ...DEFAULT_CAKES[key] };
+                    if (!remoteCakes[key]) {
+                        remoteCakes[key] = { ...DEFAULT_CAKES[key] };
                     }
                 });
-                // Salvar no localStorage local
-                localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(cakesData));
-                
-                // Recalcular faturamento e renderizar com dados atualizados
-                calculateCapacity();
-                renderCakesGrid();
+
+                // Comparação de string JSON para evitar reflows e re-renders se os dados forem idênticos
+                const localStr = JSON.stringify(cakesData);
+                const remoteStr = JSON.stringify(remoteCakes);
+
+                if (localStr !== remoteStr) {
+                    cakesData = remoteCakes;
+                    // Salvar no localStorage local
+                    localStorage.setItem('bolos_da_palloma_cakes', JSON.stringify(cakesData));
+                    
+                    // Recalcular faturamento e renderizar com dados atualizados
+                    calculateCapacity();
+                    renderCakesGrid();
+                    showToast("Dados sincronizados com a nuvem!");
+                }
             }
         } catch (e) {
             console.error("Erro ao buscar dados do Supabase:", e);
@@ -678,6 +687,19 @@ document.addEventListener('DOMContentLoaded', function() {
             balanceSliders(this);
         });
     });
+
+    // Otimização de teclado para mobile: oculta o footer ao abrir o teclado para liberar espaço de digitação
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            const footer = document.querySelector('.dashboard-footer');
+            if (!footer) return;
+            if (window.visualViewport.height < window.innerHeight * 0.8) {
+                footer.classList.add('hidden');
+            } else {
+                footer.classList.remove('hidden');
+            }
+        });
+    }
 
     // ==========================================
     // EXECUÇÃO INICIAL
