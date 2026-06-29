@@ -168,7 +168,7 @@ body.no-scroll {
 .categories-nav {
     display: flex;
     gap: 8px;
-    padding: 16px 20px;
+    padding: 28px 20px 16px 20px;
     overflow-x: auto;
     white-space: nowrap;
     background-color: var(--bg-cream);
