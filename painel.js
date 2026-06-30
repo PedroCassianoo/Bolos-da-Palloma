@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'cenoura-chocolate',
             name: 'Bolo de Cenoura com Brigadeiro',
             category: 'caseiros',
-            image: 'assets/images/bolo_cenoura.png',
+            image: 'assets/images/bolo_cenoura_brigadeiro.jpg',
             tag: 'Mais vendido',
             price: 28.00,
             farinha: 2.00,
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'vulcao-ninho-nutella',
             name: 'Bolo Vulcão de Ninho com Nutella',
             category: 'caseiros',
-            image: 'assets/images/bolo_vulcao.png',
+            image: 'assets/images/bolo_vulcao_ninho_nutella.jpg',
             tag: 'Destaque',
             price: 38.00,
             farinha: 2.50,
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'fuba-goiabada',
             name: 'Bolo de Fubá com Goiabada',
             category: 'caseiros',
-            image: 'assets/images/bolo_cenoura.png',
+            image: 'assets/images/bolo_fuba_goiabada.jpg',
             tag: 'Caseirinho',
             price: 24.00,
             farinha: 1.50,
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'trufado-chocolate',
             name: 'Bolo Trufado de Chocolate',
             category: 'confeitados',
-            image: 'assets/images/bolo_morango.png',
+            image: 'assets/images/bolo_trufado_chocolate.jpg',
             tag: 'Festa',
             price: 75.00,
             farinha: 4.00,
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'ninho-morango',
             name: 'Bolo Ninho com Morangos Frescos',
             category: 'confeitados',
-            image: 'assets/images/bolo_morango.png',
+            image: 'assets/images/bolo_ninho_morango.jpg',
             tag: 'Campeão de Pedidos',
             price: 80.00,
             farinha: 4.00,
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'red-velvet-cream',
             name: 'Bolo Red Velvet',
             category: 'confeitados',
-            image: 'assets/images/bolo_morango.png',
+            image: 'assets/images/bolo_red_velvet.jpg',
             tag: 'Premium',
             price: 85.00,
             farinha: 4.50,
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'copo-felicidade-ninho',
             name: 'Copo da Felicidade de Morango',
             category: 'doces',
-            image: 'assets/images/copo_felicidade.png',
+            image: 'assets/images/copo_felicidade_morango.jpg',
             tag: 'Sobremesa',
             price: 18.00,
             farinha: 1.00,
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'brownie-supremo',
             name: 'Brownie Supremo',
             category: 'doces',
-            image: 'assets/images/copo_felicidade.png',
+            image: 'assets/images/brownie_supremo.jpg',
             tag: 'Individual',
             price: 12.00,
             farinha: 0.80,
@@ -172,16 +172,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     let cakesData = {};
+    let activeCategoryFilter = 'all';
 
     function loadLocalCakesData() {
         try {
             const saved = localStorage.getItem('bolos_da_palloma_cakes');
             if (saved) {
-                cakesData = JSON.parse(saved);
+                let parsed = JSON.parse(saved);
+                if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                    parsed = {};
+                }
+                cakesData = parsed;
                 // Garantir que todos os bolos padrão existam se algum novo for adicionado
                 Object.keys(DEFAULT_CAKES).forEach(key => {
                     if (!cakesData[key]) {
                         cakesData[key] = { ...DEFAULT_CAKES[key] };
+                    } else {
+                        // Sempre garantir que usamos a imagem correta do DEFAULT_CAKES para evitar dados desatualizados no local storage
+                        cakesData[key].image = DEFAULT_CAKES[key].image;
                     }
                 });
             } else {
@@ -205,11 +213,17 @@ document.addEventListener('DOMContentLoaded', function() {
             if (error) throw error;
 
             if (data && data.value) {
-                const remoteCakes = data.value;
+                let remoteCakes = data.value;
+                if (remoteCakes === null || typeof remoteCakes !== 'object' || Array.isArray(remoteCakes)) {
+                    remoteCakes = {};
+                }
                 // Garantir que todos os bolos padrão existam
                 Object.keys(DEFAULT_CAKES).forEach(key => {
                     if (!remoteCakes[key]) {
                         remoteCakes[key] = { ...DEFAULT_CAKES[key] };
+                    } else {
+                        // Sempre garantir que usamos a imagem correta do DEFAULT_CAKES para evitar dados desatualizados da nuvem
+                        remoteCakes[key].image = DEFAULT_CAKES[key].image;
                     }
                 });
 
@@ -247,10 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Carrega local imediatamente (para evitar flash de tela em branco)
-    loadLocalCakesData();
-    // Busca dados atualizados da nuvem de forma assíncrona
-    loadRemoteCakesData();
+    // (A inicialização dos dados agora é feita após a autenticação do usuário no Supabase)
 
     let activeCakeId = null;
 
@@ -408,6 +419,12 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.keys(cakesData).forEach(key => {
             const cake = cakesData[key];
             
+            // Filtro de categoria
+            const cakeCategory = cake.category === 'caseiros' ? 'caseiro' : cake.category === 'confeitados' ? 'confeitado' : 'doce';
+            if (activeCategoryFilter !== 'all' && cakeCategory !== activeCategoryFilter) {
+                return;
+            }
+            
             // Calcular margem de lucro real atual
             const ingredientsCost = cake.farinha + cake.ovos + cake.acucarManteiga + cake.outros;
             const operationalCost = cake.gas + cake.embalagem;
@@ -424,10 +441,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 profitPercent = Math.round((profitAmount / price) * 100);
                 if (profitPercent > 0) {
                     profitClass = 'profit-positive';
-                    profitText = `+${profitPercent}% de Lucro`;
+                    profitText = `Lucro: ${profitPercent}%`;
                 } else if (profitPercent < 0) {
                     profitClass = 'profit-negative';
-                    profitText = `${profitPercent}% de Prejuízo`;
+                    profitText = `Prejuízo: ${Math.abs(profitPercent)}%`;
                 }
             }
             
@@ -435,20 +452,36 @@ document.addEventListener('DOMContentLoaded', function() {
             card.className = 'cake-card';
             card.dataset.id = cake.id;
             
+            const tagText = cake.tag || (cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce');
+
             card.innerHTML = `
                 <div class="cake-card-img-wrapper">
-                    ${cake.tag ? `<span class="cake-card-tag">${cake.tag}</span>` : ''}
+                    <span class="cake-card-tag">${tagText}</span>
                     <img src="${cake.image}" alt="${cake.name}" class="cake-card-img" onerror="this.src='assets/images/logo_icon.png'">
                 </div>
                 <div class="cake-card-content">
-                    <span class="cake-card-category">${cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce'}</span>
                     <h4 class="cake-card-title">${cake.name}</h4>
                     <div class="cake-card-footer">
                         <span class="cake-card-price">${formatCurrency(cake.price)}</span>
                         <span class="profit-badge ${profitClass}">${profitText}</span>
                     </div>
+                    <button class="cake-card-add-sale-btn" title="Registrar +1 Vendido">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16" style="stroke-width: 2.5;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        +1 Vendido
+                    </button>
                 </div>
             `;
+            
+            // Configurar botão de venda rápida
+            const btnSold = card.querySelector('.cake-card-add-sale-btn');
+            if (btnSold) {
+                btnSold.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Evita abrir os detalhes de precificação do bolo
+                    openQuickSaleModal(cake.id);
+                });
+            }
             
             card.addEventListener('click', () => {
                 selectCake(cake.id);
@@ -456,21 +489,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             cakesGrid.appendChild(card);
         });
-        
-        // Adicionar card especial 'TOTAL DO DIA'
-        const totalCard = document.createElement('div');
-        totalCard.className = 'cake-card cake-card-total';
-        totalCard.id = 'card-total-dia';
-        totalCard.innerHTML = `
-            <div class="total-card-icon">📊</div>
-            <h4 class="total-card-title">TOTAL DO DIA</h4>
-            <p class="total-card-subtext">Atualizar diariamente as vendas</p>
-        `;
-        totalCard.addEventListener('click', (e) => {
-            e.stopPropagation();
-            showToast('Função de Sumário de Faturamento será liberada em breve!');
-        });
-        cakesGrid.appendChild(totalCard);
     }
 
     // Selecionar um bolo e abrir subview de detalhes
@@ -559,6 +577,335 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Recalcular e renderizar lista novamente
             renderCakesGrid();
+        });
+    }
+
+    // ==========================================
+    // 2.2. FATURAMENTO E VENDAS (TOTAL DO DIA)
+    // ==========================================
+    let salesData = [];
+    
+    // Helper para obter a data local no formato YYYY-MM-DD
+    function getLocalDateString(date) {
+        const offset = date.getTimezoneOffset();
+        return new Date(date.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
+    }
+    
+    let activeSaleDate = getLocalDateString(new Date());
+    
+    // Carrega dados de vendas do Supabase
+    async function loadSalesData() {
+        if (!supabaseClient) return;
+        try {
+            const { data, error } = await supabaseClient
+                .from('vendas')
+                .select('*')
+                .order('data', { ascending: false })
+                .order('created_at', { ascending: false });
+                
+            if (error) throw error;
+            if (data) {
+                salesData = data;
+                updateTotalDiaCard();
+                renderDailySales(activeSaleDate);
+            }
+        } catch (e) {
+            console.error("Erro ao buscar vendas do Supabase:", e);
+        }
+    }
+    
+    // Atualiza o texto do Card "TOTAL DO DIA" na tela inicial e na sidebar
+    function updateTotalDiaCard() {
+        const todayStr = getLocalDateString(new Date());
+        const todaySales = salesData.filter(s => s.data === todayStr);
+        const todayTotalVal = todaySales.reduce((sum, s) => sum + parseFloat(s.valor_venda), 0);
+        const todayCount = todaySales.length;
+
+        // Card no grid (se ainda existir)
+        const totalCard = document.getElementById('card-total-dia');
+        if (totalCard) {
+            const valEl = totalCard.querySelector('.total-card-value');
+            const subtextEl = totalCard.querySelector('.total-card-subtext');
+            if (valEl) valEl.textContent = formatCurrency(todayTotalVal);
+            if (subtextEl) subtextEl.textContent = `${todayCount} venda${todayCount === 1 ? '' : 's'} hoje`;
+        }
+
+        // Elementos da Sidebar Premium
+        const sidebarValEl = document.getElementById('sidebar-revenue-amount');
+        const sidebarCountEl = document.getElementById('sidebar-total-count');
+        if (sidebarValEl) sidebarValEl.textContent = formatCurrency(todayTotalVal).replace('R$', '').trim();
+        if (sidebarCountEl) sidebarCountEl.textContent = `${todayCount} venda${todayCount === 1 ? '' : 's'}`;
+
+        // Renderizar a lista de vendas na sidebar
+        renderSidebarSales(todaySales);
+    }
+    
+    // Abre a subview de controle de faturamento
+    function openSalesSubview() {
+        document.getElementById('subview-cake-list').classList.add('hidden');
+        document.getElementById('subview-total-dia').classList.remove('hidden');
+        
+        // Preencher o select de produtos com os bolos ativos
+        const selectProduct = document.getElementById('select-sale-product');
+        selectProduct.innerHTML = '<option value="" disabled selected>Selecione o bolo/doce...</option>';
+        
+        Object.keys(cakesData).forEach(key => {
+            const cake = cakesData[key];
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = cake.name;
+            selectProduct.appendChild(option);
+        });
+        
+        // Inicializar input de data
+        const dateInput = document.getElementById('input-sale-date');
+        dateInput.value = activeSaleDate;
+        
+        // Renderizar vendas do dia
+        renderDailySales(activeSaleDate);
+    }
+    
+    // Voltar da subview de faturamento para o grid
+    const btnBackToListTotal = document.getElementById('btn-back-to-list-total');
+    if (btnBackToListTotal) {
+        btnBackToListTotal.addEventListener('click', () => {
+            document.getElementById('subview-total-dia').classList.add('hidden');
+            document.getElementById('subview-cake-list').classList.remove('hidden');
+        });
+    }
+    
+    // Escutar mudanças no select de produto para auto-preenchimento
+    const selectSaleProduct = document.getElementById('select-sale-product');
+    const inputSaleValue = document.getElementById('input-sale-value');
+    const inputSaleCost = document.getElementById('input-sale-cost');
+    
+    if (selectSaleProduct) {
+        selectSaleProduct.addEventListener('change', () => {
+            const cakeId = selectSaleProduct.value;
+            const cake = cakesData[cakeId];
+            if (cake) {
+                inputSaleValue.value = cake.price.toFixed(2);
+                // Calcular custo real atual
+                const farinha = cake.farinha || 0;
+                const ovos = cake.ovos || 0;
+                const acucarManteiga = cake.acucarManteiga || 0;
+                const outros = cake.outros || 0;
+                const gas = cake.gas || 0;
+                const embalagem = cake.embalagem || 0;
+                const tempo = cake.tempo || 0;
+                const valorHora = cake.valorHora || 0;
+                const totalCost = farinha + ovos + acucarManteiga + outros + gas + embalagem + (tempo / 60) * valorHora;
+                
+                inputSaleCost.value = totalCost.toFixed(2);
+            }
+        });
+    }
+    
+    // Gerenciador de badges rápidos
+    let activeChannel = 'WhatsApp';
+    let activePayment = 'PIX';
+    
+    const channelBadges = document.querySelectorAll('#canal-venda-badges .badge-btn');
+    channelBadges.forEach(badge => {
+        badge.addEventListener('click', () => {
+            channelBadges.forEach(b => b.classList.remove('active'));
+            badge.classList.add('active');
+            activeChannel = badge.getAttribute('data-value');
+        });
+    });
+    
+    const paymentBadges = document.querySelectorAll('#forma-pagamento-badges .badge-btn');
+    paymentBadges.forEach(badge => {
+        badge.addEventListener('click', () => {
+            paymentBadges.forEach(b => b.classList.remove('active'));
+            badge.classList.add('active');
+            activePayment = badge.getAttribute('data-value');
+        });
+    });
+    
+    // Registrar nova venda
+    const btnSaveSale = document.getElementById('btn-save-sale');
+    if (btnSaveSale) {
+        btnSaveSale.addEventListener('click', async () => {
+            if (!selectSaleProduct.value) {
+                showToast("Selecione o produto vendido!");
+                return;
+            }
+            
+            const valorVenda = parseFloat(inputSaleValue.value) || 0;
+            const custoEstimado = parseFloat(inputSaleCost.value) || 0;
+            
+            const cake = cakesData[selectSaleProduct.value];
+            const produto = cake.name;
+            const categoria = cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce';
+            
+            const lucroLiquido = valorVenda - custoEstimado;
+            const margemLucro = custoEstimado > 0 ? (lucroLiquido / custoEstimado) * 100 : 0;
+            
+            const newSale = {
+                data: activeSaleDate,
+                produto,
+                categoria,
+                canal_venda: activeChannel,
+                forma_pagamento: activePayment,
+                valor_venda: valorVenda,
+                custo_estimado: custoEstimado,
+                lucro_liquido: lucroLiquido,
+                margem_lucro: margemLucro
+            };
+            
+            if (!supabaseClient) {
+                showToast("Erro: Supabase não inicializado.");
+                return;
+            }
+            
+            try {
+                btnSaveSale.disabled = true;
+                btnSaveSale.textContent = 'Gravando...';
+                
+                const { data, error } = await supabaseClient
+                    .from('vendas')
+                    .insert([newSale])
+                    .select();
+                    
+                if (error) throw error;
+                
+                if (data && data[0]) {
+                    salesData.unshift(data[0]);
+                    updateTotalDiaCard();
+                    renderDailySales(activeSaleDate);
+                    showToast("Venda registrada com sucesso!");
+                    
+                    // Resetar form
+                    selectSaleProduct.selectedIndex = 0;
+                    inputSaleValue.value = '';
+                    inputSaleCost.value = '';
+                }
+            } catch (err) {
+                console.error("Erro ao salvar venda:", err);
+                showToast("Erro ao salvar venda no banco.");
+            } finally {
+                btnSaveSale.disabled = false;
+                btnSaveSale.textContent = 'Registrar Venda';
+            }
+        });
+    }
+    
+    // Excluir venda
+    async function deleteSale(saleId) {
+        if (!confirm("Tem certeza que deseja excluir esta venda permanentemente?")) return;
+        if (!supabaseClient) return;
+        
+        try {
+            const { error } = await supabaseClient
+                .from('vendas')
+                .delete()
+                .eq('id', saleId);
+                
+            if (error) throw error;
+            
+            salesData = salesData.filter(s => s.id !== saleId);
+            updateTotalDiaCard();
+            renderDailySales(activeSaleDate);
+            showToast("Venda excluída com sucesso!");
+        } catch (err) {
+            console.error("Erro ao excluir venda:", err);
+            showToast("Erro ao excluir venda.");
+        }
+    }
+    
+    // Filtro de data e setas de navegação
+    const dateInput = document.getElementById('input-sale-date');
+    const btnPrevDay = document.getElementById('btn-prev-day');
+    const btnNextDay = document.getElementById('btn-next-day');
+    
+    if (dateInput) {
+        dateInput.addEventListener('change', () => {
+            activeSaleDate = dateInput.value;
+            renderDailySales(activeSaleDate);
+        });
+    }
+    
+    if (btnPrevDay) {
+        btnPrevDay.addEventListener('click', () => {
+            const date = new Date(activeSaleDate + 'T00:00:00');
+            date.setDate(date.getDate() - 1);
+            activeSaleDate = getLocalDateString(date);
+            dateInput.value = activeSaleDate;
+            renderDailySales(activeSaleDate);
+        });
+    }
+    
+    if (btnNextDay) {
+        btnNextDay.addEventListener('click', () => {
+            const date = new Date(activeSaleDate + 'T00:00:00');
+            date.setDate(date.getDate() + 1);
+            activeSaleDate = getLocalDateString(date);
+            dateInput.value = activeSaleDate;
+            renderDailySales(activeSaleDate);
+        });
+    }
+    
+    // Renderiza a lista de vendas e os cards de faturamento de uma data
+    function renderDailySales(dateStr) {
+        const filtered = salesData.filter(s => s.data === dateStr);
+        
+        const faturamento = filtered.reduce((sum, s) => sum + parseFloat(s.valor_venda), 0);
+        const custo = filtered.reduce((sum, s) => sum + parseFloat(s.custo_estimado), 0);
+        const lucro = faturamento - custo;
+        const margem = custo > 0 ? (lucro / custo) * 100 : 0;
+        
+        document.getElementById('day-faturamento').textContent = formatCurrency(faturamento);
+        document.getElementById('day-custo').textContent = formatCurrency(custo);
+        document.getElementById('day-lucro').textContent = formatCurrency(lucro);
+        document.getElementById('day-margem').textContent = margem.toFixed(0) + '%';
+        
+        // Cor do tile de lucro se negativo
+        const profitTileVal = document.getElementById('day-lucro');
+        const profitTile = profitTileVal.closest('.result-tile');
+        if (lucro < 0) {
+            profitTile.className = 'result-tile bg-red-light';
+            profitTileVal.className = 'tile-value text-red';
+        } else {
+            profitTile.className = 'result-tile bg-green-light';
+            profitTileVal.className = 'tile-value text-green';
+        }
+        
+        const listContainer = document.getElementById('sales-list-items');
+        listContainer.innerHTML = '';
+        
+        if (filtered.length === 0) {
+            listContainer.innerHTML = '<div class="empty-sales-message">Nenhuma venda registrada nesta data.</div>';
+            return;
+        }
+        
+        filtered.forEach(sale => {
+            const item = document.createElement('div');
+            item.className = 'sales-list-item';
+            
+            const saleVal = parseFloat(sale.valor_venda);
+            const saleProfit = parseFloat(sale.lucro_liquido);
+            const profitText = saleProfit >= 0 ? `+${formatCurrency(saleProfit)}` : formatCurrency(saleProfit);
+            const profitClass = saleProfit >= 0 ? 'text-green' : 'text-red';
+            
+            item.innerHTML = `
+                <span class="col-prod" title="${sale.produto}">${sale.produto}</span>
+                <span class="col-chan">${sale.canal_venda}</span>
+                <span class="col-pay">${sale.forma_pagamento}</span>
+                <span class="col-val text-right">
+                    ${formatCurrency(saleVal)}
+                    <span class="col-profit-span ${profitClass}">${profitText} lucro</span>
+                </span>
+                <span class="col-act">
+                    <button class="btn-delete-sale" title="Excluir venda">🗑️</button>
+                </span>
+            `;
+            
+            item.querySelector('.btn-delete-sale').addEventListener('click', () => {
+                deleteSale(sale.id);
+            });
+            
+            listContainer.appendChild(item);
         });
     }
 
@@ -702,8 +1049,335 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // EXECUÇÃO INICIAL
+    // SEGURANÇA E AUTENTICAÇÃO (SUPABASE AUTH)
     // ==========================================
-    calculateCapacity();
-    renderCakesGrid();
+    const loginContainer = document.getElementById('login-container');
+    const dashboardApp = document.getElementById('dashboard-app');
+    const loginForm = document.getElementById('login-form');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginMsg = document.getElementById('login-msg');
+    const btnLogin = document.getElementById('btn-login');
+    const btnSignup = document.getElementById('btn-signup');
+    const btnLogout = document.getElementById('btn-logout');
+
+    if (supabaseClient) {
+        // Escuta mudanças no estado de login
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (session) {
+                // Logado
+                loginContainer.classList.add('hidden');
+                dashboardApp.classList.remove('hidden');
+                
+                // Inicializa a aplicação localmente de imediato (offline-first)
+                loadLocalCakesData();
+                calculateCapacity();
+                renderCakesGrid();
+                
+                // Carrega os dados da nuvem assincronamente em background para não travar a UI
+                loadRemoteCakesData().then(() => {
+                    loadSalesData();
+                });
+            } else {
+                // Não logado
+                dashboardApp.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+            }
+        });
+        
+        // Listener de Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginMsg.classList.add('hidden');
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Entrando...';
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+            } catch (err) {
+                loginMsg.textContent = "Erro ao entrar: " + err.message;
+                loginMsg.className = "login-msg error";
+                loginMsg.classList.remove('hidden');
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar';
+            }
+        });
+        
+        // Listener de Cadastro (Criar Conta)
+        btnSignup.addEventListener('click', async () => {
+            loginMsg.classList.add('hidden');
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            
+            if (!email || !password) {
+                loginMsg.textContent = "Preencha e-mail e senha para cadastrar.";
+                loginMsg.className = "login-msg error";
+                loginMsg.classList.remove('hidden');
+                return;
+            }
+            
+            btnSignup.disabled = true;
+            btnSignup.textContent = 'Cadastrando...';
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) throw error;
+                loginMsg.textContent = "Cadastro realizado! Você foi logado.";
+                loginMsg.className = "login-msg success";
+                loginMsg.classList.remove('hidden');
+            } catch (err) {
+                loginMsg.textContent = "Erro ao cadastrar: " + err.message;
+                loginMsg.className = "login-msg error";
+                loginMsg.classList.remove('hidden');
+            } finally {
+                btnSignup.disabled = false;
+                btnSignup.textContent = 'Criar Conta';
+            }
+        });
+        
+        // Listener de Logout
+        if (btnLogout) {
+            btnLogout.addEventListener('click', async () => {
+                await supabaseClient.auth.signOut();
+                showToast("Você saiu da conta.");
+            });
+        }
+    } else {
+        // Se Supabase falhar, exibe fallback local (para fins de teste/offline)
+        loginContainer.classList.add('hidden');
+        dashboardApp.classList.remove('hidden');
+        loadLocalCakesData();
+        calculateCapacity();
+        renderCakesGrid();
+    }
+
+    // ==========================================
+    // LÓGICA DO LOG DA SIDEBAR E DA VENDA RÁPIDA
+    // ==========================================
+    function renderSidebarSales(todaySales) {
+        const sidebarList = document.getElementById('sidebar-sales-list-items');
+        if (!sidebarList) return;
+        
+        sidebarList.innerHTML = '';
+        
+        if (todaySales.length === 0) {
+            sidebarList.innerHTML = '<li class="empty-sales-state">Nenhuma venda hoje.</li>';
+            return;
+        }
+        
+        // Mostrar no máximo as últimas 5 vendas para manter a sidebar compacta
+        const recentSales = todaySales.slice(0, 5);
+        recentSales.forEach(sale => {
+            const item = document.createElement('li');
+            item.className = 'sale-item';
+            
+            // Tentar extrair hora de created_at (ex: "2026-06-29 21:03:54.99+00")
+            let timeString = '';
+            if (sale.created_at) {
+                try {
+                    const date = new Date(sale.created_at);
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    timeString = `${hours}:${minutes}`;
+                } catch(e) {
+                    timeString = '';
+                }
+            }
+            
+            item.innerHTML = `
+                <div class="sale-item-info">
+                    <span class="sale-item-name" title="${sale.produto}">${sale.produto}</span>
+                    <span class="sale-item-meta">
+                        ${timeString ? `<time class="sale-item-time">${timeString}</time>` : ''}
+                        <span class="sale-item-channel">${timeString ? '• ' : ''}${sale.canal_venda}</span>
+                    </span>
+                </div>
+                <span class="sale-item-value">+ ${formatCurrency(parseFloat(sale.valor_venda))}</span>
+            `;
+            sidebarList.appendChild(item);
+        });
+    }
+
+    // Lógica de Venda Rápida
+    let pendingQuickSaleCake = null;
+    let selectedQuickSaleChannel = 'Balcão';
+    let selectedQuickSalePayment = 'PIX';
+
+    function openQuickSaleModal(cakeId) {
+        const cake = cakesData[cakeId];
+        if (!cake) return;
+        
+        pendingQuickSaleCake = cake;
+        selectedQuickSaleChannel = 'Balcão';
+        selectedQuickSalePayment = 'PIX';
+        
+        // Resetar visualmente os seletores do modal para o padrão
+        document.querySelectorAll('#quick-sale-channel-selectors .quick-sale-selector-btn').forEach(btn => {
+            if (btn.dataset.value === 'Balcão') btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        document.querySelectorAll('#quick-sale-payment-selectors .quick-sale-selector-btn').forEach(btn => {
+            if (btn.dataset.value === 'PIX') btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        
+        // Preencher detalhes do bolo no modal
+        const modalImg = document.getElementById('quick-sale-img');
+        const modalName = document.getElementById('quick-sale-name');
+        const modalPrice = document.getElementById('quick-sale-price');
+        
+        if (modalImg) modalImg.src = cake.image;
+        if (modalName) modalName.textContent = cake.name;
+        if (modalPrice) modalPrice.textContent = formatCurrency(cake.price);
+        
+        // Abrir modal
+        const overlay = document.getElementById('quick-sale-overlay');
+        const modal = document.getElementById('quick-sale-modal');
+        if (overlay) overlay.classList.add('active');
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeQuickSaleModal() {
+        const overlay = document.getElementById('quick-sale-overlay');
+        const modal = document.getElementById('quick-sale-modal');
+        if (overlay) overlay.classList.remove('active');
+        if (modal) modal.classList.remove('active');
+        pendingQuickSaleCake = null;
+    }
+
+    // Registrar venda rápida
+    async function registerQuickSale() {
+        if (!pendingQuickSaleCake) return;
+        
+        const cake = pendingQuickSaleCake;
+        const valorVenda = cake.price;
+        
+        // Calcular custo estimado
+        const farinha = cake.farinha || 0;
+        const ovos = cake.ovos || 0;
+        const acucarManteiga = cake.acucarManteiga || 0;
+        const outros = cake.outros || 0;
+        const gas = cake.gas || 0;
+        const embalagem = cake.embalagem || 0;
+        const tempo = cake.tempo || 0;
+        const valorHora = cake.valorHora || 0;
+        const custoEstimado = farinha + ovos + acucarManteiga + outros + gas + embalagem + (tempo / 60) * valorHora;
+        
+        const lucroLiquido = valorVenda - custoEstimado;
+        const margemLucro = custoEstimado > 0 ? (lucroLiquido / custoEstimado) * 100 : 0;
+        const categoria = cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce';
+        
+        const todayStr = getLocalDateString(new Date());
+        
+        const newSale = {
+            data: todayStr, // Dia atual
+            produto: cake.name,
+            categoria: categoria,
+            canal_venda: selectedQuickSaleChannel,
+            forma_pagamento: selectedQuickSalePayment,
+            valor_venda: valorVenda,
+            custo_estimado: custoEstimado,
+            lucro_liquido: lucroLiquido,
+            margem_lucro: margemLucro
+        };
+        
+        if (!supabaseClient) {
+            // Se Supabase falhar, registra localmente para testes offline
+            const localId = 'temp-' + Date.now();
+            const tempSale = { id: localId, created_at: new Date().toISOString(), ...newSale };
+            salesData.unshift(tempSale);
+            updateTotalDiaCard();
+            if (activeSaleDate === todayStr) {
+                renderDailySales(todayStr);
+            }
+            showToast("Venda registrada localmente!");
+            closeQuickSaleModal();
+            return;
+        }
+        
+        try {
+            const btnConfirm = document.getElementById('btn-confirm-quick-sale');
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.textContent = 'Gravando...';
+            }
+            
+            const { data, error } = await supabaseClient
+                .from('vendas')
+                .insert([newSale])
+                .select();
+                
+            if (error) throw error;
+            
+            if (data && data[0]) {
+                salesData.unshift(data[0]);
+                updateTotalDiaCard();
+                if (activeSaleDate === todayStr) {
+                    renderDailySales(todayStr);
+                }
+                showToast("Venda registrada com sucesso!");
+            }
+        } catch (err) {
+            console.error("Erro ao salvar venda rápida:", err);
+            showToast("Erro ao registrar venda no banco.");
+        } finally {
+            const btnConfirm = document.getElementById('btn-confirm-quick-sale');
+            if (btnConfirm) {
+                btnConfirm.disabled = false;
+                btnConfirm.textContent = 'Sim';
+            }
+            closeQuickSaleModal();
+        }
+    }
+
+    // Configurar event listeners para o modal de venda rápida
+    const closeQuickSaleBtn = document.getElementById('close-quick-sale-btn');
+    const btnCancelQuickSale = document.getElementById('btn-cancel-quick-sale');
+    const btnConfirmQuickSale = document.getElementById('btn-confirm-quick-sale');
+    const quickSaleOverlay = document.getElementById('quick-sale-overlay');
+    
+    if (closeQuickSaleBtn) closeQuickSaleBtn.addEventListener('click', closeQuickSaleModal);
+    if (btnCancelQuickSale) btnCancelQuickSale.addEventListener('click', closeQuickSaleModal);
+    if (quickSaleOverlay) quickSaleOverlay.addEventListener('click', closeQuickSaleModal);
+    if (btnConfirmQuickSale) btnConfirmQuickSale.addEventListener('click', registerQuickSale);
+
+    // Configurar seletores interativos do modal de venda rápida
+    document.querySelectorAll('#quick-sale-channel-selectors .quick-sale-selector-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('#quick-sale-channel-selectors .quick-sale-selector-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedQuickSaleChannel = btn.dataset.value;
+        });
+    });
+    
+    document.querySelectorAll('#quick-sale-payment-selectors .quick-sale-selector-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('#quick-sale-payment-selectors .quick-sale-selector-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedQuickSalePayment = btn.dataset.value;
+        });
+    });
+
+    // Configurar filtros de categoria
+    const btnFilterAll = document.getElementById('btn-filter-all');
+    const btnFilterCaseiros = document.getElementById('btn-filter-caseiros');
+    const btnFilterConfeitados = document.getElementById('btn-filter-confeitados');
+    const btnFilterDoces = document.getElementById('btn-filter-doces');
+    
+    function setCategoryFilter(category, activeBtn) {
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        if (activeBtn) activeBtn.classList.add('active');
+        activeCategoryFilter = category;
+        renderCakesGrid();
+    }
+    
+    if (btnFilterAll) btnFilterAll.addEventListener('click', (e) => setCategoryFilter('all', e.currentTarget));
+    if (btnFilterCaseiros) btnFilterCaseiros.addEventListener('click', (e) => setCategoryFilter('caseiro', e.currentTarget));
+    if (btnFilterConfeitados) btnFilterConfeitados.addEventListener('click', (e) => setCategoryFilter('confeitado', e.currentTarget));
+    if (btnFilterDoces) btnFilterDoces.addEventListener('click', (e) => setCategoryFilter('doce', e.currentTarget));
 });

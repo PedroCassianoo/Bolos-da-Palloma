@@ -17,8 +17,35 @@
 </head>
 <body>
 
-    <!-- Container Principal do Painel (Otimizado para Desktop) -->
-    <div class="dashboard-container">
+    <!-- Tela de Login (Oculta por padrão) -->
+    <div id="login-container" class="login-wrapper hidden">
+        <div class="login-card">
+            <div class="login-brand">
+                <img class="brand-logo-icon" src="assets/images/logo_icon.png" alt="Bolos da Palloma Ícone">
+                <h2>Bolos da Palloma</h2>
+                <p>Painel de Gestão & Precificação</p>
+            </div>
+            
+            <form id="login-form" class="login-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" required placeholder="seu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required placeholder="Digite sua senha">
+                </div>
+                
+                <button type="submit" id="btn-login" class="btn-login-action">Entrar</button>
+                <button type="button" id="btn-signup" class="btn-signup-action">Criar Conta</button>
+            </form>
+            <div id="login-msg" class="login-msg hidden"></div>
+        </div>
+    </div>
+
+    <!-- Container Principal do Painel (Otimizado para Desktop - Oculto por padrão) -->
+    <div class="dashboard-container hidden" id="dashboard-app">
         
         <!-- Cabeçalho (Header) -->
         <header class="dashboard-header">
@@ -32,6 +59,7 @@
                 </div>
                 <div class="header-badge">
                     <span>Espaço da Empreendedora 🍰</span>
+                    <button id="btn-logout" class="btn-logout" title="Sair da conta">Sair</button>
                 </div>
             </div>
             
@@ -61,10 +89,80 @@
 
             <!-- ================= ABA 1: CUSTO & PREÇO ================= -->
             <section class="tab-content active" id="tab-custo-preco">
-                <!-- Subview: Lista de Bolos (Grid) -->
+                <!-- Subview: Lista de Bolos (Grid com Sidebar de Vendas Premium) -->
                 <div id="subview-cake-list" class="subview">
-                    <div class="cakes-grid">
-                        <!-- Bolos serão renderizados dinamicamente pelo JS -->
+                    <div class="cakes-layout">
+                        <!-- Sidebar de Vendas do Dia -->
+                        <aside class="cakes-sidebar">
+                            <!-- Logo / Marca -->
+                            <div class="brand-container-sidebar">
+                                <div class="brand-logo-sidebar">🍰</div>
+                                <div class="brand-info-sidebar">
+                                    <h1>Bolos da Palloma</h1>
+                                    <p>Gestão & Precificação</p>
+                                </div>
+                            </div>
+
+                            <!-- Total de Vendas do Dia -->
+                            <div class="sales-highlight-card" style="cursor: pointer;" onclick="openSalesSubview();" title="Clique para gerenciar vendas detalhadamente">
+                                <div class="card-title">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Vendas de Hoje
+                                </div>
+                                <div class="card-value" id="sidebar-total-value">
+                                    <span class="currency">R$</span><span id="sidebar-revenue-amount">0,00</span>
+                                </div>
+                                <div class="card-subtitle">
+                                    <span>Contador</span>
+                                    <span class="sales-counter-pill" id="sidebar-total-count">0 vendas</span>
+                                </div>
+                            </div>
+
+                            <!-- Atividades Recentes -->
+                            <div class="recent-sales-section">
+                                <div class="recent-sales-title">
+                                    <span>Atividades Recentes</span>
+                                    <span class="tempo-real-badge">Tempo real</span>
+                                </div>
+                                <ul class="recent-sales-list" id="sidebar-sales-list-items">
+                                    <div class="empty-sales-state">Carregando vendas...</div>
+                                </ul>
+                            </div>
+
+                            <!-- Footer do Operador -->
+                            <div class="sidebar-footer-vendas">
+                                <div class="operator-info">
+                                    <div class="operator-avatar">P</div>
+                                    <div class="operator-details">
+                                        <span class="operator-name">Palloma Confeitaria</span>
+                                        <span class="operator-status">Operando</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- Área Central/Direita -->
+                        <div class="cakes-main-area">
+                            <header class="cakes-main-header">
+                                <div class="header-title-group">
+                                    <h2>Painel de Vendas Rápido</h2>
+                                    <p>Monitore suas vendas diárias e registre novas com apenas um clique</p>
+                                </div>
+                                
+                                <div class="filters-container">
+                                    <button class="filter-btn active" id="btn-filter-all">Tudo</button>
+                                    <button class="filter-btn" id="btn-filter-caseiros">Caseiros</button>
+                                    <button class="filter-btn" id="btn-filter-confeitados">Confeitados</button>
+                                    <button class="filter-btn" id="btn-filter-doces">Doces & Sobremesas</button>
+                                </div>
+                            </header>
+
+                            <div class="cakes-grid">
+                                <!-- Bolos serão renderizados dinamicamente pelo JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -207,6 +305,127 @@
                             <!-- Nota Explicativa -->
                             <div class="info-note">
                                 <p>💡 <strong>Aha Moment:</strong> Repare que ao definir o <em>Valor da sua hora</em> e o <em>Tempo por bolo</em>, a sua mão de obra é remunerada separadamente do lucro da empresa. Lucro é o dinheiro que fica para a confeitaria crescer, não é o seu salário!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subview: Faturamento e Vendas do Dia (Oculto por padrão) -->
+                <div id="subview-total-dia" class="subview hidden">
+                    <!-- Cabeçalho com Botão de Voltar e Data Selecionada -->
+                    <div class="cake-details-header">
+                        <button id="btn-back-to-list-total" class="btn-back">
+                            <svg class="back-icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                            Voltar para a lista de bolos
+                        </button>
+                        <div class="date-selector-group">
+                            <button id="btn-prev-day" class="btn-arrow" title="Dia anterior">◀</button>
+                            <input type="date" id="input-sale-date" class="date-picker-input">
+                            <button id="btn-next-day" class="btn-arrow" title="Próximo dia">▶</button>
+                        </div>
+                    </div>
+
+                    <!-- Cards de Resumo Financeiro do Dia -->
+                    <div class="results-subgrid text-center margin-bottom-20">
+                        <div class="result-tile bg-blue-light">
+                            <span class="tile-label">Faturamento bruto</span>
+                            <span class="tile-value text-blue" id="day-faturamento">R$ 0,00</span>
+                        </div>
+                        <div class="result-tile bg-red-light">
+                            <span class="tile-label">Custo total estimado</span>
+                            <span class="tile-value text-red" id="day-custo">R$ 0,00</span>
+                        </div>
+                        <div class="result-tile bg-green-light">
+                            <span class="tile-label">Lucro líquido estimado</span>
+                            <span class="tile-value text-green" id="day-lucro">R$ 0,00</span>
+                        </div>
+                        <div class="result-tile bg-gold-light highlight-tile">
+                            <span class="tile-label">Margem média do dia</span>
+                            <span class="tile-value text-gold" id="day-margem">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="grid-2col">
+                        <!-- Formulário de Registro de Venda Rápido -->
+                        <div class="card panel-card">
+                            <div class="card-header-group">
+                                <div class="card-header-row">
+                                    <span class="card-icon">🍰</span>
+                                    <h2>Registrar venda do dia</h2>
+                                </div>
+                                <p class="card-desc">Lançamento simplificado: os custos e preço padrão são puxados automaticamente.</p>
+                            </div>
+                            
+                            <form id="form-add-sale" class="inputs-grid" onsubmit="return false;">
+                                <div class="form-group col-span-2">
+                                    <label for="select-sale-product">Produto vendido</label>
+                                    <select id="select-sale-product" required class="form-control-input">
+                                        <option value="" disabled selected>Selecione o bolo/doce...</option>
+                                        <!-- Preenchido dinamicamente pelo JS -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-sale-value">Valor de venda (R$)</label>
+                                    <input type="number" id="input-sale-value" min="0" step="0.01" required class="form-control-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="input-sale-cost">Custo estimado (R$)</label>
+                                    <input type="number" id="input-sale-cost" min="0" step="0.01" readonly class="form-control-input bg-gray-light" title="Calculado automaticamente com base na ficha técnica do bolo">
+                                </div>
+
+                                <div class="form-group col-span-2">
+                                    <label>Canal de venda</label>
+                                    <div class="badge-selectors" id="canal-venda-badges">
+                                        <button type="button" class="badge-btn active" data-value="WhatsApp">WhatsApp</button>
+                                        <button type="button" class="badge-btn" data-value="Instagram">Instagram</button>
+                                        <button type="button" class="badge-btn" data-value="Ifood">iFood</button>
+                                        <button type="button" class="badge-btn" data-value="Boca a Boca">Boca a Boca</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-span-2">
+                                    <label>Forma de pagamento</label>
+                                    <div class="badge-selectors" id="forma-pagamento-badges">
+                                        <button type="button" class="badge-btn active" data-value="PIX">PIX</button>
+                                        <button type="button" class="badge-btn" data-value="Cartão de Crédito">Cartão de Crédito</button>
+                                        <button type="button" class="badge-btn" data-value="Dinheiro">Dinheiro</button>
+                                        <button type="button" class="badge-btn" data-value="Cartão de Débito">Cartão de Débito</button>
+                                    </div>
+                                </div>
+
+                                <div class="save-actions col-span-2">
+                                    <button type="button" id="btn-save-sale" class="btn-save btn-block-save">
+                                        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                        Registrar Venda
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Tabela de Lançamentos do Dia -->
+                        <div class="card panel-card flex-between">
+                            <div class="card-header-group full-width">
+                                <div class="card-header-row">
+                                    <span class="card-icon">📋</span>
+                                    <h2>Vendas registradas no dia</h2>
+                                </div>
+                                <p class="card-desc">Lista detalhada de todas as vendas do dia selecionado.</p>
+                            </div>
+
+                            <div class="sales-list-container full-width">
+                                <div class="sales-list-header">
+                                    <span class="col-prod">Produto</span>
+                                    <span class="col-chan">Canal</span>
+                                    <span class="col-pay">Pagamento</span>
+                                    <span class="col-val text-right">Valor (Lucro)</span>
+                                    <span class="col-act"></span>
+                                </div>
+                                <div class="sales-list-body" id="sales-list-items">
+                                    <!-- Preenchido dinamicamente pelo JS -->
+                                    <div class="empty-sales-message">Nenhuma venda registrada nesta data.</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -524,6 +743,53 @@
             <p>Criado para <strong>Bolos da Palloma</strong> — Todos os cálculos são feitos de forma local e automática.</p>
         </footer>
 
+    </div>
+
+    <!-- Modal de Confirmação de Venda Rápida (Estilo Info & Horários) -->
+    <div class="quick-sale-overlay" id="quick-sale-overlay"></div>
+    <div class="quick-sale-modal" id="quick-sale-modal" role="dialog" aria-modal="true" aria-labelledby="quick-sale-title">
+        <div class="modal-header">
+            <h2 id="quick-sale-title">Confirmar Nova Venda</h2>
+            <button class="close-modal-btn" id="close-quick-sale-btn" aria-label="Fechar confirmação">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-message">Você deseja confirmar a venda do produto abaixo?</p>
+            <div class="quick-sale-product-card">
+                <img src="" id="quick-sale-img" alt="Bolo" class="quick-sale-thumb">
+                <div class="quick-sale-details">
+                    <span id="quick-sale-name" class="quick-sale-name">Bolo</span>
+                    <span id="quick-sale-price" class="quick-sale-price">R$ 0,00</span>
+                </div>
+            </div>
+            <!-- Canal de Venda Selector -->
+            <div class="quick-sale-field-group">
+                <label class="quick-sale-field-label">Canal de Venda</label>
+                <div class="quick-sale-selectors" id="quick-sale-channel-selectors">
+                    <button type="button" class="quick-sale-selector-btn active" data-value="Balcão">Balcão</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="WhatsApp">WhatsApp</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="Instagram">Instagram</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="iFood">iFood</button>
+                </div>
+            </div>
+
+            <!-- Forma de Pagamento Selector -->
+            <div class="quick-sale-field-group">
+                <label class="quick-sale-field-label">Forma de Pagamento</label>
+                <div class="quick-sale-selectors" id="quick-sale-payment-selectors">
+                    <button type="button" class="quick-sale-selector-btn active" data-value="PIX">PIX</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="Dinheiro">Dinheiro</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="Crédito">Crédito</button>
+                    <button type="button" class="quick-sale-selector-btn" data-value="Débito">Débito</button>
+                </div>
+            </div>
+
+            <div class="quick-sale-actions">
+                <button type="button" class="btn-confirm-sale" id="btn-confirm-quick-sale">Sim</button>
+                <button type="button" class="btn-cancel-sale" id="btn-cancel-quick-sale">Não</button>
+            </div>
+        </div>
     </div>
 
     <!-- Container de Notificação Toast -->

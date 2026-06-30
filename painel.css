@@ -1321,4 +1321,1126 @@ body {
     }
 }
 
+/* ==========================================================================
+   TELA DE LOGIN
+   ========================================================================== */
+.login-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #3d2511;
+    background-image: radial-gradient(circle, rgba(160, 93, 37, 0.2) 10%, transparent 11%);
+    background-size: 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.login-card {
+    background-color: var(--bg-card);
+    width: 90%;
+    max-width: 400px;
+    padding: 40px 32px;
+    border-radius: var(--radius-lg);
+    border: 6px solid var(--primary);
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-brand .brand-logo-icon {
+    height: 64px;
+    width: auto;
+    margin-bottom: 12px;
+}
+
+.login-brand h2 {
+    color: var(--text-dark);
+    font-size: 1.8rem;
+    font-family: 'Cherry Swash', cursive, serif;
+}
+
+.login-brand p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid rgba(160, 93, 37, 0.15);
+    background-color: var(--white);
+    color: var(--text-dark);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(160, 93, 37, 0.15);
+}
+
+.btn-login-action {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.btn-login-action:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-signup-action {
+    width: 100%;
+    padding: 14px;
+    background-color: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-signup-action:hover {
+    background-color: rgba(160, 93, 37, 0.05);
+}
+
+.login-msg {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.login-msg.success {
+    background-color: #f1f1e1;
+    color: #55552b;
+    border: 1px solid #c2c29c;
+}
+
+.login-msg.error {
+    background-color: #fce8e6;
+    color: #c5221f;
+    border: 1px solid #fad2cf;
+}
+
+/* ==========================================================================
+   BOTOES DO HEADER & LOGOUT
+   ========================================================================== */
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-logout {
+    background-color: #fce8e6;
+    color: #c5221f;
+    border: 1px solid #fad2cf;
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background-color: #fad2cf;
+}
+
+/* ==========================================================================
+   TELA DE FATURAMENTO: TOTAL DO DIA
+   ========================================================================== */
+.date-selector-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--white);
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    border: 2px solid rgba(160, 93, 37, 0.12);
+}
+
+.date-picker-input {
+    border: none;
+    background: transparent;
+    color: var(--text-dark);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-arrow {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-arrow:hover {
+    background-color: rgba(160, 93, 37, 0.08);
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px !important;
+}
+
+/* Resultados do Faturamento */
+.bg-blue-light {
+    background-color: #e8f0fe;
+    border: 1px solid #d2e3fc;
+}
+.text-blue {
+    color: #1a73e8;
+}
+.bg-red-light {
+    background-color: #fce8e6;
+    border: 1px solid #fad2cf;
+}
+.text-red {
+    color: #c5221f;
+}
+
+/* Badge Selectors para canal e forma de pagamento */
+.badge-selectors {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.badge-btn {
+    background-color: var(--white);
+    color: var(--text-muted);
+    border: 2px solid rgba(160, 93, 37, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.badge-btn:hover {
+    background-color: rgba(160, 93, 37, 0.03);
+    border-color: var(--primary);
+}
+
+.badge-btn.active {
+    background-color: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(160, 93, 37, 0.25);
+}
+
+.btn-block-save {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Lista de Vendas */
+.sales-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    border: 2px solid rgba(160, 93, 37, 0.08);
+    overflow: hidden;
+}
+
+.sales-list-header {
+    display: grid;
+    grid-template-columns: 2.2fr 1.1fr 1.1fr 1.6fr 0.4fr;
+    padding: 12px 16px;
+    background-color: rgba(160, 93, 37, 0.05);
+    border-bottom: 2px solid rgba(160, 93, 37, 0.1);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sales-list-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 360px;
+}
+
+.sales-list-item {
+    display: grid;
+    grid-template-columns: 2.2fr 1.1fr 1.1fr 1.6fr 0.4fr;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(160, 93, 37, 0.06);
+    align-items: center;
+    font-size: 0.88rem;
+    transition: background-color 0.15s ease;
+}
+
+.sales-list-item:hover {
+    background-color: rgba(160, 93, 37, 0.02);
+}
+
+.sales-list-item:last-child {
+    border-bottom: none;
+}
+
+.col-prod {
+    font-weight: 600;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-chan, .col-pay {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.col-val {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.col-profit-span {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--status-green);
+    font-weight: 600;
+}
+
+.btn-delete-sale {
+    background: none;
+    border: none;
+    color: #c5221f;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-sale:hover {
+    background-color: #fce8e6;
+    transform: scale(1.1);
+}
+
+.empty-sales-message {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.bg-gray-light {
+    background-color: #f1f3f4 !important;
+    cursor: not-allowed;
+}
+
+.col-span-2 {
+    grid-column: span 2;
+}
+
+.form-control-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 2px solid rgba(160, 93, 37, 0.15);
+    background-color: var(--white);
+    color: var(--text-dark);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-control-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Helpers */
+.full-width {
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    .badge-selectors {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==========================================================================
+   LAYOUT DE VENDAS COM SIDEBAR LATERAL (ESTILO PREMIUM DO DASHBOARD)
+   ========================================================================== */
+.cakes-layout {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    overflow: hidden;
+    min-height: calc(100vh - 160px);
+    box-shadow: 0 10px 15px -3px rgba(77, 43, 15, 0.05);
+    border: 2px solid rgba(160, 93, 37, 0.08);
+}
+
+/* Sidebar Vendas (Esquerda) */
+.cakes-sidebar {
+    width: 320px;
+    background-color: var(--bg-card); /* Fundo claro da sidebar */
+    color: var(--text-dark);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    border-right: 2px solid rgba(160, 93, 37, 0.08);
+    z-index: 10;
+}
+
+.brand-container-sidebar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.brand-logo-sidebar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(160, 93, 37, 0.3);
+    font-size: 1.25rem;
+    color: white;
+}
+
+.brand-info-sidebar h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+
+.brand-info-sidebar p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+/* Card Destaque: Faturamento Diário */
+.sales-highlight-card {
+    background: var(--white);
+    border: 1px solid rgba(160, 93, 37, 0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.sales-highlight-card .card-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sales-highlight-card .card-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--status-green);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+}
+
+.sales-highlight-card .card-value span.currency {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--status-green);
+}
+
+.sales-highlight-card .card-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sales-highlight-card .sales-counter-pill {
+    background-color: rgba(112, 112, 66, 0.1);
+    color: var(--status-green);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 1px solid rgba(112, 112, 66, 0.2);
+}
+
+/* Vendas Recentes */
+.recent-sales-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.recent-sales-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tempo-real-badge {
+    background-color: rgba(112, 112, 66, 0.1);
+    color: var(--status-green);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    border: 1px solid rgba(112, 112, 66, 0.2);
+}
+
+.recent-sales-list {
+    list-style: none;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-right: 4px;
+}
+
+.recent-sales-list::-webkit-scrollbar {
+    width: 4px;
+}
+.recent-sales-list::-webkit-scrollbar-thumb {
+    background: rgba(160, 93, 37, 0.15);
+    border-radius: 10px;
+}
+
+.sale-item {
+    background-color: var(--white);
+    border: 1px solid rgba(160, 93, 37, 0.1);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sale-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    max-width: 70%;
+}
+
+.sale-item-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sale-item-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sale-item-value {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--status-green);
+}
+
+.empty-sales-state {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 2rem 1rem;
+    border: 1px dashed rgba(160, 93, 37, 0.2);
+    border-radius: 12px;
+    margin: auto 0;
+}
+
+/* Sidebar Footer */
+.sidebar-footer-vendas {
+    border-top: 1px solid rgba(160, 93, 37, 0.08);
+    padding-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Área Central/Direita (Creme/Bege Claro) */
+.cakes-main-area {
+    flex-grow: 1;
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+    background-color: var(--bg-card);
+}
+
+.cakes-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid rgba(160, 93, 37, 0.08);
+    padding-bottom: 1.25rem;
+}
+
+.cakes-main-header h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+}
+
+.cakes-main-header p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.cakes-layout .cakes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) !important; /* Exatamente 4 colunas como no desktop do screenshot */
+    gap: 1.5rem;
+    flex-grow: 1;
+    margin: 0;
+}
+
+/* Card de Bolo Customizado no Estilo Premium */
+.cakes-layout .cake-card {
+    background-color: var(--white);
+    border-radius: 16px;
+    border: 2px solid rgba(160, 93, 37, 0.08);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    cursor: pointer;
+}
+
+.cakes-layout .cake-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(160, 93, 37, 0.15);
+}
+
+.cakes-layout .cake-card-img-wrapper {
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+    background-color: #f1f5f9;
+}
+
+.cakes-layout .cake-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cakes-layout .cake-card:hover .cake-card-img {
+    transform: scale(1.05);
+}
+
+.cakes-layout .cake-card-tag {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background-color: rgba(77, 43, 15, 0.75);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 2;
+}
+
+.cakes-layout .cake-card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 1rem;
+}
+
+.cakes-layout .cake-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.6rem;
+    margin: 0;
+}
+
+.cakes-layout .cake-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    padding-top: 0;
+    border-top: none;
+}
+
+.cakes-layout .cake-card-price {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+}
+
+/* Margem de lucro */
+.cakes-layout .profit-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.cakes-layout .profit-badge.profit-positive {
+    color: #55552b;
+    background-color: var(--status-green-light);
+    border: 1px solid rgba(112, 112, 66, 0.25);
+}
+
+.cakes-layout .profit-badge.profit-negative {
+    color: #991b1b;
+    background-color: #fee2e2;
+}
+
+.cakes-layout .profit-badge.profit-none {
+    color: var(--text-muted);
+    background-color: rgba(160, 93, 37, 0.05);
+}
+
+/* Botão CTA (+1 Vendido - Chocolate Oficial) */
+.cakes-layout .cake-card-add-sale-btn {
+    position: static;
+    width: 100%;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(160, 93, 37, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: auto;
+}
+
+.cakes-layout .cake-card-add-sale-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -2px rgba(160, 93, 37, 0.25);
+}
+
+.cakes-layout .cake-card-add-sale-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px -1px rgba(160, 93, 37, 0.1);
+}
+
+/* Filtros Pills */
+.filter-btn {
+    background-color: transparent;
+    border: 2px solid rgba(160, 93, 37, 0.15);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: rgba(160, 93, 37, 0.05);
+    border-color: var(--primary);
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(160, 93, 37, 0.25);
+}
+
+/* ==========================================================================
+   MODAL DE CONFIRMAÇÃO DE VENDA RÁPIDA (QUICK SALE)
+   ========================================================================== */
+.quick-sale-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(77, 43, 15, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.quick-sale-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.quick-sale-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 440px;
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    padding: 2.25rem;
+    border: 6px solid var(--primary);
+}
+
+.quick-sale-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.quick-sale-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(160, 93, 37, 0.08);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.quick-sale-modal .modal-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.quick-sale-modal .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.quick-sale-modal .modal-message {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-align: center;
+}
+
+.quick-sale-modal .quick-sale-product-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: rgba(160, 93, 37, 0.03);
+    border: 1px solid rgba(160, 93, 37, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.quick-sale-modal .quick-sale-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    border: 1px solid rgba(160, 93, 37, 0.08);
+}
+
+.quick-sale-modal .quick-sale-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.quick-sale-modal .quick-sale-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.quick-sale-modal .quick-sale-price {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.quick-sale-modal .quick-sale-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.quick-sale-modal .btn-confirm-sale {
+    background-color: var(--status-green);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(112, 112, 66, 0.2);
+}
+
+.quick-sale-modal .btn-confirm-sale:hover {
+    background-color: #5c5c36;
+    transform: translateY(-1px);
+}
+
+.quick-sale-modal .btn-cancel-sale {
+    background-color: transparent;
+    border: 2px solid rgba(160, 93, 37, 0.15);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-sale-modal .btn-cancel-sale:hover {
+    background-color: rgba(160, 93, 37, 0.05);
+    color: var(--text-dark);
+}
+
+.quick-sale-modal .close-modal-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quick-sale-modal .close-modal-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Responsividade do layout premium */
+@media (max-width: 1200px) {
+    .cakes-layout .cakes-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .cakes-layout {
+        flex-direction: column;
+    }
+    .cakes-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .cakes-layout .cakes-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .cakes-layout .cakes-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .cakes-main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .filters-container {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+}
+
+/* Seletores do modal de venda rápida */
+.quick-sale-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.quick-sale-field-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.quick-sale-selectors {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.quick-sale-selector-btn {
+    background-color: var(--white);
+    color: var(--text-muted);
+    border: 2px solid rgba(160, 93, 37, 0.12);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.quick-sale-selector-btn:hover {
+    background-color: rgba(160, 93, 37, 0.03);
+    border-color: var(--primary);
+}
+
+.quick-sale-selector-btn.active {
+    background-color: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+    box-shadow: 0 4px 8px rgba(160, 93, 37, 0.2);
+}
+
+
+
 

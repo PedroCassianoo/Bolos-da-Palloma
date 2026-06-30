@@ -6,7 +6,7 @@ const PRODUCTS = [
         description: 'Massa fofinha de cenoura com cobertura generosa de brigadeiro gourmet tradicional.',
         price: 28.00,
         category: 'caseiros',
-        image: 'assets/images/bolo_cenoura.png',
+        image: 'assets/images/bolo_cenoura_brigadeiro.jpg',
         tag: 'Mais vendido'
     },
     {
@@ -15,7 +15,7 @@ const PRODUCTS = [
         description: 'Bolo caseiro com furo central totalmente preenchido por creme de leite Ninho e cobertura espessa de Nutella.',
         price: 38.00,
         category: 'caseiros',
-        image: 'assets/images/bolo_vulcao.png',
+        image: 'assets/images/bolo_vulcao_ninho_nutella.jpg',
         tag: 'Destaque'
     },
     {
@@ -24,7 +24,7 @@ const PRODUCTS = [
         description: 'O clássico bolo de fubá, super macio, com pedaços derretidos de goiabada cascão na massa.',
         price: 24.00,
         category: 'caseiros',
-        image: 'assets/images/bolo_cenoura.png',
+        image: 'assets/images/bolo_fuba_goiabada.jpg',
         tag: 'Caseirinho'
     },
     {
@@ -33,7 +33,7 @@ const PRODUCTS = [
         description: 'Massa de cacau premium com recheio duplo de trufa de chocolate meio amargo e cobertura de ganache artesanal.',
         price: 75.00,
         category: 'confeitados',
-        image: 'assets/images/bolo_morango.png',
+        image: 'assets/images/bolo_trufado_chocolate.jpg',
         tag: 'Festa'
     },
     {
@@ -42,7 +42,7 @@ const PRODUCTS = [
         description: 'Massa pão de ló super leve, recheio cremoso de leite Ninho e morangos frescos selecionados picados.',
         price: 80.00,
         category: 'confeitados',
-        image: 'assets/images/bolo_morango.png',
+        image: 'assets/images/bolo_ninho_morango.jpg',
         tag: 'Campeão de Pedidos'
     },
     {
@@ -51,7 +51,7 @@ const PRODUCTS = [
         description: 'Massa aveludada vermelha com recheio e cobertura cremosa de cream cheese e geleia artesanal de frutas vermelhas.',
         price: 85.00,
         category: 'confeitados',
-        image: 'assets/images/bolo_morango.png',
+        image: 'assets/images/bolo_red_velvet.jpg',
         tag: 'Premium'
     },
     {
@@ -60,7 +60,7 @@ const PRODUCTS = [
         description: 'Deliciosas camadas de creme de Ninho, morangos frescos e ganache trufada de chocolate.',
         price: 18.00,
         category: 'doces',
-        image: 'assets/images/copo_felicidade.png',
+        image: 'assets/images/copo_felicidade_morango.jpg',
         tag: 'Sobremesa'
     },
     {
@@ -69,7 +69,7 @@ const PRODUCTS = [
         description: 'Brownie denso, úmido e chocolatudo com cobertura de doce de leite cremoso e pedaço de morango.',
         price: 12.00,
         category: 'doces',
-        image: 'assets/images/copo_felicidade.png',
+        image: 'assets/images/brownie_supremo.jpg',
         tag: 'Individual'
     }
 ];
