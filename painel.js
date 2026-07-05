@@ -888,8 +888,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const profitText = saleProfit >= 0 ? `+${formatCurrency(saleProfit)}` : formatCurrency(saleProfit);
             const profitClass = saleProfit >= 0 ? 'text-green' : 'text-red';
             
+            // NOVO: Renderização condicional dos dados enviados pelo Cardápio Digital
+            let detalhesExtras = '';
+            if (sale.cliente_nome) {
+                detalhesExtras += `<br><small style="color: #6b7280; font-size: 0.85em; display: block; margin-top: 4px;">👤 Cliente: ${sale.cliente_nome}</small>`;
+                
+                if (sale.metodo_entrega === 'delivery') {
+                    detalhesExtras += `<small style="color: #6b7280; font-size: 0.85em; display: block;">🛵 Entrega: ${sale.endereco_entrega || 'Endereço não informado'}</small>`;
+                } else if (sale.metodo_entrega === 'retirada' || sale.endereco_entrega === 'Retirada') {
+                    detalhesExtras += `<small style="color: #6b7280; font-size: 0.85em; display: block;">🏪 Retirada no Local</small>`;
+                }
+            }
+            
             item.innerHTML = `
-                <span class="col-prod" title="${sale.produto}">${sale.produto}</span>
+                <span class="col-prod" title="${sale.produto}">
+                    <strong>${sale.produto}</strong>
+                    ${detalhesExtras}
+                </span>
                 <span class="col-chan">${sale.canal_venda}</span>
                 <span class="col-pay">${sale.forma_pagamento}</span>
                 <span class="col-val text-right">
