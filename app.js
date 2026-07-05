@@ -626,7 +626,7 @@ function updateCartUI() {
 }
 
 // Formatação do WhatsApp e Redirecionamento Seguro (Sem Reverse Tabnabbing)
-function sendOrderToWhatsApp() {
+async function sendOrderToWhatsApp() {
     const clientName = sanitizeInput(clientNameInput.value);
     const activeMethodRadio = document.querySelector('input[name="delivery-method"]:checked');
     const deliveryMethod = activeMethodRadio ? activeMethodRadio.value : 'delivery';
@@ -751,29 +751,85 @@ Enviado através do Cardápio Digital`;
 
     // 6. Confirmação do fluxo de envio antes de limpar dados sensíveis
     if (confirm('Seu pedido está pronto! Clique em OK para enviar no WhatsApp.')) {
-        // Disparar confetes visuais de comemoração nativos
-        triggerConfetti();
-
-        // Redireciona com noopener, noreferrer para proteção contra Reverse Tabnabbing
-        const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-        if (newWindow) {
-            newWindow.opener = null;
+        
+        // UX: Feedback visual de Loading
+        const submitBtn = checkoutForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.innerText : '';
+        
+        if (submitBtn) {
+            submitBtn.innerText = 'Processando pedido...';
+            submitBtn.disabled = true;
         }
 
-        // Limpa carrinho e formulário (segurança LGPD para dispositivos compartilhados)
-        setTimeout(() => {
-            cart = {};
-            checkoutForm.reset();
-            
-            // Oculta os painéis condicionais do formulário para o estado padrão
-            deliveryFields.classList.remove('hidden');
-            pickupFields.classList.add('hidden');
-            changeField.classList.add('hidden');
-            
-            updateCartUI();
-            renderMenu('all');
-            closeCart();
-        }, 1000);
+        try {
+            // Registrar vendas no Painel de Gestão via Supabase com trava de segurança
+            if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+                const pedidoId = crypto.randomUUID ? crypto.randomUUID() : 'pd-' + Date.now();
+                const vendasParaInserir = [];
+                
+                const isoDate = formattedDate ? formattedDate.split('/').reverse().join('-') : new Date().toISOString().split('T')[0];
+                
+                Object.keys(cart).forEach(id => {
+                    const product = PRODUCTS.find(p => p.id === id);
+                    if (product) {
+                        vendasParaInserir.push({
+                            pedido_id: pedidoId,
+                            data: isoDate,
+                            produto: product.name,
+                            categoria: product.category === 'caseiros' ? 'Caseiro' : 'Confeitado',
+                            canal_venda: 'Cardápio Digital',
+                            forma_pagamento: payMethodValue,
+                            valor_venda: product.price * cart[id],
+                            custo_estimado: 0,
+                            lucro_liquido: product.price * cart[id], 
+                            cliente_nome: clientName,
+                            metodo_entrega: deliveryMethod,
+                            endereco_entrega: deliveryMethod === 'delivery' ? sanitizeInput(deliveryAddress.value) : 'Retirada'
+                        });
+                    }
+                });
+                
+                // Inserção transacional assíncrona (Aguardando resposta do DB)
+                const { error } = await supabaseClient.from('vendas').insert(vendasParaInserir);
+                
+                // Trava: Lança erro e interrompe a execução caso o banco falhe
+                if (error) throw error;
+            }
+
+            // Sucesso garantido: Só chega aqui se o try não lançar erro
+            triggerConfetti();
+
+            // Redireciona com noopener, noreferrer para proteção contra Reverse Tabnabbing
+            const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            if (newWindow) {
+                newWindow.opener = null;
+            }
+
+            // Limpa carrinho e formulário 
+            setTimeout(() => {
+                cart = {};
+                checkoutForm.reset();
+                
+                deliveryFields.classList.remove('hidden');
+                pickupFields.classList.add('hidden');
+                changeField.classList.add('hidden');
+                
+                updateCartUI();
+                renderMenu('all');
+                closeCart();
+            }, 1000);
+
+        } catch (error) {
+            // Error Handling: Resiliência em caso de falha de conexão/banco
+            console.error('Erro crítico ao salvar no painel:', error);
+            alert('Tivemos um problema de conexão ao processar seu pedido. O registro não foi concluído. Por favor, verifique sua internet e tente novamente.');
+        } finally {
+            // UX: Restaura o botão independente de sucesso ou falha
+            if (submitBtn) {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
     }
 }
 
