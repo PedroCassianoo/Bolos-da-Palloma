@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bolos da Palloma - Painel de Gestão</title>
     <meta name="description" content="Painel interativo de custos, capacidade e metas para gestão interna da confeitaria Bolos da Palloma.">
+    <meta name="robots" content="noindex, nofollow">
     
     <!-- Google Fonts: Plus Jakarta Sans para interface limpa e moderna, Cherry Swash para toques especiais -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +15,8 @@
     <link rel="stylesheet" href="painel.css?v=1.4.0">
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Configuração centralizada do Supabase (credenciais em arquivo único) -->
+    <script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -38,7 +41,7 @@
                 </div>
                 
                 <button type="submit" id="btn-login" class="btn-login-action">Entrar</button>
-                <button type="button" id="btn-signup" class="btn-signup-action">Criar Conta</button>
+                <!-- Botão de signup removido por segurança: novos usuários devem ser criados manualmente pelo painel do Supabase -->
             </form>
             <div id="login-msg" class="login-msg hidden"></div>
         </div>

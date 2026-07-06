@@ -1,0 +1,409 @@
+diff --git a/painel.css b/painel.css
+index 9b789ab..27a086c 100644
+--- a/painel.css
++++ b/painel.css
+@@ -1321,4 +1321,404 @@ body {
+     }
+ }
+ 
++/* ==========================================================================
++   TELA DE LOGIN
++   ========================================================================== */
++.login-wrapper {
++    position: fixed;
++    top: 0;
++    left: 0;
++    width: 100vw;
++    height: 100vh;
++    background-color: #3d2511;
++    background-image: radial-gradient(circle, rgba(160, 93, 37, 0.2) 10%, transparent 11%);
++    background-size: 20px 20px;
++    display: flex;
++    justify-content: center;
++    align-items: center;
++    z-index: 9999;
++}
++
++.login-card {
++    background-color: var(--bg-card);
++    width: 90%;
++    max-width: 400px;
++    padding: 40px 32px;
++    border-radius: var(--radius-lg);
++    border: 6px solid var(--primary);
++    box-shadow: var(--shadow-lg);
++    animation: fadeIn 0.4s ease-out;
++}
++
++.login-brand {
++    text-align: center;
++    margin-bottom: 30px;
++}
++
++.login-brand .brand-logo-icon {
++    height: 64px;
++    width: auto;
++    margin-bottom: 12px;
++}
++
++.login-brand h2 {
++    color: var(--text-dark);
++    font-size: 1.8rem;
++    font-family: 'Cherry Swash', cursive, serif;
++}
++
++.login-brand p {
++    color: var(--text-muted);
++    font-size: 0.9rem;
++    font-weight: 500;
++}
++
++.login-form .form-group {
++    margin-bottom: 20px;
++}
++
++.login-form label {
++    display: block;
++    margin-bottom: 8px;
++    font-size: 0.88rem;
++    font-weight: 600;
++    color: var(--text-dark);
++}
++
++.login-form input {
++    width: 100%;
++    padding: 12px 16px;
++    border-radius: var(--radius-sm);
++    border: 2px solid rgba(160, 93, 37, 0.15);
++    background-color: var(--white);
++    color: var(--text-dark);
++    font-family: var(--font-sans);
++    font-size: 0.95rem;
++    transition: all 0.2s ease;
++}
++
++.login-form input:focus {
++    outline: none;
++    border-color: var(--primary);
++    box-shadow: 0 0 0 3px rgba(160, 93, 37, 0.15);
++}
++
++.btn-login-action {
++    width: 100%;
++    padding: 14px;
++    background-color: var(--primary);
++    color: var(--white);
++    border: none;
++    border-radius: var(--radius-sm);
++    font-size: 1rem;
++    font-weight: 700;
++    cursor: pointer;
++    transition: all 0.2s ease;
++    margin-bottom: 12px;
++}
++
++.btn-login-action:hover {
++    background-color: var(--primary-dark);
++}
++
++.btn-signup-action {
++    width: 100%;
++    padding: 14px;
++    background-color: transparent;
++    color: var(--primary);
++    border: 2px solid var(--primary);
++    border-radius: var(--radius-sm);
++    font-size: 1rem;
++    font-weight: 700;
++    cursor: pointer;
++    transition: all 0.2s ease;
++}
++
++.btn-signup-action:hover {
++    background-color: rgba(160, 93, 37, 0.05);
++}
++
++.login-msg {
++    margin-top: 15px;
++    padding: 12px;
++    border-radius: var(--radius-sm);
++    text-align: center;
++    font-size: 0.88rem;
++    font-weight: 600;
++}
++
++.login-msg.success {
++    background-color: #f1f1e1;
++    color: #55552b;
++    border: 1px solid #c2c29c;
++}
++
++.login-msg.error {
++    background-color: #fce8e6;
++    color: #c5221f;
++    border: 1px solid #fad2cf;
++}
++
++/* ==========================================================================
++   BOTOES DO HEADER & LOGOUT
++   ========================================================================== */
++.header-badge {
++    display: flex;
++    align-items: center;
++    gap: 12px;
++}
++
++.btn-logout {
++    background-color: #fce8e6;
++    color: #c5221f;
++    border: 1px solid #fad2cf;
++    border-radius: var(--radius-sm);
++    padding: 6px 12px;
++    font-size: 0.8rem;
++    font-weight: 700;
++    cursor: pointer;
++    transition: all 0.2s ease;
++}
++
++.btn-logout:hover {
++    background-color: #fad2cf;
++}
++
++/* ==========================================================================
++   TELA DE FATURAMENTO: TOTAL DO DIA
++   ========================================================================== */
++.date-selector-group {
++    display: flex;
++    align-items: center;
++    gap: 8px;
++    background-color: var(--white);
++    padding: 6px 12px;
++    border-radius: var(--radius-md);
++    border: 2px solid rgba(160, 93, 37, 0.12);
++}
++
++.date-picker-input {
++    border: none;
++    background: transparent;
++    color: var(--text-dark);
++    font-family: var(--font-sans);
++    font-size: 1rem;
++    font-weight: 700;
++    cursor: pointer;
++    outline: none;
++}
++
++.btn-arrow {
++    background: none;
++    border: none;
++    color: var(--primary);
++    font-size: 1rem;
++    cursor: pointer;
++    padding: 4px 8px;
++    border-radius: var(--radius-sm);
++    transition: all 0.2s ease;
++}
++
++.btn-arrow:hover {
++    background-color: rgba(160, 93, 37, 0.08);
++}
++
++.margin-bottom-20 {
++    margin-bottom: 20px !important;
++}
++
++/* Resultados do Faturamento */
++.bg-blue-light {
++    background-color: #e8f0fe;
++    border: 1px solid #d2e3fc;
++}
++.text-blue {
++    color: #1a73e8;
++}
++.bg-red-light {
++    background-color: #fce8e6;
++    border: 1px solid #fad2cf;
++}
++.text-red {
++    color: #c5221f;
++}
++
++/* Badge Selectors para canal e forma de pagamento */
++.badge-selectors {
++    display: grid;
++    grid-template-columns: repeat(2, 1fr);
++    gap: 8px;
++    width: 100%;
++}
++
++.badge-btn {
++    background-color: var(--white);
++    color: var(--text-muted);
++    border: 2px solid rgba(160, 93, 37, 0.15);
++    border-radius: var(--radius-sm);
++    padding: 10px;
++    font-size: 0.85rem;
++    font-weight: 600;
++    cursor: pointer;
++    transition: all 0.2s ease;
++    text-align: center;
++}
++
++.badge-btn:hover {
++    background-color: rgba(160, 93, 37, 0.03);
++    border-color: var(--primary);
++}
++
++.badge-btn.active {
++    background-color: var(--primary);
++    color: var(--white);
++    border-color: var(--primary);
++    box-shadow: 0 4px 10px rgba(160, 93, 37, 0.25);
++}
++
++.btn-block-save {
++    width: 100%;
++    margin-top: 10px;
++}
++
++/* Lista de Vendas */
++.sales-list-container {
++    display: flex;
++    flex-direction: column;
++    width: 100%;
++    height: 100%;
++    min-height: 320px;
++    background-color: var(--white);
++    border-radius: var(--radius-md);
++    border: 2px solid rgba(160, 93, 37, 0.08);
++    overflow: hidden;
++}
++
++.sales-list-header {
++    display: grid;
++    grid-template-columns: 2.2fr 1.1fr 1.1fr 1.6fr 0.4fr;
++    padding: 12px 16px;
++    background-color: rgba(160, 93, 37, 0.05);
++    border-bottom: 2px solid rgba(160, 93, 37, 0.1);
++    font-size: 0.78rem;
++    font-weight: 700;
++    color: var(--text-dark);
++    text-transform: uppercase;
++    letter-spacing: 0.5px;
++}
++
++.sales-list-body {
++    flex-grow: 1;
++    overflow-y: auto;
++    max-height: 360px;
++}
++
++.sales-list-item {
++    display: grid;
++    grid-template-columns: 2.2fr 1.1fr 1.1fr 1.6fr 0.4fr;
++    padding: 14px 16px;
++    border-bottom: 1px solid rgba(160, 93, 37, 0.06);
++    align-items: center;
++    font-size: 0.88rem;
++    transition: background-color 0.15s ease;
++}
++
++.sales-list-item:hover {
++    background-color: rgba(160, 93, 37, 0.02);
++}
++
++.sales-list-item:last-child {
++    border-bottom: none;
++}
++
++.col-prod {
++    font-weight: 600;
++    color: var(--text-dark);
++    white-space: nowrap;
++    overflow: hidden;
++    text-overflow: ellipsis;
++}
++
++.col-chan, .col-pay {
++    color: var(--text-muted);
++    font-size: 0.8rem;
++    font-weight: 500;
++}
++
++.col-val {
++    font-weight: 700;
++    color: var(--text-dark);
++}
++
++.col-profit-span {
++    display: block;
++    font-size: 0.7rem;
++    color: var(--status-green);
++    font-weight: 600;
++}
++
++.btn-delete-sale {
++    background: none;
++    border: none;
++    color: #c5221f;
++    cursor: pointer;
++    padding: 4px;
++    border-radius: var(--radius-sm);
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    transition: all 0.2s ease;
++}
++
++.btn-delete-sale:hover {
++    background-color: #fce8e6;
++    transform: scale(1.1);
++}
++
++.empty-sales-message {
++    padding: 40px;
++    text-align: center;
++    color: var(--text-muted);
++    font-size: 0.9rem;
++    font-style: italic;
++}
++
++.bg-gray-light {
++    background-color: #f1f3f4 !important;
++    cursor: not-allowed;
++}
++
++.col-span-2 {
++    grid-column: span 2;
++}
++
++.form-control-input {
++    width: 100%;
++    padding: 10px 14px;
++    border-radius: var(--radius-sm);
++    border: 2px solid rgba(160, 93, 37, 0.15);
++    background-color: var(--white);
++    color: var(--text-dark);
++    font-family: var(--font-sans);
++    font-size: 0.95rem;
++    transition: all 0.2s ease;
++}
++
++.form-control-input:focus {
++    outline: none;
++    border-color: var(--primary);
++}
++
++/* Helpers */
++.full-width {
++    width: 100% !important;
++}
++
++@media (max-width: 768px) {
++    .badge-selectors {
++        grid-template-columns: repeat(2, 1fr);
++    }
++}
++
++
+ 

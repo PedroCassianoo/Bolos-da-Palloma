@@ -1,0 +1,5 @@
+# Bloqueia indexação do painel de gestão por buscadores
+User-agent: *
+Disallow: /painel.html
+Disallow: /painel.css
+Disallow: /painel.js
