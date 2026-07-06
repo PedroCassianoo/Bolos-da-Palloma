@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="style.css?v=1.5.0">
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Configuração centralizada do Supabase (credenciais em arquivo único) -->
+    <script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -199,8 +201,8 @@
                         <button type="submit" class="btn-whatsapp" id="btn-submit-order">
                             Finalizar Pedido no WhatsApp
                         </button>
-                        <p class="lgpd-notice">
-                            🔒 <strong>Segurança & Privacidade:</strong> Seus dados são processados temporariamente no navegador apenas para estruturar a mensagem do WhatsApp. Não salvamos nenhuma informação sua.
+                        <p class="lgpd-notice" style="font-size: 0.75rem; color: #666; margin-top: 12px; line-height: 1.3;">
+                            🔒 <strong>Privacidade (LGPD):</strong> Coletamos apenas os dados necessários para o seu pedido (nome, data, método de entrega, endereço e itens). Eles são armazenados de forma segura no banco de dados (Supabase) com a finalidade exclusiva de processar e entregar suas encomendas. Você pode solicitar a exclusão total desses dados a qualquer momento pelo WhatsApp.
                         </p>
                     </div>
                 </form>

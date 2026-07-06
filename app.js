@@ -74,14 +74,9 @@ const PRODUCTS = [
     }
 ];
 
-// Configuração do Supabase
-const SUPABASE_URL = 'https://iqakaoawviocutlcqnho.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_rotated_key_placeholder';
-let supabaseClient = null;
-
-if (typeof supabase !== 'undefined') {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
+// Configuração do Supabase (centralizada em supabase-config.js)
+// As variáveis globais SUPABASE_URL, SUPABASE_KEY e supabaseClient
+// são definidas no script carregado antes deste no HTML.
 
 // 1. Carrega do localStorage imediatamente (síncrono) para evitar flashes de preços antigos
 function loadLocalPrices() {
@@ -762,38 +757,45 @@ Enviado através do Cardápio Digital`;
         }
 
         try {
-            // Registrar vendas no Painel de Gestão via Supabase com trava de segurança
-            if (typeof supabaseClient !== 'undefined' && supabaseClient) {
-                const pedidoId = crypto.randomUUID ? crypto.randomUUID() : 'pd-' + Date.now();
-                const vendasParaInserir = [];
-                
-                const isoDate = formattedDate ? formattedDate.split('/').reverse().join('-') : new Date().toISOString().split('T')[0];
-                
-                Object.keys(cart).forEach(id => {
-                    const product = PRODUCTS.find(p => p.id === id);
-                    if (product) {
-                        vendasParaInserir.push({
-                            pedido_id: pedidoId,
-                            data: isoDate,
-                            produto: product.name,
-                            categoria: product.category === 'caseiros' ? 'Caseiro' : 'Confeitado',
-                            canal_venda: 'Cardápio Digital',
-                            forma_pagamento: payMethodValue,
-                            valor_venda: product.price * cart[id],
-                            custo_estimado: 0,
-                            lucro_liquido: product.price * cart[id], 
-                            cliente_nome: clientName,
-                            metodo_entrega: deliveryMethod,
-                            endereco_entrega: deliveryMethod === 'delivery' ? sanitizeInput(deliveryAddress.value) : 'Retirada'
-                        });
-                    }
+            // Registrar vendas no Painel de Gestão via Serverless Function (server-side)
+            // A inserção no banco é feita pelo backend (/api/register-sale.js)
+            // que usa a service_role_key do Supabase e valida todos os campos.
+            const pedidoId = crypto.randomUUID ? crypto.randomUUID() : 'pd-' + Date.now();
+            const vendasParaInserir = [];
+            
+            const isoDate = formattedDate ? formattedDate.split('/').reverse().join('-') : new Date().toISOString().split('T')[0];
+            
+            Object.keys(cart).forEach(id => {
+                const product = PRODUCTS.find(p => p.id === id);
+                if (product) {
+                    vendasParaInserir.push({
+                        pedido_id: pedidoId,
+                        data: isoDate,
+                        produto: product.name,
+                        categoria: product.category === 'caseiros' ? 'Caseiro' : product.category === 'confeitados' ? 'Confeitado' : 'Doce',
+                        canal_venda: 'Cardápio Digital',
+                        forma_pagamento: payMethodValue,
+                        valor_venda: product.price * cart[id],
+                        custo_estimado: 0,
+                        lucro_liquido: product.price * cart[id], 
+                        cliente_nome: clientName,
+                        metodo_entrega: deliveryMethod,
+                        endereco_entrega: deliveryMethod === 'delivery' ? sanitizeInput(deliveryAddress.value) : 'Retirada'
+                    });
+                }
+            });
+            
+            if (vendasParaInserir.length > 0) {
+                const response = await fetch('/api/register-sale', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: vendasParaInserir })
                 });
                 
-                // Inserção transacional assíncrona (Aguardando resposta do DB)
-                const { error } = await supabaseClient.from('vendas').insert(vendasParaInserir);
-                
-                // Trava: Lança erro e interrompe a execução caso o banco falhe
-                if (error) throw error;
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Erro HTTP ${response.status}`);
+                }
             }
 
             // Sucesso garantido: Só chega aqui se o try não lançar erro

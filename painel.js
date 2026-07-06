@@ -1,6 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ==========================================
+    // UTILS E SANITIZAÇÃO
+    // ==========================================
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                "'": '&#39;', '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+
+    // ==========================================
     // NOTIFICAÇÕES TOAST
     // ==========================================
     function showToast(message) {
@@ -9,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.innerHTML = `<span>✨</span><span>${message}</span>`;
+        toast.innerHTML = `<span>✨</span><span>${escapeHTML(message)}</span>`;
         container.appendChild(toast);
         
         // Remove após 3 segundos
@@ -161,15 +174,12 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ==========================================
-    // CONFIGURAÇÃO DO SUPABASE
+    // CONFIGURAÇÃO DO SUPABASE (centralizada em supabase-config.js)
     // ==========================================
-    const SUPABASE_URL = 'https://iqakaoawviocutlcqnho.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_rotated_key_placeholder';
-    let supabaseClient = null;
-
-    if (typeof supabase !== 'undefined') {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
+    // As variáveis globais SUPABASE_URL, SUPABASE_KEY e supabaseClient
+    // são definidas no script carregado antes deste no HTML.
+    // Aqui apenas criamos uma referência local para uso dentro deste escopo.
+    let supabaseClient = window.supabaseClient || null;
 
     let cakesData = {};
     let activeCategoryFilter = 'all';
@@ -456,20 +466,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
             card.innerHTML = `
                 <div class="cake-card-img-wrapper">
-                    <span class="cake-card-tag">${tagText}</span>
-                    <img src="${cake.image}" alt="${cake.name}" class="cake-card-img" onerror="this.src='assets/images/logo_icon.png'">
+                    <span class="cake-card-tag">${escapeHTML(tagText)}</span>
+                    <img src="${escapeHTML(cake.image)}" alt="${escapeHTML(cake.name)}" class="cake-card-img" onerror="this.src='assets/images/logo_icon.png'">
                 </div>
                 <div class="cake-card-content">
-                    <h4 class="cake-card-title">${cake.name}</h4>
+                    <h4 class="cake-card-title">${escapeHTML(cake.name)}</h4>
                     <div class="cake-card-footer">
                         <span class="cake-card-price">${formatCurrency(cake.price)}</span>
-                        <span class="profit-badge ${profitClass}">${profitText}</span>
+                        <span class="profit-badge ${profitClass}">${escapeHTML(profitText)}</span>
                     </div>
                     <button class="cake-card-add-sale-btn" title="Registrar +1 Vendido">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16" style="stroke-width: 2.5;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        +1 Vendido
                     </button>
                 </div>
             `;
@@ -891,22 +900,22 @@ document.addEventListener('DOMContentLoaded', function() {
             // NOVO: Renderização condicional dos dados enviados pelo Cardápio Digital
             let detalhesExtras = '';
             if (sale.cliente_nome) {
-                detalhesExtras += `<br><small style="color: #6b7280; font-size: 0.85em; display: block; margin-top: 4px;">👤 Cliente: ${sale.cliente_nome}</small>`;
+                detalhesExtras += `<br><small style="color: #6b7280; font-size: 0.85em; display: block; margin-top: 4px;">👤 Cliente: ${escapeHTML(sale.cliente_nome)}</small>`;
                 
                 if (sale.metodo_entrega === 'delivery') {
-                    detalhesExtras += `<small style="color: #6b7280; font-size: 0.85em; display: block;">🛵 Entrega: ${sale.endereco_entrega || 'Endereço não informado'}</small>`;
+                    detalhesExtras += `<small style="color: #6b7280; font-size: 0.85em; display: block;">🛵 Entrega: ${escapeHTML(sale.endereco_entrega) || 'Endereço não informado'}</small>`;
                 } else if (sale.metodo_entrega === 'retirada' || sale.endereco_entrega === 'Retirada') {
                     detalhesExtras += `<small style="color: #6b7280; font-size: 0.85em; display: block;">🏪 Retirada no Local</small>`;
                 }
             }
             
             item.innerHTML = `
-                <span class="col-prod" title="${sale.produto}">
-                    <strong>${sale.produto}</strong>
+                <span class="col-prod" title="${escapeHTML(sale.produto)}">
+                    <strong>${escapeHTML(sale.produto)}</strong>
                     ${detalhesExtras}
                 </span>
-                <span class="col-chan">${sale.canal_venda}</span>
-                <span class="col-pay">${sale.forma_pagamento}</span>
+                <span class="col-chan">${escapeHTML(sale.canal_venda)}</span>
+                <span class="col-pay">${escapeHTML(sale.forma_pagamento)}</span>
                 <span class="col-val text-right">
                     ${formatCurrency(saleVal)}
                     <span class="col-profit-span ${profitClass}">${profitText} lucro</span>
@@ -1100,10 +1109,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Rate limiting de tentativas de login
+        let loginAttempts = 0;
+        let blockTime = 0;
+
         // Listener de Login
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             loginMsg.classList.add('hidden');
+
+            const now = Date.now();
+            if (now < blockTime) {
+                const timeLeft = Math.ceil((blockTime - now) / 1000);
+                loginMsg.textContent = `Muitas tentativas. Aguarde ${timeLeft}s.`;
+                loginMsg.className = "login-msg error";
+                loginMsg.classList.remove('hidden');
+                return;
+            }
+
             const email = loginEmail.value.trim();
             const password = loginPassword.value;
             
@@ -1113,7 +1136,14 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
+                // Sucesso: reseta as tentativas
+                loginAttempts = 0;
             } catch (err) {
+                loginAttempts++;
+                if (loginAttempts >= 5) {
+                    blockTime = Date.now() + 60000; // Bloqueio de 60 segundos
+                    loginAttempts = 0; // Reseta após castigo
+                }
                 loginMsg.textContent = "Erro ao entrar: " + err.message;
                 loginMsg.className = "login-msg error";
                 loginMsg.classList.remove('hidden');
@@ -1123,37 +1153,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Listener de Cadastro (Criar Conta)
-        btnSignup.addEventListener('click', async () => {
-            loginMsg.classList.add('hidden');
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value;
-            
-            if (!email || !password) {
-                loginMsg.textContent = "Preencha e-mail e senha para cadastrar.";
-                loginMsg.className = "login-msg error";
-                loginMsg.classList.remove('hidden');
-                return;
-            }
-            
-            btnSignup.disabled = true;
-            btnSignup.textContent = 'Cadastrando...';
-            
-            try {
-                const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                if (error) throw error;
-                loginMsg.textContent = "Cadastro realizado! Você foi logado.";
-                loginMsg.className = "login-msg success";
-                loginMsg.classList.remove('hidden');
-            } catch (err) {
-                loginMsg.textContent = "Erro ao cadastrar: " + err.message;
-                loginMsg.className = "login-msg error";
-                loginMsg.classList.remove('hidden');
-            } finally {
-                btnSignup.disabled = false;
-                btnSignup.textContent = 'Criar Conta';
-            }
-        });
+        // Listener de Cadastro (desabilitado por segurança — botão removido do HTML)
+        if (btnSignup) {
+            btnSignup.addEventListener('click', async () => {
+                loginMsg.classList.add('hidden');
+                const email = loginEmail.value.trim();
+                const password = loginPassword.value;
+                
+                if (!email || !password) {
+                    loginMsg.textContent = "Preencha e-mail e senha para cadastrar.";
+                    loginMsg.className = "login-msg error";
+                    loginMsg.classList.remove('hidden');
+                    return;
+                }
+                
+                btnSignup.disabled = true;
+                btnSignup.textContent = 'Cadastrando...';
+                
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                    if (error) throw error;
+                    loginMsg.textContent = "Cadastro realizado! Você foi logado.";
+                    loginMsg.className = "login-msg success";
+                    loginMsg.classList.remove('hidden');
+                } catch (err) {
+                    loginMsg.textContent = "Erro ao cadastrar: " + err.message;
+                    loginMsg.className = "login-msg error";
+                    loginMsg.classList.remove('hidden');
+                } finally {
+                    btnSignup.disabled = false;
+                    btnSignup.textContent = 'Criar Conta';
+                }
+            });
+        }
         
         // Listener de Logout
         if (btnLogout) {
@@ -1163,12 +1195,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     } else {
-        // Se Supabase falhar, exibe fallback local (para fins de teste/offline)
-        loginContainer.classList.add('hidden');
-        dashboardApp.classList.remove('hidden');
-        loadLocalCakesData();
-        calculateCapacity();
-        renderCakesGrid();
+        // Supabase indisponível: exibe mensagem de erro e mantém o painel bloqueado
+        dashboardApp.classList.add('hidden');
+        loginContainer.classList.remove('hidden');
+        if (loginMsg) {
+            loginMsg.textContent = 'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.';
+            loginMsg.className = 'login-msg error';
+            loginMsg.classList.remove('hidden');
+        }
+        if (btnLogin) btnLogin.disabled = true;
+        if (btnSignup) btnSignup.disabled = true;
     }
 
     // ==========================================
@@ -1206,10 +1242,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             item.innerHTML = `
                 <div class="sale-item-info">
-                    <span class="sale-item-name" title="${sale.produto}">${sale.produto}</span>
+                    <span class="sale-item-name" title="${escapeHTML(sale.produto)}">${escapeHTML(sale.produto)}</span>
                     <span class="sale-item-meta">
                         ${timeString ? `<time class="sale-item-time">${timeString}</time>` : ''}
-                        <span class="sale-item-channel">${timeString ? '• ' : ''}${sale.canal_venda}</span>
+                        <span class="sale-item-channel">${timeString ? '• ' : ''}${escapeHTML(sale.canal_venda)}</span>
                     </span>
                 </div>
                 <span class="sale-item-value">+ ${formatCurrency(parseFloat(sale.valor_venda))}</span>

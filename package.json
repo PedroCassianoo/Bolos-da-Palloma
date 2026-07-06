@@ -1,0 +1,9 @@
+{
+  "name": "bolos-da-palloma",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Cardápio digital e painel de gestão - Bolos da Palloma",
+  "dependencies": {
+    "@supabase/supabase-js": "^2"
+  }
+}
