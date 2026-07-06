@@ -90,3 +90,18 @@ Abaixo está o status detalhado de cada item de segurança revisado e corrigido 
 
 ### supabase_rls_policies.sql [NOVO]
 - Script SQL para remoção de políticas vulneráveis antigas e criação de políticas RLS estritas de produção.
+
+---
+
+## 3. Políticas Ativas Pós-Auditoria (pg_policies)
+
+A query `SELECT schemaname, tablename, policyname, roles, cmd, qual, with_check FROM pg_policies;` foi executada em produção e retornou o seguinte estado limpo e seguro:
+
+| Tabela | Nome da Política | Comando (CMD) | Papéis (Roles) | Condição (USING/QUAL) | Condição (WITH CHECK) | Status de Segurança |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **Custos & Preços** | `Public can view prices` | SELECT | `{public}` | `true` | `null` | ✅ Seguro (Leitura Pública Autorizada) |
+| **Custos & Preços** | `Authenticated users can manage prices` | ALL | `{authenticated}` | `true` | `true` | ✅ Seguro (Modificação restrita a Admins) |
+| **vendas** | `Authenticated users can view sales` | SELECT | `{authenticated}` | `true` | `null` | ✅ Seguro (Leitura restrita a Admins) |
+| **vendas** | `Authenticated users can insert sales` | INSERT | `{authenticated}` | `null` | `true` | ✅ Seguro (Inserção manual restrita a Admins) |
+| **vendas** | `Authenticated users can update sales` | UPDATE | `{authenticated}` | `true` | `true` | ✅ Seguro (Edição restrita a Admins) |
+| **vendas** | `Authenticated users can delete sales` | DELETE | `{authenticated}` | `true` | `null` | ✅ Seguro (Exclusão restrita a Admins) |
