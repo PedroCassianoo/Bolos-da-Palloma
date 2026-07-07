@@ -475,22 +475,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="cake-card-price">${formatCurrency(cake.price)}</span>
                         <span class="profit-badge ${profitClass}">${escapeHTML(profitText)}</span>
                     </div>
-                    <button class="cake-card-add-sale-btn" title="Registrar +1 Vendido">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16" style="stroke-width: 2.5;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                    </button>
                 </div>
             `;
-            
-            // Configurar botão de venda rápida
-            const btnSold = card.querySelector('.cake-card-add-sale-btn');
-            if (btnSold) {
-                btnSold.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Evita abrir os detalhes de precificação do bolo
-                    openQuickSaleModal(cake.id);
-                });
-            }
             
             card.addEventListener('click', () => {
                 selectCake(cake.id);
@@ -644,6 +630,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const sidebarCountEl = document.getElementById('sidebar-total-count');
         if (sidebarValEl) sidebarValEl.textContent = formatCurrency(todayTotalVal).replace('R$', '').trim();
         if (sidebarCountEl) sidebarCountEl.textContent = `${todayCount} venda${todayCount === 1 ? '' : 's'}`;
+
+        // Elementos do Hub Início
+        const hubValEl = document.getElementById('hub-revenue-amount');
+        if (hubValEl) hubValEl.textContent = formatCurrency(todayTotalVal);
+
+        // Elementos Fixos do Cabeçalho (Ticket Médio e Faturamento)
+        const headerFaturamentoEl = document.getElementById('header-faturamento-dia');
+        const headerTicketEl = document.getElementById('header-ticket-medio');
+        const ticketMedio = todayCount > 0 ? (todayTotalVal / todayCount) : 0;
+        if (headerFaturamentoEl) headerFaturamentoEl.textContent = formatCurrency(todayTotalVal);
+        if (headerTicketEl) headerTicketEl.textContent = formatCurrency(ticketMedio);
 
         // Renderizar a lista de vendas na sidebar
         renderSidebarSales(todaySales);
@@ -1091,7 +1088,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (session) {
                 // Logado
                 loginContainer.classList.add('hidden');
-                dashboardApp.classList.remove('hidden');
+                
+                const appLayout = document.getElementById('app-layout');
+                if (appLayout) {
+                    appLayout.classList.remove('hidden');
+                }
                 
                 // Inicializa a aplicação localmente de imediato (offline-first)
                 loadLocalCakesData();
@@ -1102,9 +1103,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadRemoteCakesData().then(() => {
                     loadSalesData();
                 });
+
+                // Restaura a rota da URL (query param) ou a última rota ativa ou vai para inicio
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryRoute = urlParams.get('route');
+                const lastRoute = queryRoute || localStorage.getItem('activeRoute') || 'inicio';
+                if (window.selectRoute) {
+                    window.selectRoute(lastRoute);
+                }
             } else {
                 // Não logado
-                dashboardApp.classList.add('hidden');
+                const appLayout = document.getElementById('app-layout');
+                if (appLayout) {
+                    appLayout.classList.add('hidden');
+                }
                 loginContainer.classList.remove('hidden');
             }
         });
@@ -1260,10 +1272,32 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedQuickSalePayment = 'PIX';
 
     function openQuickSaleModal(cakeId) {
-        const cake = cakesData[cakeId];
-        if (!cake) return;
-        
-        pendingQuickSaleCake = cake;
+        // Preencher o select de produtos com todos os bolos ativos
+        const productSelect = document.getElementById('quick-sale-product-select');
+        if (productSelect) {
+            productSelect.innerHTML = '';
+            Object.keys(cakesData).forEach(key => {
+                const cake = cakesData[key];
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = cake.name;
+                productSelect.appendChild(option);
+            });
+            
+            // Selecionar o cakeId se fornecido e válido, senão o primeiro bolo por padrão
+            const targetKey = cakeId && cakesData[cakeId] ? cakeId : Object.keys(cakesData)[0];
+            if (targetKey) {
+                productSelect.value = targetKey;
+                const cake = cakesData[targetKey];
+                pendingQuickSaleCake = cake;
+                
+                const modalImg = document.getElementById('quick-sale-img');
+                const modalPrice = document.getElementById('quick-sale-price');
+                if (modalImg) modalImg.src = cake.image;
+                if (modalPrice) modalPrice.textContent = formatCurrency(cake.price);
+            }
+        }
+
         selectedQuickSaleChannel = 'Balcão';
         selectedQuickSalePayment = 'PIX';
         
@@ -1276,15 +1310,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (btn.dataset.value === 'PIX') btn.classList.add('active');
             else btn.classList.remove('active');
         });
-        
-        // Preencher detalhes do bolo no modal
-        const modalImg = document.getElementById('quick-sale-img');
-        const modalName = document.getElementById('quick-sale-name');
-        const modalPrice = document.getElementById('quick-sale-price');
-        
-        if (modalImg) modalImg.src = cake.image;
-        if (modalName) modalName.textContent = cake.name;
-        if (modalPrice) modalPrice.textContent = formatCurrency(cake.price);
         
         // Abrir modal
         const overlay = document.getElementById('quick-sale-overlay');
@@ -1397,6 +1422,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (quickSaleOverlay) quickSaleOverlay.addEventListener('click', closeQuickSaleModal);
     if (btnConfirmQuickSale) btnConfirmQuickSale.addEventListener('click', registerQuickSale);
 
+    // Configurar seletor de produto do modal de venda rápida
+    const quickSaleProductSelect = document.getElementById('quick-sale-product-select');
+    if (quickSaleProductSelect) {
+        quickSaleProductSelect.addEventListener('change', () => {
+            const cakeId = quickSaleProductSelect.value;
+            const cake = cakesData[cakeId];
+            if (cake) {
+                pendingQuickSaleCake = cake;
+                const modalImg = document.getElementById('quick-sale-img');
+                const modalPrice = document.getElementById('quick-sale-price');
+                if (modalImg) modalImg.src = cake.image;
+                if (modalPrice) modalPrice.textContent = formatCurrency(cake.price);
+            }
+        });
+    }
+
     // Configurar seletores interativos do modal de venda rápida
     document.querySelectorAll('#quick-sale-channel-selectors .quick-sale-selector-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -1431,4 +1472,255 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnFilterCaseiros) btnFilterCaseiros.addEventListener('click', (e) => setCategoryFilter('caseiro', e.currentTarget));
     if (btnFilterConfeitados) btnFilterConfeitados.addEventListener('click', (e) => setCategoryFilter('confeitado', e.currentTarget));
     if (btnFilterDoces) btnFilterDoces.addEventListener('click', (e) => setCategoryFilter('doce', e.currentTarget));
+
+    // ==========================================
+    // ROTEAMENTO CENTRALIZADO (ETAPA 1)
+    // ==========================================
+    window.selectRoute = function(routeId) {
+        // Esconde todas as views de aplicativo
+        const appViews = document.querySelectorAll('.app-view');
+        appViews.forEach(view => {
+            view.classList.add('hidden');
+            view.style.display = 'none';
+        });
+
+        // Determina qual wrapper/container principal mostrar
+        if (['inicio', 'metas', 'capacidade', 'clientes', 'custo-preco'].includes(routeId)) {
+            // Mostra o dashboard central do painel
+            const dashboardApp = document.getElementById('dashboard-app');
+            if (dashboardApp) {
+                dashboardApp.classList.remove('hidden');
+                dashboardApp.style.display = 'flex';
+            }
+
+            // Alterna abas internas
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            let tabId = routeId;
+            if (routeId === 'inicio') {
+                tabId = 'inicio';
+            } else if (routeId === 'custo-preco') {
+                tabId = 'custo-preco';
+                // Mostra a listagem de bolos e detalhes se ativo
+                const details = document.getElementById('subview-cake-details');
+                const list = document.getElementById('subview-cake-list');
+                if (details) details.classList.add('hidden');
+                if (list) list.classList.remove('hidden');
+            }
+
+            const activeTabContent = document.getElementById(`tab-${tabId}`);
+            if (activeTabContent) {
+                activeTabContent.classList.add('active');
+            }
+        } else {
+            // Rota de iframe (estoque, receitas, pedidos)
+            const targetViewId = `${routeId}-app`;
+            const targetView = document.getElementById(targetViewId);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                targetView.style.display = 'flex';
+            }
+        }
+
+        // Atualiza a classe ativa em qualquer item de menu (sidebar e bottom nav)
+        document.querySelectorAll('.bolos-nav-item').forEach(item => {
+            if (item.getAttribute('data-target') === routeId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Salva a rota ativa
+        localStorage.setItem('activeRoute', routeId);
+    };
+
+    // ==========================================
+    // LÓGICA DA BUSCA GLOBAL (HEADER)
+    // ==========================================
+    const searchInput = document.getElementById('global-search-input');
+    const searchResultsDropdown = document.getElementById('search-results-dropdown');
+
+    if (searchInput && searchResultsDropdown) {
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.trim().toLowerCase();
+            if (!query) {
+                searchResultsDropdown.innerHTML = '';
+                searchResultsDropdown.classList.add('hidden');
+                return;
+            }
+
+            const results = [];
+
+            // 1. Filtrar Receitas (de cakesData)
+            const matchedCakes = Object.keys(cakesData)
+                .map(key => cakesData[key])
+                .filter(cake => cake.name.toLowerCase().includes(query));
+
+            if (matchedCakes.length > 0) {
+                results.push({
+                    type: 'receitas',
+                    title: 'Receitas & Precificação',
+                    items: matchedCakes.map(cake => ({
+                        name: cake.name,
+                        meta: `Categoria: ${cake.category === 'caseiros' ? 'Caseiro' : cake.category === 'confeitados' ? 'Confeitado' : 'Doce'} · R$ ${cake.price.toFixed(2)}`,
+                        icon: '🍰',
+                        action: () => {
+                            window.selectRoute('custo-preco');
+                            selectCake(cake.id);
+                        }
+                    }))
+                });
+            }
+
+            // 2. Filtrar Insumos / Estoque
+            const stockItems = [
+                { name: 'Morangos Frescos', meta: 'Frutas frescas · Expira em 1 dia', icon: '🍓', route: 'estoque' },
+                { name: 'Leite Integral', meta: 'Laticínios · Expira em 2 dias', icon: '🥛', route: 'estoque' },
+                { name: 'Farinha de Trigo Premium', meta: 'Secos · Estoque: 150 kg', icon: '🌾', route: 'estoque' },
+                { name: 'Caixa Kraft de Bolos', meta: 'Embalagens · Estoque Crítico', icon: '📦', route: 'estoque' }
+            ];
+
+            const matchedStock = stockItems.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.meta.toLowerCase().includes(query)
+            );
+
+            if (matchedStock.length > 0) {
+                results.push({
+                    type: 'estoque',
+                    title: 'Insumos & Estoque',
+                    items: matchedStock.map(item => ({
+                        name: item.name,
+                        meta: item.meta,
+                        icon: item.icon,
+                        action: () => {
+                            window.selectRoute(item.route);
+                        }
+                    }))
+                });
+            }
+
+            // 3. Filtrar Canais / Clientes
+            const clientChannels = [
+                { name: 'Colegas da empresa', meta: 'Canal atual · Vendas boca a boca', icon: '👥', route: 'clientes' },
+                { name: 'Eventos corporativos', meta: 'Canal futuro · Coffee breaks', icon: '💼', route: 'clientes' },
+                { name: 'iFood / online', meta: 'Canal futuro · Delivery', icon: '🛵', route: 'clientes' }
+            ];
+
+            const matchedClients = clientChannels.filter(channel => 
+                channel.name.toLowerCase().includes(query) || 
+                channel.meta.toLowerCase().includes(query)
+            );
+
+            if (matchedClients.length > 0) {
+                results.push({
+                    type: 'clientes',
+                    title: 'Segmentação de Clientes',
+                    items: matchedClients.map(client => ({
+                        name: client.name,
+                        meta: client.meta,
+                        icon: client.icon,
+                        action: () => {
+                            window.selectRoute(client.route);
+                        }
+                    }))
+                });
+            }
+
+            // 4. Filtrar Páginas Operacionais Gerais
+            const generalPages = [
+                { name: 'Pedidos & Vendas', meta: 'Volume e faturamento geral', icon: '💰', route: 'pedidos' },
+                { name: 'Simulador de Catering', meta: 'Cálculo preditivo de ingredientes e trabalho', icon: '⚡', route: 'simulador' },
+                { name: 'Acompanhamento de Metas', meta: 'Planejamento e metas', icon: '🎯', route: 'metas' },
+                { name: 'Capacidade Limite Operacional', meta: 'Simulação e planejamento de produção', icon: '🥣', route: 'capacidade' }
+            ];
+
+            const matchedPages = generalPages.filter(page => 
+                page.name.toLowerCase().includes(query) || 
+                page.meta.toLowerCase().includes(query)
+            );
+
+            if (matchedPages.length > 0) {
+                results.push({
+                    type: 'paginas',
+                    title: 'Telas & Ferramentas',
+                    items: matchedPages.map(page => ({
+                        name: page.name,
+                        meta: page.meta,
+                        icon: page.icon,
+                        action: () => {
+                            window.selectRoute(page.route);
+                        }
+                    }))
+                });
+            }
+
+            // Renderizar resultados no dropdown
+            searchResultsDropdown.innerHTML = '';
+
+            if (results.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'search-no-results';
+                noResults.textContent = 'Nenhum resultado encontrado.';
+                searchResultsDropdown.appendChild(noResults);
+            } else {
+                results.forEach(group => {
+                    // Título do grupo
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'search-group-title';
+                    groupTitle.textContent = group.title;
+                    searchResultsDropdown.appendChild(groupTitle);
+
+                    // Itens do grupo
+                    group.items.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'search-item';
+                        
+                        itemEl.innerHTML = `
+                            <span class="search-item-icon">${item.icon}</span>
+                            <div class="search-item-info">
+                                <span class="search-item-name">${item.name}</span>
+                                <span class="search-item-meta">${item.meta}</span>
+                            </div>
+                        `;
+
+                        itemEl.addEventListener('click', () => {
+                            item.action();
+                            searchInput.value = '';
+                            searchResultsDropdown.innerHTML = '';
+                            searchResultsDropdown.classList.add('hidden');
+                        });
+
+                        searchResultsDropdown.appendChild(itemEl);
+                    });
+                });
+            }
+
+            searchResultsDropdown.classList.remove('hidden');
+        });
+
+        // Fechar a busca se clicar fora
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResultsDropdown.contains(e.target)) {
+                searchResultsDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    // ==========================================
+    // AÇÃO DO BOTÃO "LANÇAR VENDA" (DASHBOARD)
+    // ==========================================
+    const btnLaunchSale = document.getElementById('btn-launch-sale');
+    if (btnLaunchSale) {
+        btnLaunchSale.addEventListener('click', () => {
+            if (typeof openQuickSaleModal === 'function') {
+                openQuickSaleModal();
+            }
+        });
+    }
+
+    // Expor openSalesSubview globalmente para que inline onclick="openSalesSubview()" funcione
+    window.openSalesSubview = openSalesSubview;
 });

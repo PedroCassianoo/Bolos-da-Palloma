@@ -1,0 +1,233 @@
+/* VUI (Voice User Interface) Floating Button Styles */
+
+/* 1. Fixed VUI Container */
+.vui-container {
+    position: fixed;
+    bottom: 96px; /* Default above mobile bottom nav */
+    right: 24px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', system-ui, sans-serif;
+    transition: bottom 0.3s ease, right 0.3s ease;
+}
+
+/* Responsive Positioning for Pages WITHOUT OCR (like receitas.html) */
+@media (min-width: 768px) {
+    .vui-container {
+        bottom: 40px; /* Corner on desktop */
+        right: 40px;
+    }
+}
+
+/* Responsive Positioning for Pages WITH OCR (like estoque.html) - Shifts VUI up to avoid overlap */
+.vui-container.vui-has-ocr {
+    bottom: 176px; /* Shifts above OCR button on mobile */
+}
+
+@media (min-width: 768px) {
+    .vui-container.vui-has-ocr {
+        bottom: 120px; /* Shifts above OCR button on desktop */
+        right: 40px;
+    }
+}
+
+/* 2. Tooltip (Visible in State 2 only) */
+.vui-tooltip {
+    position: absolute;
+    bottom: 68px; /* Above the 56px button */
+    background-color: #1e1e24;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vui-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e1e24 transparent transparent transparent;
+}
+
+/* Show tooltip class (applied in State 2 when hovered) */
+.vui-container.vui-show-tooltip .vui-tooltip {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* 3. The VUI Button */
+.vui-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #1e1e24; /* Dark rounded div background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    padding: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s active;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.vui-btn:hover {
+    background-color: #2b2b36;
+}
+
+.vui-btn:active {
+    transform: scale(0.95);
+}
+
+/* Inner White Circle (Visible in States 1 & 2) */
+.vui-inner-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Icon Styles & Transitions */
+.vui-icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+.vui-icon-arrow {
+    color: #000000; /* Black arrow icon */
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.vui-icon-mic-black {
+    color: #000000; /* Black mic icon */
+    opacity: 0;
+    transform: scale(0.5);
+    stroke-width: 2.2;
+}
+
+.vui-icon-mic-white {
+    color: #ffffff; /* White mic icon directly on dark bg */
+    width: 22px;
+    height: 22px;
+    opacity: 0;
+    transform: scale(0.5);
+    z-index: 1;
+    stroke-width: 2.2;
+}
+
+/* State 1: Enviar (Send Arrow Mode) */
+.vui-btn.vui-state-1 .vui-inner-circle {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.vui-btn.vui-state-1 .vui-icon-arrow {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.vui-btn.vui-state-1 .vui-icon-mic-black {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.vui-btn.vui-state-1 .vui-icon-mic-white {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+/* State 2: Voz (Voice Mic Mode) */
+.vui-btn.vui-state-2 .vui-inner-circle {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.vui-btn.vui-state-2 .vui-icon-arrow {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.vui-btn.vui-state-2 .vui-icon-mic-black {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.vui-btn.vui-state-2 .vui-icon-mic-white {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+/* State 3: Ativo (Recording Mic Mode) */
+.vui-btn.vui-state-3 {
+    background-color: #1e1e24; /* Directly over dark bg */
+    border-color: rgba(255, 255, 255, 0.4);
+    animation: vui-pulse-ring-glow 1.5s infinite;
+}
+
+.vui-btn.vui-state-3 .vui-inner-circle {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.vui-btn.vui-state-3 .vui-icon-arrow {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.vui-btn.vui-state-3 .vui-icon-mic-black {
+    opacity: 0;
+    transform: scale(0.5);
+}
+
+.vui-btn.vui-state-3 .vui-icon-mic-white {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* State 3 Pulse Ring */
+@keyframes vui-pulse-ring-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0), 0 4px 16px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 4px 16px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}

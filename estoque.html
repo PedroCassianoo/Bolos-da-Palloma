@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Bolos da Palloma - Estoque</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Eb+Garamond:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#9a9088",
+                        "on-surface-variant": "#605850",
+                        "error-container": "#fce4e0",
+                        "primary-fixed": "#fbe8d8",
+                        "on-primary-container": "#fbe8d8",
+                        "on-secondary-fixed": "#2a2420",
+                        "on-surface": "#3a302a",
+                        "secondary-container": "#eae2da",
+                        "surface-tint": "#c2652a",
+                        "surface-dim": "#dcd6cc",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#2e1515",
+                        "on-primary-fixed": "#401a08",
+                        "secondary-fixed-dim": "#cec6be",
+                        "surface-container-highest": "#e6e0d6",
+                        "background": "#faf5ee",
+                        "tertiary-fixed-dim": "#e8a0a0",
+                        "surface-container-low": "#f6f0e8",
+                        "primary-container": "#e08850",
+                        "tertiary-fixed": "#fce0e0",
+                        "error": "#c0392b",
+                        "inverse-on-surface": "#faf5ee",
+                        "inverse-surface": "#3a302a",
+                        "primary-fixed-dim": "#f0a878",
+                        "secondary-fixed": "#eae2da",
+                        "on-secondary-fixed-variant": "#504840",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#8c3c3c",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#7a1a10",
+                        "surface": "#faf5ee",
+                        "surface-bright": "#faf5ee",
+                        "secondary": "#78706a",
+                        "on-tertiary-container": "#3a2020",
+                        "primary": "#c2652a",
+                        "on-background": "#3a302a",
+                        "surface-container-high": "#ece6dc",
+                        "tertiary-container": "#d47070",
+                        "outline-variant": "#d8d0c8",
+                        "surface-variant": "#ece6dc",
+                        "surface-container": "#f2ece4",
+                        "inverse-primary": "#f0a878",
+                        "on-tertiary-fixed-variant": "#6e3030",
+                        "on-primary-fixed-variant": "#8a4518",
+                        "on-secondary-container": "#605850",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Eb Garamond"],
+                        "display": ["Eb Garamond"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for data tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #faf5ee; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dcd6cc; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cec6be; 
+        }
+
+        /* If running inside iframe, hide sidebar and header, and adjust main layout */
+        body.in-iframe nav, 
+        body.in-iframe header {
+            display: none !important;
+        }
+        body.in-iframe main {
+            margin-left: 0 !important;
+            padding-top: 1rem !important;
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        body.in-iframe {
+            padding-bottom: 0px !important;
+        }
+        body.in-iframe [aria-label="Escanear Nota Fiscal (OCR)"] {
+            bottom: 1.5rem !important;
+            right: 1.5rem !important;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/nav.css">
+    <link rel="stylesheet" href="assets/css/vui.css">
+    <script src="assets/js/nav-helper.js" defer></script>
+    <script src="assets/js/vui.js" defer></script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface h-screen w-72 flex-col border-r border-outline-variant/60 flat no shadows fixed left-0 top-0 z-40 hidden md:flex">
+    <div class="p-8 pb-4">
+        <h1 class="font-headline text-2xl font-bold text-primary dark:text-primary-fixed">Bolos da Palloma</h1>
+        <p class="font-body text-label-md text-on-surface-variant mt-1">Kitchen Intelligence</p>
+    </div>
+    <div class="flex-1 px-4 mt-6 space-y-2">
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="painel.html">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body text-label-md">Painel</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-fixed/30 hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="estoque.html">
+            <span class="material-symbols-outlined fill">inventory_2</span>
+            <span class="font-body text-label-md">Estoque</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="receitas.html">
+            <span class="material-symbols-outlined">menu_book</span>
+            <span class="font-body text-label-md">Receitas</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="pedidos.html">
+            <span class="material-symbols-outlined">query_stats</span>
+            <span class="font-body text-label-md">Pedidos</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">storefront</span>
+            <span class="font-body text-label-md">Vitrine Digital</span>
+        </a>
+    </div>
+    <div class="p-4 border-t border-outline-variant/60 space-y-2">
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body text-label-md">Configurações</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">help</span>
+            <span class="font-body text-label-md">Suporte</span>
+        </a>
+    </div>
+</nav>
+
+<!-- TopAppBar -->
+<header class="bg-background/80 backdrop-blur-md dark:bg-background/80 h-16 shadow-sm fixed top-0 right-0 left-0 md:left-72 z-30 px-6 md:px-8 flex items-center justify-between">
+    <div class="font-headline text-display-sm text-primary dark:text-primary-fixed">
+        <span class="font-headline text-xl text-primary font-bold">Bolos da Palloma</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined">account_circle</span>
+        </button>
+    </div>
+</header>
+
+<!-- Main Canvas -->
+<main class="ml-0 md:ml-72 pt-20 md:pt-24 pb-24 md:pb-20 px-4 sm:px-6 md:px-12 w-full max-w-[1600px] mx-auto min-h-screen flex flex-col">
+    <!-- Page Header -->
+    <div class="mb-12">
+        <h2 class="font-headline text-4xl md:text-5xl text-on-surface font-bold tracking-tight mb-3">Insumos e Inteligência de Entrada</h2>
+        <p class="font-body text-on-surface-variant text-base md:text-lg">Visão geral do estoque e gestão de insumos</p>
+    </div>
+
+    <!-- Section 1: Próximos do Vencimento -->
+    <section class="mb-16">
+        <div class="flex items-center justify-between mb-8">
+            <h3 class="font-headline text-2xl md:text-3xl text-on-surface font-bold flex items-center gap-3">
+                <span class="material-symbols-outlined text-tertiary">warning</span>
+                Próximos do Vencimento
+            </h3>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Card 1 -->
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden flex flex-col sm:flex-row shadow-[0_2px_16px_rgba(58,48,42,0.04)] group hover:shadow-[0_8px_24px_rgba(58,48,42,0.08)] transition-all duration-300">
+                <div class="w-full sm:w-48 h-48 sm:h-auto shrink-0 relative overflow-hidden">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Foto em close de morangos frescos e vermelhos brilhantes em uma cesta rústica tecida apoiada sobre uma mesa de madeira clara. A iluminação é quente e natural, criando uma estética culinária premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuV7C9j4Bk3HOCi-PJMPo8_FO_62e8I71dgq_hAo_JBy0NpazZRkQKSccqsD756LCtyQsXNJq0SuVjZ6-l3fYGWcHz4ADX4fu7_wdqHP1gaEkrcRxrmxo_jeD2g-B5BQdnoK79Vgjj1thcsKVYpZes3mZuxelWTSmaVNyamJbOkaywdRGPsSYMYi8YuxNjF563zVuXO-t_Ceu7gxCwrMyAlGewYLZBRRSPJANEccoLw2zdRibwOn9oOwX7hV0udybT5dkm2Lx6Up8"/>
+                    <div class="absolute top-4 left-4 bg-tertiary/10 backdrop-blur-md border border-tertiary/20 text-tertiary px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">schedule</span> Expira em 1 dia
+                    </div>
+                </div>
+                <div class="p-8 flex flex-col justify-between flex-1">
+                    <div>
+                        <h4 class="font-headline text-2xl font-bold text-on-surface mb-2">Morangos Frescos</h4>
+                        <div class="space-y-1 mb-6 text-on-surface-variant text-sm">
+                            <p><span class="font-semibold">Lote:</span> #BR-2024-88A</p>
+                            <p><span class="font-semibold">Quantidade:</span> 12 kg (Restante)</p>
+                            <p><span class="font-semibold">Fornecedor:</span> Fazenda Sol Nascente</p>
+                        </div>
+                    </div>
+                    <button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-container hover:text-on-primary-container transition-colors w-fit flex items-center gap-2">
+                        Sugerir Receita <span class="material-symbols-outlined">auto_awesome</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden flex flex-col sm:flex-row shadow-[0_2px_16px_rgba(58,48,42,0.04)] group hover:shadow-[0_8px_24px_rgba(58,48,42,0.08)] transition-all duration-300">
+                <div class="w-full sm:w-48 h-48 sm:h-auto shrink-0 relative overflow-hidden">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Garrafa de vidro premium de leite integral sobre bancada de mármore iluminada pelo sol. Luz quente da manhã atinge o vidro. Estética culinária limpa e minimalista." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAW2uJmKaDioLbD06RATh0E9g34_5ndexITf9dwbyQPHyL1ZbC9Wy3lrexBUCe7LECMXD5Xk10a8ff5zRGvxgUXBp2aXRhX5XQ1wDUJSoplByTpz6YK5Qeq1iti0KtLjDiv99tYPvYwKRRa-WlDXCk0Yl8u6UvUK00DMbkVtgrMyWRwutcCXn0-PVLlFhPSyHJ0mEPG96VvMHnyQhcuF6kWGUDvUL75AqiavxUohWzov5gD1KDoJoRbsRjuKD81ivLw02GB9hKWVo"/>
+                    <div class="absolute top-4 left-4 bg-tertiary-container/30 backdrop-blur-md border border-tertiary/20 text-on-tertiary-container px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">schedule</span> Expira em 2 dias
+                    </div>
+                </div>
+                <div class="p-8 flex flex-col justify-between flex-1">
+                    <div>
+                        <h4 class="font-headline text-2xl font-bold text-on-surface mb-2">Leite Integral</h4>
+                        <div class="space-y-1 mb-6 text-on-surface-variant text-sm">
+                            <p><span class="font-semibold">Lote:</span> #LT-092-B</p>
+                            <p><span class="font-semibold">Quantidade:</span> 24 Litros</p>
+                            <p><span class="font-semibold">Fornecedor:</span> Laticínios Vale</p>
+                        </div>
+                    </div>
+                    <button class="bg-primary text-on-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-container hover:text-on-primary-container transition-colors w-fit flex items-center gap-2">
+                        Sugerir Receita <span class="material-symbols-outlined">auto_awesome</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Lista Mestra de Insumos -->
+    <section class="flex-1 flex flex-col mb-12">
+        <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
+            <div>
+                <h3 class="font-headline text-2xl md:text-3xl text-on-surface font-bold mb-2">Lista Mestra de Insumos</h3>
+                <p class="font-body text-on-surface-variant text-sm md:text-base">Database completo de ingredientes</p>
+            </div>
+            <div class="relative w-full md:w-96">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                <input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border border-outline-variant/60 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-on-surface placeholder-on-surface-variant/50" placeholder="Buscar insumo..." type="text"/>
+            </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-[0_2px_16px_rgba(58,48,42,0.04)] flex-1">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-surface-container-low border-b border-outline-variant/60 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
+                            <th class="px-8 py-4">Insumo</th>
+                            <th class="px-8 py-4">Categoria</th>
+                            <th class="px-8 py-4">Estoque Atual</th>
+                            <th class="px-8 py-4">Nível Mínimo</th>
+                            <th class="px-8 py-4">Último Preço</th>
+                            <th class="px-8 py-4 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant/30 text-on-surface">
+                        <!-- Row 1 -->
+                        <tr class="hover:bg-surface-container/30 transition-colors group">
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center shrink-0 overflow-hidden">
+                                        <span class="material-symbols-outlined text-secondary">grain</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-base">Farinha de Trigo Premium</p>
+                                        <p class="text-sm text-on-surface-variant">Peneirada, Tipo 1</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Secos</span></td>
+                            <td class="px-8 py-4 font-medium">150 kg</td>
+                            <td class="px-8 py-4 text-on-surface-variant">50 kg</td>
+                            <td class="px-8 py-4">R$ 4,50 / kg</td>
+                            <td class="px-8 py-4 text-right">
+                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
+                                    <span class="material-symbols-outlined">more_horiz</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="hover:bg-surface-container/30 transition-colors group">
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center shrink-0 overflow-hidden">
+                                        <span class="material-symbols-outlined text-secondary">scatter_plot</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-base">Açúcar Refinado</p>
+                                        <p class="text-sm text-on-surface-variant">União</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Secos</span></td>
+                            <td class="px-8 py-4 font-medium">85 kg</td>
+                            <td class="px-8 py-4 text-on-surface-variant">30 kg</td>
+                            <td class="px-8 py-4">R$ 3,80 / kg</td>
+                            <td class="px-8 py-4 text-right">
+                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
+                                    <span class="material-symbols-outlined">more_horiz</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-surface-container/30 transition-colors group">
+                            <td class="px-8 py-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-lg bg-primary-fixed-dim/20 flex items-center justify-center shrink-0 overflow-hidden">
+                                        <span class="material-symbols-outlined text-primary-container">icecream</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-base">Manteiga Sem Sal</p>
+                                        <p class="text-sm text-on-surface-variant">Aviação</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Refrigerados</span></td>
+                            <td class="px-8 py-4 font-medium">12 kg</td>
+                            <td class="px-8 py-4 text-tertiary">20 kg <span class="material-symbols-outlined text-xs ml-1 align-middle">arrow_downward</span></td>
+                            <td class="px-8 py-4">R$ 45,00 / kg</td>
+                            <td class="px-8 py-4 text-right">
+                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
+                                    <span class="material-symbols-outlined">more_horiz</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-6 border-t border-outline-variant/60 flex items-center justify-between text-sm text-on-surface-variant bg-surface-container-low/50">
+                <span>Mostrando 3 de 142 itens</span>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 rounded-md border border-outline-variant/60 hover:bg-surface-container transition-colors disabled:opacity-50">Anterior</button>
+                    <button class="px-4 py-2 rounded-md border border-outline-variant/60 hover:bg-surface-container transition-colors">Próxima</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FAB: Scan Invoice (Mobile: bottom right, Web: bottom right inside main content area) -->
+<button aria-label="Escanear Nota Fiscal (OCR)" class="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-primary text-on-primary w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center hover:bg-primary-container hover:scale-105 active:scale-95 transition-all duration-200 z-50 group">
+    <span class="material-symbols-outlined text-[32px] group-hover:rotate-12 transition-transform" style="font-variation-settings: 'FILL' 1;">document_scanner</span>
+</button>
+
+<!-- Nav bar removed for iframe-based unified navigation -->
+
+</body>
+</html>

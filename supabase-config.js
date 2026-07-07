@@ -9,13 +9,19 @@
 // Row-Level Security (RLS) policies configuradas no dashboard.
 //
 // ROTAÇÃO: Para trocar a chave, edite SOMENTE este arquivo.
+//
+// IMPORTANTE: Usamos window.supabaseClient (e não "let") para que a variável
+// fique disponível globalmente no browser. Variáveis com "let" no topo de um
+// script NÃO se tornam propriedades de window, o que quebraria o painel.js.
 // ==========================================================================
 
 const SUPABASE_URL = 'https://iqakaoawviocutlcqnho.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ivuPftbhmRcAoYDfe_OxRA_onNUdeiK';
 
-let supabaseClient = null;
+window.supabaseClient = null;
 
 if (typeof supabase !== 'undefined') {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} else {
+    console.error('[Supabase] SDK não carregado. Verifique o script CDN no HTML.');
 }

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Bolos da Palloma - Ficha Técnica e Guardião de Margem</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Eb+Garamond:wght@400;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#9a9088",
+                        "on-surface-variant": "#605850",
+                        "error-container": "#fce4e0",
+                        "primary-fixed": "#fbe8d8",
+                        "on-primary-container": "#fbe8d8",
+                        "on-secondary-fixed": "#2a2420",
+                        "on-surface": "#3a302a",
+                        "secondary-container": "#eae2da",
+                        "surface-tint": "#c2652a",
+                        "surface-dim": "#dcd6cc",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#2e1515",
+                        "on-primary-fixed": "#401a08",
+                        "secondary-fixed-dim": "#cec6be",
+                        "surface-container-highest": "#e6e0d6",
+                        "background": "#faf5ee",
+                        "tertiary-fixed-dim": "#e8a0a0",
+                        "surface-container-low": "#f6f0e8",
+                        "primary-container": "#e08850",
+                        "tertiary-fixed": "#fce0e0",
+                        "error": "#c0392b",
+                        "inverse-on-surface": "#faf5ee",
+                        "inverse-surface": "#3a302a",
+                        "primary-fixed-dim": "#f0a878",
+                        "secondary-fixed": "#eae2da",
+                        "on-secondary-fixed-variant": "#504840",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#8c3c3c",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#7a1a10",
+                        "surface": "#faf5ee",
+                        "surface-bright": "#faf5ee",
+                        "secondary": "#78706a",
+                        "on-tertiary-container": "#3a2020",
+                        "primary": "#c2652a",
+                        "on-background": "#3a302a",
+                        "surface-container-high": "#ece6dc",
+                        "tertiary-container": "#d47070",
+                        "outline-variant": "#d8d0c8",
+                        "surface-variant": "#ece6dc",
+                        "surface-container": "#f2ece4",
+                        "inverse-primary": "#f0a878",
+                        "on-tertiary-fixed-variant": "#6e3030",
+                        "on-primary-fixed-variant": "#8a4518",
+                        "on-secondary-container": "#605850",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Eb Garamond"],
+                        "display": ["Eb Garamond"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for data tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #faf5ee; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dcd6cc; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cec6be; 
+        }
+
+        /* If running inside iframe, hide sidebar and header, and adjust main layout */
+        body.in-iframe nav, 
+        body.in-iframe header {
+            display: none !important;
+        }
+        body.in-iframe main {
+            margin-left: 0 !important;
+            padding-top: 1rem !important;
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        body.in-iframe {
+            padding-bottom: 0px !important;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/nav.css">
+    <link rel="stylesheet" href="assets/css/vui.css">
+    <script src="assets/js/nav-helper.js" defer></script>
+    <script src="assets/js/vui.js" defer></script>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface h-screen w-72 flex-col border-r border-outline-variant/60 flat no shadows fixed left-0 top-0 z-40 hidden md:flex">
+    <div class="p-8 pb-4">
+        <h1 class="font-headline text-2xl font-bold text-primary dark:text-primary-fixed">Bolos da Palloma</h1>
+        <p class="font-body text-label-md text-on-surface-variant mt-1">Kitchen Intelligence</p>
+    </div>
+    <div class="flex-1 px-4 mt-6 space-y-2">
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="painel.html">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body text-label-md">Painel</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="estoque.html">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <span class="font-body text-label-md">Estoque</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-fixed/30 hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="receitas.html">
+            <span class="material-symbols-outlined fill">menu_book</span>
+            <span class="font-body text-label-md">Receitas</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="pedidos.html">
+            <span class="material-symbols-outlined">query_stats</span>
+            <span class="font-body text-label-md">Pedidos</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">storefront</span>
+            <span class="font-body text-label-md">Vitrine Digital</span>
+        </a>
+    </div>
+    <div class="p-4 border-t border-outline-variant/60 space-y-2">
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body text-label-md">Configurações</span>
+        </a>
+        <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors hover:bg-primary-fixed/20 transition-all scale-95 active:scale-90 transition-transform" href="#">
+            <span class="material-symbols-outlined">help</span>
+            <span class="font-body text-label-md">Suporte</span>
+        </a>
+    </div>
+</nav>
+
+<!-- TopAppBar -->
+<header class="bg-background/80 backdrop-blur-md dark:bg-background/80 h-16 shadow-sm fixed top-0 right-0 left-0 md:left-72 z-30 px-6 md:px-8 flex items-center justify-between">
+    <div class="font-headline text-display-sm text-primary dark:text-primary-fixed">
+        <span class="font-headline text-xl text-primary font-bold">Bolos da Palloma</span>
+    </div>
+    <div class="flex items-center gap-6">
+        <button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined">account_circle</span>
+        </button>
+    </div>
+</header>
+
+<!-- Main Canvas -->
+<main class="ml-0 md:ml-72 pt-20 md:pt-24 pb-24 md:pb-20 px-4 sm:px-6 md:px-12 w-full max-w-[1600px] mx-auto min-h-screen flex flex-col">
+    <!-- Breadcrumb & Header -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-on-surface-variant text-sm mb-2">
+                <a class="hover:text-primary transition-colors" href="#">Receitas</a>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                <span class="text-on-surface font-medium">Bolo de Cenoura</span>
+            </div>
+            <h1 class="font-headline text-4xl lg:text-5xl font-bold text-on-surface leading-tight tracking-tight">Bolo de Cenoura <span class="text-primary italic font-normal">Clássico</span></h1>
+        </div>
+        <div class="flex gap-3">
+            <button class="px-4 py-2 border border-outline-variant rounded-lg text-on-surface font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">edit</span>
+                Editar
+            </button>
+            <button class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-lg font-medium hover:bg-secondary-container/80 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">print</span>
+                Imprimir Ficha
+            </button>
+        </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Column: Recipe Engineering -->
+        <div class="lg:col-span-7 flex flex-col gap-8">
+            <!-- Recipe Image Card -->
+            <div class="rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/40 bg-surface-container-lowest h-64 relative">
+                <img class="w-full h-full object-cover" data-alt="Fatia lindamente estilizada de bolo de cenoura em um prato cerâmico rústico. O bolo tem uma cor laranja rica e é coberto com cobertura de ganache de chocolate brilhante. Composição editorial minimalista." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0EfqlP-bhj4cwDNe_oPG-T0iomgPTQMHqLLVRUfa3NM4HaLtZGhdqJ8WH917frCHLVBo5fHp2fP5aHukdZIT4fs1YuFua48uF_R8zjWn1PDOlqSoTDVVzR-q4-ZaOE8HYx2G_mtNesljZVybg3H-DX8F21g9fqjGbSyJvR8Yn24WW0DNYix6g4xP7LdvE-wCCB96gr1Prt3t30I9mhffCfoJPDjqIDwy50DAb9Db0xjjIqsnWd64ks4qJ-0BB0NDZwltBUFkqTYE"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6">
+                    <div class="text-white">
+                        <p class="text-sm font-semibold uppercase tracking-widest mb-1 opacity-90">Sobremesa • Rendimento: 12 Fatias</p>
+                        <p class="font-body text-lg">Tempo de preparo: 45 min</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Engenharia da Receita -->
+            <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/40">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-headline text-2xl md:text-3xl text-on-surface font-semibold tracking-tight">Engenharia da Receita</h2>
+                    <button class="text-primary hover:text-primary-container font-medium text-sm flex items-center gap-1 transition-colors">
+                        <span class="material-symbols-outlined text-sm">add_circle</span>
+                        Adicionar Ingrediente
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <!-- Ingredient Row 1 -->
+                    <div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/30 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">egg</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-on-surface">Ovos Mínimos</p>
+                                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> Fornecedor: Granja Sol Nascente</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-on-surface">3 unid.</p>
+                            <p class="text-xs text-on-surface-variant">~150g</p>
+                        </div>
+                        <div class="w-24 text-right">
+                            <p class="font-bold text-on-surface">R$ 1,20</p>
+                            <p class="text-xs text-tertiary">14% do custo</p>
+                        </div>
+                    </div>
+                    <!-- Ingredient Row 2 -->
+                    <div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/30 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">grocery</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-on-surface">Cenoura Ralada</p>
+                                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> Fornecedor: Hortifruti Central</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-on-surface">300g</p>
+                            <p class="text-xs text-on-surface-variant">Bruto: 350g</p>
+                        </div>
+                        <div class="w-24 text-right">
+                            <p class="font-bold text-on-surface">R$ 2,10</p>
+                            <p class="text-xs text-tertiary">25% do custo</p>
+                        </div>
+                    </div>
+                    <!-- Ingredient Row 3 -->
+                    <div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/30 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">grain</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-on-surface">Farinha de Trigo Especial</p>
+                                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> Fornecedor: Moinhos Sul</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-on-surface">250g</p>
+                            <p class="text-xs text-on-surface-variant">2 xícaras</p>
+                        </div>
+                        <div class="w-24 text-right">
+                            <p class="font-bold text-on-surface">R$ 1,50</p>
+                            <p class="text-xs text-on-surface-variant">17% do custo</p>
+                        </div>
+                    </div>
+                    <!-- Ingredient Row 4 -->
+                    <div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/30 transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">water_drop</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-on-surface">Óleo de Milho</p>
+                                <p class="text-xs text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_shipping</span> Fornecedor: Distribuidora Alpha</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-on-surface">150ml</p>
+                            <p class="text-xs text-on-surface-variant">3/4 xícara</p>
+                        </div>
+                        <div class="w-24 text-right">
+                            <p class="font-bold text-on-surface">R$ 1,80</p>
+                            <p class="text-xs text-on-surface-variant">21% do custo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Margin Guardian -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            <!-- Guardião de Margem Card -->
+            <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-[0_2px_16px_rgba(58,48,42,0.04)] border border-outline-variant/40 relative overflow-hidden flex-1 flex flex-col">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-bl-full -mr-10 -mt-10 blur-2xl"></div>
+                <h2 class="font-headline text-2xl md:text-3xl text-on-surface font-semibold tracking-tight mb-8">Guardião de Margem</h2>
+                
+                <!-- Status Banner -->
+                <div class="bg-error-container text-on-error-container px-4 py-3 rounded-xl mb-8 flex items-center gap-3 border border-error/20">
+                    <span class="material-symbols-outlined text-error">warning</span>
+                    <div>
+                        <p class="font-bold text-sm uppercase tracking-wide">Status: Crítico</p>
+                        <p class="text-xs opacity-90">A margem caiu abaixo do limite seguro de 15%.</p>
+                    </div>
+                </div>
+
+                <!-- Circular Progress & Financials -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 mb-10">
+                    <!-- Circular Indicator -->
+                    <div class="relative w-32 h-32 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+                            <!-- 12% stroke dasharray -->
+                            <path class="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="12, 100" stroke-width="3"></path>
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center">
+                            <span class="font-display text-4xl font-bold text-tertiary">12%</span>
+                            <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Margem</span>
+                        </div>
+                    </div>
+                    <!-- Financial Summary -->
+                    <div class="space-y-4 w-full sm:w-auto">
+                        <div class="bg-surface p-4 rounded-xl border border-outline-variant/30">
+                            <p class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold mb-1">Custo Total</p>
+                            <p class="font-body text-xl font-bold text-on-surface">R$ 8,50</p>
+                        </div>
+                        <div class="bg-surface p-4 rounded-xl border border-outline-variant/30">
+                            <p class="text-xs text-on-surface-variant uppercase tracking-wider font-semibold mb-1">Preço Venda</p>
+                            <p class="font-body text-xl font-bold text-primary">R$ 15,00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Recomendadas -->
+                <div class="flex-grow">
+                    <h3 class="font-headline text-lg text-on-surface font-semibold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">lightbulb</span>
+                        Ações Recomendadas
+                    </h3>
+                    <div class="space-y-3">
+                        <button class="w-full bg-surface-container hover:bg-surface-variant transition-colors p-4 rounded-xl text-left border border-outline-variant/30 group">
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="font-bold text-on-surface group-hover:text-primary transition-colors">Aumentar R$ 0,75 no cardápio</p>
+                                <span class="material-symbols-outlined text-on-surface-variant text-sm">trending_up</span>
+                            </div>
+                            <p class="text-sm text-on-surface-variant">Recupera a margem para 16% sem impacto severo na demanda.</p>
+                        </button>
+                        <button class="w-full bg-surface-container hover:bg-surface-variant transition-colors p-4 rounded-xl text-left border border-outline-variant/30 group">
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="font-bold text-on-surface group-hover:text-primary transition-colors">Reduzir porção em 20g</p>
+                                <span class="material-symbols-outlined text-on-surface-variant text-sm">scale</span>
+                            </div>
+                            <p class="text-sm text-on-surface-variant">Mantém o preço de R$ 15,00 e eleva a margem para 15.5%.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer button -->
+                <div class="mt-8 pt-6 border-t border-outline-variant/40">
+                    <button class="w-full bg-primary text-on-primary font-bold uppercase tracking-wider py-4 rounded-xl hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">bolt</span>
+                        Ativar Oferta Relâmpago
+                    </button>
+                    <p class="text-center text-xs text-on-surface-variant mt-3">Gera volume imediato para compensar margem baixa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Nav bar removed for iframe-based unified navigation -->
+
+</body>
+</html>

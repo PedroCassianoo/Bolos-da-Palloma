@@ -1,0 +1,1022 @@
+/* Custom Floating Navigation Bar Styles */
+.bolos-nav-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 480px;
+    background-color: #FAF5EE; /* Clean off-white cream background */
+    border: 1.5px solid #E6DCD0;
+    border-radius: 28px;
+    box-shadow: 0 8px 30px rgba(58, 48, 42, 0.12);
+    z-index: 9999;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Plus Jakarta Sans', 'Manrope', sans-serif;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+}
+
+.bolos-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 64px;
+    text-decoration: none;
+    color: #5D5046; /* Warm grey/brown */
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 20px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 4px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active State matching user image */
+.bolos-nav-item.active {
+    background-color: #D58E55; /* Warm terracotta/orange-brown */
+    color: #FFFFFF !important;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(213, 142, 85, 0.3);
+}
+
+.bolos-nav-item:not(.active):hover {
+    background-color: rgba(213, 142, 85, 0.08);
+    color: #C2652A;
+}
+
+.bolos-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.bolos-nav-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    transition: transform 0.2s ease;
+}
+
+.bolos-nav-item:active .bolos-nav-icon svg {
+    transform: scale(0.9);
+}
+
+/* Hides navigation bar inside iframes to prevent duplicate menus */
+body.in-iframe .bolos-nav-container {
+    display: none !important;
+}
+
+body.in-iframe {
+    padding-bottom: 0px !important;
+}
+
+/* Adjust page layout padding so bottom nav doesn't cover content */
+body {
+    padding-bottom: 100px !important;
+}
+
+/* Dark Mode Fallback */
+html.dark .bolos-nav-container,
+body.dark .bolos-nav-container {
+    background-color: #2A2420;
+    border-color: #4A3E36;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .bolos-nav-item,
+body.dark .bolos-nav-item {
+    color: #CEC6BE;
+}
+
+html.dark .bolos-nav-item:not(.active):hover {
+    background-color: rgba(213, 142, 85, 0.15);
+    color: #F0A878;
+}
+
+/* ==========================================
+   Etapa 1: Layout Wrapper Responsivo
+   ========================================== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #FAF5EE; /* Matching warm background */
+}
+
+/* Central Content Wrapper */
+.content-wrapper {
+    flex: 1;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 24px;
+    width: 100%;
+}
+
+/* Desktop Sidebar Nav */
+.desktop-sidebar {
+    width: 280px;
+    background-color: #FAF5EE;
+    border-right: 1.5px solid #E6DCD0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjust Content Wrapper for Desktop Sidebar */
+.content-wrapper {
+    margin-left: 280px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile Bottom Nav Bar Wrapper */
+.mobile-bottom-nav {
+    display: none; /* Hidden on Desktop */
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+    .desktop-sidebar {
+        display: none !important;
+    }
+    
+    .content-wrapper {
+        margin-left: 0 !important;
+        padding: 16px;
+        padding-bottom: 90px; /* Safety padding for bottom nav */
+    }
+    
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background-color: #FAF5EE;
+        border-top: 1.5px solid #E6DCD0;
+        z-index: 1000;
+        align-items: center;
+        justify-content: space-around;
+        box-shadow: 0 -4px 20px rgba(58, 48, 42, 0.08);
+    }
+}
+
+/* Utility to hide layout wrapper when login is active */
+.app-layout.hidden {
+    display: none !important;
+}
+
+/* ==========================================
+   Etapa 2: Estilização da Sidebar (Desktop)
+   ========================================== */
+.desktop-sidebar {
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header da Sidebar */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+    border-bottom: 1.5px solid #E6DCD0;
+    background-color: #FAF5EE;
+}
+
+.sidebar-logo-icon {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(58, 48, 42, 0.06);
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-brand-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #3A302A;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.2;
+}
+
+.sidebar-brand-subtitle {
+    font-size: 11px;
+    color: #8c7e73;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Menu da Sidebar */
+.sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Custom Scrollbar for Sidebar Menu */
+.sidebar-menu::-webkit-scrollbar {
+    width: 5px;
+}
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: #E6DCD0;
+    border-radius: 4px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: #D58E55;
+}
+
+/* Categorias */
+.menu-category {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #8c7e73;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Itens de Navegação na Sidebar */
+.desktop-sidebar .bolos-nav-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 46px;
+    padding: 0 16px;
+    gap: 12px;
+    border-radius: 12px;
+    color: #5D5046;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+}
+
+.desktop-sidebar .bolos-nav-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.desktop-sidebar .bolos-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+}
+
+.desktop-sidebar .bolos-nav-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Hover e Active na Sidebar */
+.desktop-sidebar .bolos-nav-item:not(.active):hover {
+    background-color: rgba(213, 142, 85, 0.08);
+    color: #C2652A !important;
+    transform: translateX(4px);
+}
+
+.desktop-sidebar .bolos-nav-item.active {
+    background-color: #D58E55;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(213, 142, 85, 0.25);
+}
+
+.desktop-sidebar .bolos-nav-item.active .bolos-nav-icon svg {
+    stroke: #FFFFFF;
+}
+
+/* Footer / Operador */
+.sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1.5px solid #E6DCD0;
+    background-color: #FAF5EE;
+}
+
+.operator-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.operator-avatar {
+    width: 36px;
+    height: 36px;
+    background-color: #D58E55;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(213, 142, 85, 0.2);
+}
+
+.operator-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.operator-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #3A302A;
+}
+
+.operator-status {
+    font-size: 11px;
+    color: #27AE60;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1px;
+}
+
+.operator-status::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #27AE60;
+    border-radius: 50%;
+    animation: statusPulse 2s infinite ease-in-out;
+}
+
+@keyframes statusPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* ==========================================
+   Etapa 3/Ajuste: Estilização Mobile (Top Bar, Bottom Nav & Left Drawer)
+   ========================================== */
+
+/* Cabeçalho Fixo Móvel Superior */
+.mobile-app-header {
+    display: none; /* Escondido por padrão no Desktop */
+}
+
+@media (max-width: 1024px) {
+    /* Habilitar cabeçalho móvel no topo */
+    .mobile-app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background-color: #FAF5EE;
+        border-bottom: 1.5px solid #E6DCD0;
+        z-index: 9999;
+        padding: 0 16px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 10px rgba(58, 48, 42, 0.04);
+        backdrop-filter: blur(10px);
+    }
+
+    .mobile-menu-trigger-top {
+        background: transparent;
+        border: none;
+        color: #5D5046;
+        cursor: pointer;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+    }
+
+    .mobile-menu-trigger-top:active {
+        background-color: rgba(58, 48, 42, 0.08);
+    }
+
+    .mobile-menu-trigger-top svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+    }
+
+    .mobile-header-brand {
+        font-family: 'Cherry Swash', 'Plus Jakarta Sans', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #B2591E; /* Terracotta brand color */
+        text-align: center;
+    }
+
+    /* Espaçamento extra no topo do wrapper central no mobile para limpar o cabeçalho fixo */
+    .content-wrapper {
+        padding-top: 72px !important;
+        padding-bottom: 90px !important; /* Safety padding for bottom nav */
+    }
+}
+
+/* Overlay do Drawer Móvel (Fundo Escuro) */
+.mobile-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Left Drawer (Desliza da Esquerda) */
+.mobile-menu-drawer.left-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 290px;
+    max-width: 85%;
+    background-color: #FAF5EE;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(58, 48, 42, 0.15);
+    box-sizing: border-box;
+}
+
+.mobile-menu-drawer.left-drawer.open {
+    transform: translateX(0);
+}
+
+/* Cabeçalho do Drawer (Cores da Referência) */
+.mobile-menu-drawer.left-drawer .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px 16px 20px;
+    border-bottom: 1px solid rgba(230, 220, 208, 0.5);
+    background-color: #FAF5EE;
+}
+
+.mobile-menu-drawer.left-drawer .drawer-title-brand {
+    font-family: 'Cherry Swash', 'Plus Jakarta Sans', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #B2591E; /* Terracotta brand color matching reference */
+}
+
+.mobile-menu-drawer.left-drawer .close-drawer-btn {
+    background: transparent;
+    border: none;
+    color: #5D5046;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.mobile-menu-drawer.left-drawer .close-drawer-btn svg {
+    width: 22px;
+    height: 22px;
+    stroke: #5D5046;
+    stroke-width: 2.2;
+}
+
+/* Conteúdo de Itens de Menu (Estilo Referência) */
+.mobile-menu-drawer.left-drawer .drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: #FAF5EE;
+}
+
+/* Estilização da lista de itens - sem fundo na versão normal */
+.mobile-menu-drawer.left-drawer .bolos-nav-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 48px;
+    padding: 0 16px;
+    gap: 16px;
+    border-radius: 12px;
+    background-color: transparent; /* No box background by default */
+    border: none; /* No border by default */
+    color: #5D5046;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.mobile-menu-drawer.left-drawer .bolos-nav-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5D5046;
+}
+
+.mobile-menu-drawer.left-drawer .bolos-nav-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+}
+
+.mobile-menu-drawer.left-drawer .bolos-nav-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Destaque Ativo Terracota Sólido (Igual Referência) */
+.mobile-menu-drawer.left-drawer .bolos-nav-item.active {
+    background-color: #D58E55; /* Terracota base */
+    color: #FFFFFF !important;
+}
+
+.mobile-menu-drawer.left-drawer .bolos-nav-item.active .bolos-nav-icon {
+    color: #FFFFFF;
+}
+
+/* Dividers para itens especiais (ex: Custo & Preço no rodapé se separado, ou Configurações se houver) */
+.mobile-menu-drawer.left-drawer .bolos-nav-item[data-target="custo-preco"] {
+    margin-top: 12px;
+    border-top: 1px solid rgba(230, 220, 208, 0.6);
+    padding-top: 16px;
+    border-radius: 0;
+}
+
+/* Estilo do Rodapé do Drawer */
+.mobile-menu-drawer.left-drawer .drawer-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(230, 220, 208, 0.5);
+    background-color: #FAF5EE;
+}
+
+/* Botões do Menu Inferior Móvel */
+.mobile-bottom-nav .bolos-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5D5046;
+    background: transparent;
+    border: none;
+    border-radius: 16px;
+    height: 52px;
+    padding: 4px 12px;
+    min-width: 68px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.mobile-bottom-nav .bolos-nav-item.active {
+    background-color: #D58E55;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(213, 142, 85, 0.25);
+}
+
+.mobile-bottom-nav .bolos-nav-item.active .bolos-nav-icon svg {
+    stroke: #FFFFFF;
+}
+
+/* ==========================================
+   Etapa 4: Estilização do Dashboard Hub (Início)
+   ========================================== */
+
+/* Banner de Boas-Vindas */
+.welcome-banner-card {
+    background: linear-gradient(135deg, #FAF5EE 0%, rgba(213, 142, 85, 0.12) 100%);
+    border: 1.5px solid #E6DCD0;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(58, 48, 42, 0.03);
+}
+
+.welcome-left-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.welcome-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.welcome-title-row h2 {
+    font-family: 'Cherry Swash', 'Plus Jakarta Sans', serif;
+    color: #B2591E;
+    font-size: 22px;
+    margin: 0;
+}
+
+.welcome-subtitle {
+    font-size: 14px;
+    color: #5D5046;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.quick-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #E6F4EA; /* Pastel green */
+    border: 1px solid #A3E2B7;
+    color: #137333; /* Accessible dark green */
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pulse-indicator-svg {
+    width: 14px;
+    height: 14px;
+    color: #137333;
+    animation: indicatorPulse 2s infinite ease-in-out;
+}
+
+@keyframes indicatorPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.btn-launch-sale {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--primary); /* a05d25 */
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(160, 93, 37, 0.2);
+    white-space: nowrap;
+}
+
+.btn-launch-sale:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(160, 93, 37, 0.3);
+}
+
+.btn-launch-sale:active {
+    transform: translateY(0);
+}
+
+.btn-launch-sale .btn-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .welcome-banner-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 20px;
+    }
+    
+    .welcome-title-row {
+        gap: 12px;
+    }
+    
+    .btn-launch-sale {
+        width: 100%;
+        padding: 14px;
+        font-size: 15px;
+    }
+}
+
+/* Cards Interativos */
+.interactive-dashboard-card {
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    border: 1.5px solid #E6DCD0;
+}
+
+.interactive-dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(213, 142, 85, 0.08);
+    border-color: #D58E55;
+}
+
+.interactive-dashboard-card:active {
+    transform: translateY(-1px);
+}
+
+/* Stack de Alertas Operacionais */
+.alerts-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Item de Alerta */
+.alert-box-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-radius: 12px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.alert-box-item .alert-icon {
+    font-size: 22px;
+}
+
+.alert-box-item .alert-content {
+    flex: 1;
+    margin: 0 16px;
+}
+
+.alert-box-item .alert-content h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.alert-box-item .alert-content p {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.alert-box-item .alert-arrow {
+    font-size: 18px;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+}
+
+/* Efeitos de Hover nos Alertas */
+.alert-box-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(58, 48, 42, 0.04);
+}
+
+.alert-box-item:hover .alert-arrow {
+    transform: translateX(4px);
+}
+
+/* Cores de Alertas Personalizadas */
+.alert-danger {
+    background-color: #FFF5F5;
+    border: 1px solid #FEB2B2;
+    color: #9B2C2C;
+}
+.alert-danger .alert-arrow {
+    color: #E53E3E;
+}
+
+.alert-warning {
+    background-color: #FFFDF5;
+    border: 1px solid #FEEBC8;
+    color: #9C4221;
+}
+.alert-warning .alert-arrow {
+    color: #DD6B20;
+}
+
+.alert-info {
+    background-color: #F0F9FF;
+    border: 1px solid #BEE3F8;
+    color: #2B6CB0;
+}
+.alert-info .alert-arrow {
+    color: #3182CE;
+}
+
+/* Grid de Atalhos do Hub */
+.hub-shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* Botão de Atalho */
+.shortcut-tile-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background-color: #FAF5EE;
+    border: 1.5px solid #E6DCD0;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.shortcut-tile-btn .tile-icon {
+    font-size: 24px;
+    background-color: rgba(213, 142, 85, 0.08);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.shortcut-tile-btn .tile-meta h4 {
+    margin: 0 0 2px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #3A302A;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.shortcut-tile-btn .tile-meta p {
+    margin: 0;
+    font-size: 11px;
+    color: #8c7e73;
+    font-weight: 500;
+}
+
+/* Hover nos Atalhos */
+.shortcut-tile-btn:hover {
+    transform: translateY(-2px);
+    border-color: #D58E55;
+    background-color: rgba(213, 142, 85, 0.04);
+}
+
+.shortcut-tile-btn:hover .tile-icon {
+    background-color: rgba(213, 142, 85, 0.16);
+}
+
+/* ==========================================
+   BOTÕES DE AÇÃO DOS ALERTAS (CTA)
+   ========================================== */
+.btn-alert-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.alert-danger .btn-alert-action {
+    background-color: #E53E3E;
+    color: #ffffff;
+}
+.alert-danger .btn-alert-action:hover {
+    background-color: #C53030;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(197, 48, 48, 0.25);
+}
+
+.alert-warning .btn-alert-action {
+    background-color: #DD6B20;
+    color: #ffffff;
+}
+.alert-warning .btn-alert-action:hover {
+    background-color: #C05621;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(192, 86, 33, 0.25);
+}
+
+.alert-info .btn-alert-action {
+    background-color: #3182CE;
+    color: #ffffff;
+}
+.alert-info .btn-alert-action:hover {
+    background-color: #2B6CB0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(43, 108, 176, 0.25);
+}
+
+/* ==========================================
+   RESPONSIVIDADE MOBILE-FIRST (ALERTAS E SHORTCUTS)
+   ========================================== */
+@media (max-width: 580px) {
+    .alert-box-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 18px;
+    }
+    .alert-box-item .alert-content {
+        margin: 0;
+    }
+    .alert-box-item .btn-alert-action {
+        width: 100%;
+        padding: 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hub-shortcuts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+    .shortcut-tile-btn {
+        padding: 20px; /* Maior área de clique móvel */
+    }
+    .shortcut-tile-btn .tile-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 26px;
+    }
+    .shortcut-tile-btn .tile-meta h4 {
+        font-size: 15px;
+    }
+}
+
