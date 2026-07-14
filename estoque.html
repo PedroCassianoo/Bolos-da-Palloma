@@ -123,8 +123,12 @@
     </style>
     <link rel="stylesheet" href="assets/css/nav.css">
     <link rel="stylesheet" href="assets/css/vui.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
     <script src="assets/js/nav-helper.js" defer></script>
     <script src="assets/js/vui.js" defer></script>
+    <script src="assets/js/estoque-ia.js" defer></script>
+    <script src="assets/js/estoque-lista.js" defer></script>
 </head>
 <body class="bg-background text-on-background font-body min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
 
@@ -247,7 +251,66 @@
         </div>
     </section>
 
-    <!-- Section 2: Lista Mestra de Insumos -->
+    <!-- Section 2: Lançamento Inteligente -->
+    <section class="mb-12">
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 p-6 sm:p-8 shadow-[0_2px_16px_rgba(58,48,42,0.04)]">
+            <h3 class="font-headline text-2xl md:text-3xl text-on-surface font-bold mb-2 flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">smart_toy</span>
+                Lançamento Inteligente
+            </h3>
+            <p class="font-body text-on-surface-variant text-sm md:text-base mb-6">Descreva os itens que entraram ou saíram do estoque e a IA organizará tudo.</p>
+            
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+                <div class="flex-1 relative">
+                    <textarea id="ai-input" rows="3" maxlength="1000" class="w-full p-4 bg-surface-container-low border border-outline-variant/60 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-on-surface placeholder-on-surface-variant/50 resize-none" placeholder="Ex: Acabei de usar dois quilos de chocolate belga na produção de hoje e também chegaram 5 caixas de leite condensado..."></textarea>
+                    <button class="absolute bottom-4 right-4 text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high" title="Usar Microfone (Em breve)">
+                        <span class="material-symbols-outlined">mic</span>
+                    </button>
+                </div>
+                <div class="flex flex-col justify-end">
+                    <button id="ai-submit" class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm active:scale-95 flex items-center justify-center gap-2 h-[56px] md:h-auto whitespace-nowrap">
+                        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">magic_button</span> Processar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Area for Preview -->
+            <div id="ai-preview-container" class="hidden border border-outline-variant/40 bg-surface rounded-xl overflow-hidden mt-6">
+                <div class="p-4 bg-surface-container-low border-b border-outline-variant/40 flex justify-between items-center">
+                    <h4 class="font-semibold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-secondary">fact_check</span> Confirme as Alterações
+                    </h4>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface/50 text-xs text-on-surface-variant uppercase">
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Produto</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Ação</th>
+                                <th class="px-4 py-3 border-b border-outline-variant/30">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ai-preview-tbody" class="divide-y divide-outline-variant/20 text-sm text-on-surface">
+                            <!-- JS injected rows -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4 bg-surface-container-lowest border-t border-outline-variant/40 flex justify-end gap-3">
+                    <button id="ai-cancel-btn" class="px-5 py-2 rounded-lg text-error hover:bg-error-container/50 font-medium transition-colors">Cancelar</button>
+                    <button id="ai-confirm-btn" class="px-5 py-2 rounded-lg bg-surface-tint text-on-primary font-medium hover:bg-primary-container hover:text-on-primary-container transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">check</span> Confirmar e Salvar
+                    </button>
+                </div>
+            </div>
+            
+            <div id="ai-loading" class="hidden items-center gap-3 text-primary mt-4 py-4 px-2">
+                <span class="material-symbols-outlined animate-spin text-xl">autorenew</span>
+                <span class="font-medium">A IA está processando o texto...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Lista Mestra de Insumos -->
     <section class="flex-1 flex flex-col mb-12">
         <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 gap-4">
             <div>
@@ -272,76 +335,8 @@
                             <th class="px-8 py-4 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-outline-variant/30 text-on-surface">
-                        <!-- Row 1 -->
-                        <tr class="hover:bg-surface-container/30 transition-colors group">
-                            <td class="px-8 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center shrink-0 overflow-hidden">
-                                        <span class="material-symbols-outlined text-secondary">grain</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-base">Farinha de Trigo Premium</p>
-                                        <p class="text-sm text-on-surface-variant">Peneirada, Tipo 1</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Secos</span></td>
-                            <td class="px-8 py-4 font-medium">150 kg</td>
-                            <td class="px-8 py-4 text-on-surface-variant">50 kg</td>
-                            <td class="px-8 py-4">R$ 4,50 / kg</td>
-                            <td class="px-8 py-4 text-right">
-                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
-                                    <span class="material-symbols-outlined">more_horiz</span>
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Row 2 -->
-                        <tr class="hover:bg-surface-container/30 transition-colors group">
-                            <td class="px-8 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center shrink-0 overflow-hidden">
-                                        <span class="material-symbols-outlined text-secondary">scatter_plot</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-base">Açúcar Refinado</p>
-                                        <p class="text-sm text-on-surface-variant">União</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Secos</span></td>
-                            <td class="px-8 py-4 font-medium">85 kg</td>
-                            <td class="px-8 py-4 text-on-surface-variant">30 kg</td>
-                            <td class="px-8 py-4">R$ 3,80 / kg</td>
-                            <td class="px-8 py-4 text-right">
-                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
-                                    <span class="material-symbols-outlined">more_horiz</span>
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-surface-container/30 transition-colors group">
-                            <td class="px-8 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-lg bg-primary-fixed-dim/20 flex items-center justify-center shrink-0 overflow-hidden">
-                                        <span class="material-symbols-outlined text-primary-container">icecream</span>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-base">Manteiga Sem Sal</p>
-                                        <p class="text-sm text-on-surface-variant">Aviação</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-8 py-4"><span class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-medium text-on-surface-variant">Refrigerados</span></td>
-                            <td class="px-8 py-4 font-medium">12 kg</td>
-                            <td class="px-8 py-4 text-tertiary">20 kg <span class="material-symbols-outlined text-xs ml-1 align-middle">arrow_downward</span></td>
-                            <td class="px-8 py-4">R$ 45,00 / kg</td>
-                            <td class="px-8 py-4 text-right">
-                                <button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
-                                    <span class="material-symbols-outlined">more_horiz</span>
-                                </button>
-                            </td>
-                        </tr>
+                    <tbody id="estoque-lista-tbody" class="divide-y divide-outline-variant/30 text-on-surface">
+                        <!-- Itens carregados via JS do Supabase (estoque-lista.js) -->
                     </tbody>
                 </table>
             </div>
@@ -357,7 +352,7 @@
 </main>
 
 <!-- FAB: Scan Invoice (Mobile: bottom right, Web: bottom right inside main content area) -->
-<button aria-label="Escanear Nota Fiscal (OCR)" class="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-primary text-on-primary w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center hover:bg-primary-container hover:scale-105 active:scale-95 transition-all duration-200 z-50 group">
+<button id="ocr-fab" aria-label="Escanear Nota Fiscal (OCR)" class="fixed bottom-24 right-6 md:bottom-10 md:right-10 bg-primary text-on-primary w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center hover:bg-primary-container hover:scale-105 active:scale-95 transition-all duration-200 z-50 group">
     <span class="material-symbols-outlined text-[32px] group-hover:rotate-12 transition-transform" style="font-variation-settings: 'FILL' 1;">document_scanner</span>
 </button>
 

@@ -88,8 +88,30 @@ Abaixo está o status detalhado de cada item de segurança revisado e corrigido 
 ### supabase-config.js [NOVO]
 - Arquivo centralizado de inicialização do cliente Supabase para o frontend (`app.js` e `painel.js`).
 
+### Item 8: Proxy Server-Side para Chamadas ao Ollama (VULN-09)
+*   **Problema Anterior:** O frontend (`estoque-ia.js`) chamava diretamente `http://localhost:11434/api/generate` a partir do navegador. Isso causava: (a) violação de CSP em produção (Vercel bloqueia `localhost` no `connect-src`), (b) funcionalidade restrita ao PC local, (c) exposição total da API do Ollama para a rede local (listar/deletar modelos), (d) ausência de logging centralizado de interações com a LLM.
+*   **Solução Aplicada:** Criada a Serverless Function `/api/process-inventory.js` que atua como proxy server-side. O navegador agora chama `/api/process-inventory` (same-origin, compatível com CSP) enviando o token JWT do Supabase. O servidor valida autenticação, sanitiza o input (VULN-01), chama o Ollama internamente, valida o output da LLM (VULN-02), e retorna apenas dados limpos ao client. Implementa rate limiting por IP (5 req/min) e logging centralizado de todas as interações. Em produção na Vercel (onde o Ollama não é acessível), retorna erro 503 claro em vez de falhar silenciosamente.
+*   **Arquivos Modificados:**
+    *   `api/process-inventory.js` [NOVO]: Serverless function proxy com auth JWT, sanitização, validação e rate limiting.
+    *   `assets/js/estoque-ia.js`: Removidas funções `sanitizeForLLM()` e `validateLLMOutput()` (migradas para o server). Fetch alterado de `localhost:11434` para `/api/process-inventory` com header `Authorization: Bearer <token>`.
+    *   `.env`: Adicionadas variáveis `SUPABASE_URL` e `OLLAMA_URL`.
+*   **Status:** ✅ **Corrigido**
+
 ### supabase_rls_policies.sql [NOVO]
 - Script SQL para remoção de políticas vulneráveis antigas e criação de políticas RLS estritas de produção.
+
+### api/process-inventory.js [NOVO — VULN-09]
+- Serverless function proxy para chamadas ao Ollama. Valida JWT do Supabase, sanitiza input, chama a LLM server-side, valida output, e retorna itens limpos. Rate limiting por IP integrado.
+
+### assets/js/estoque-ia.js [MODIFICADO — VULN-09]
+- Removidas funções `sanitizeForLLM()` e `validateLLMOutput()` (migradas para server-side).
+- `fetch("http://localhost:11434/api/generate")` substituído por `fetch("/api/process-inventory")` com autenticação JWT.
+- Adicionado `getAccessToken()` helper para obter token atualizado.
+- Tratamento de erros específicos do proxy (503 = Ollama indisponível, 401 = sessão expirada, 429 = rate limit).
+
+### .env [MODIFICADO — VULN-09]
+- Adicionadas variáveis `SUPABASE_URL` e `OLLAMA_URL` necessárias pela nova serverless function.
+
 
 ---
 

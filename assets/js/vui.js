@@ -37,21 +37,69 @@ document.addEventListener("DOMContentLoaded", () => {
         vuiContainer.classList.remove("vui-show-tooltip");
     });
 
-    // 6. Click Handler - Cycles State: 2 (Voice) -> 3 (Active) -> 1 (Send) -> 2 (Voice)
+    // 6. Speech Recognition Logic
+    let recognition = null;
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'pt-BR'; // Assume português brasileiro
+
+        recognition.onstart = function() {
+            setVuiState(3); // Estado de gravação ativa
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            console.log("Reconhecimento de voz:", transcript);
+            
+            // Define o texto no input e submete (Integração com estoque-ia.js)
+            const aiInput = document.getElementById("ai-input");
+            const aiSubmitBtn = document.getElementById("ai-submit");
+            if (aiInput && aiSubmitBtn) {
+                aiInput.value = transcript;
+                aiSubmitBtn.click();
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Erro na gravação de voz:", event.error);
+            setVuiState(2);
+        };
+
+        recognition.onend = function() {
+            setVuiState(2); // Volta ao estado inicial ao finalizar
+        };
+    } else {
+        console.warn("Navegador não suporta Web Speech API.");
+    }
+
+    // Click Handler para o Microfone
     vuiBtn.addEventListener("click", (e) => {
         e.preventDefault();
         
-        // Hide tooltip immediately when switching states
+        // Hide tooltip
         vuiContainer.classList.remove("vui-show-tooltip");
         
         if (currentState === 2) {
-            // State 2 (Voice) -> State 3 (Active Recording)
-            setVuiState(3);
+            // Se estiver inativo, inicia a gravação
+            if (recognition) {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error("Microfone já está ativo.");
+                }
+            } else {
+                alert("Seu navegador não suporta gravação de voz nativa.");
+                // Simulação fallback
+                document.dispatchEvent(new CustomEvent('vui-speech-submit'));
+            }
         } else if (currentState === 3) {
-            // State 3 (Active Recording) -> State 1 (Send Arrow)
-            setVuiState(1);
-        } else if (currentState === 1) {
-            // State 1 (Send Arrow) -> State 2 (Voice)
+            // Se estiver gravando e clicar de novo, para a gravação
+            if (recognition) {
+                recognition.stop();
+            }
             setVuiState(2);
         }
     });

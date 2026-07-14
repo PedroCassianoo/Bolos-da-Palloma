@@ -24,8 +24,8 @@ A regra de classificação é:
 | :--- | :---: | :--- |
 | **Biblioteca Mestra de Insumos** | **[Adicionado]** | Tabela visualmente presente em `estoque.html` ("Lista Mestra de Insumos") contendo a listagem dos insumos cadastrados, categorias, estoque atual, níveis mínimos e preços. |
 | **Conversor Automático de Medidas** | **[Não Adicionado]** | Embora a visualização de ingredientes em `receitas.html` liste a conversão lado a lado (ex: *250g / 2 xícaras*), não existe uma ferramenta ou painel que converta unidades (xícaras, colheres) para massa (gramas) durante o input de receitas pelo usuário. |
-| **Entrada por OCR e XML (Câmera Inteligente)**| **[Adicionado] (Parcial)** | Botão flutuante (FAB) *"Escanear Nota Fiscal (OCR)"* com ícone de scanner de documentos presente no canto inferior de `estoque.html`. **Não possui modal ou lógica de câmera ativa ainda.** |
-| **Inventário por Comandos de Voz (VUI)** | **[Adicionado]** | Botão de microfone flutuante adicionado. Ao ser clicado, abre o painel do assistente de voz em modo escuro com padrão de fundo sutil. O botão de controle cicla ciclicamente (Enviar -> Voz -> Ativo) gerenciando ícones, dica de ferramenta e simulação interativa. |
+| **Entrada por OCR e XML (Câmera Inteligente)**| **[Adicionado] (Local Test)** | Botão flutuante (FAB) *"Escanear Nota Fiscal (OCR)"* no canto inferior de `estoque.html`. Integrado localmente via `estoque-ia.js` para simular escaneamento injetando texto mockado e acionando automaticamente a IA. |
+| **Inventário por Comandos de Voz (VUI)** | **[Adicionado] (Local Test)** | Botão flutuante ciclável. O gatilho de 'Enviar' agora dispara evento global interceptado pela lógica de IA (`estoque-ia.js`), auto-preenchendo input de teste e submetendo o formulário do Estoque. |
 
 ---
 
