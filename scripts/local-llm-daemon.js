@@ -25,6 +25,17 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 let app = express();
 app.use(express.json());
 
+// Permite CORS para conexões locais da interface do usuário (ex: file:// ou Live Server)
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 let activeTunnel = null;
 let keepAliveInterval = null;
 let apiKey = null;

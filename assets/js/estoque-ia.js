@@ -147,37 +147,111 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error("Sessão expirada. Faça login novamente.");
             }
 
-            // ===== VULN-09: Call server-side proxy instead of Ollama directly =====
-            // The server handles: sanitization (VULN-01), LLM call, output validation (VULN-02)
-            const response = await fetch("/api/process-inventory", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({ text: text })
-            });
+            let response;
+            let result;
+            let validated;
+            let warnings = [];
 
-            const result = await response.json();
+            try {
+                // ===== VULN-09: Call server-side proxy instead of Ollama directly =====
+                // The server handles: sanitization (VULN-01), LLM call, output validation (VULN-02)
+                response = await fetch("/api/process-inventory", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({ text: text })
+                });
 
-            if (!response.ok) {
-                // Handle specific error types from the proxy
-                if (response.status === 503) {
-                    throw new Error("⚠️ Processamento por IA indisponível.\n\nO servidor Ollama não está acessível neste ambiente. " +
-                        "Esta funcionalidade requer que o Ollama esteja rodando localmente.");
+                result = await response.json();
+
+                if (!response.ok) {
+                    // Handle specific error types from the proxy
+                    if (response.status === 503) {
+                        throw new Error("⚠️ Processamento por IA indisponível.\n\nO servidor Ollama não está acessível neste ambiente. " +
+                            "Esta funcionalidade requer que o Ollama esteja rodando localmente.");
+                    }
+                    if (response.status === 401) {
+                        throw new Error("Sessão expirada. Faça login novamente.");
+                    }
+                    if (response.status === 429) {
+                        throw new Error("Muitas requisições. Aguarde um minuto antes de tentar novamente.");
+                    }
+                    throw new Error(result.error || "Erro ao processar com a IA.");
                 }
-                if (response.status === 401) {
-                    throw new Error("Sessão expirada. Faça login novamente.");
+
+                validated = result.items;
+                warnings = result.warnings || [];
+            } catch (fetchError) {
+                // Se for um erro de rede (Failed to fetch ou similar), tenta o fallback local direto
+                const isNetworkError = fetchError.name === "TypeError" || fetchError.message.includes("fetch");
+                
+                if (isNetworkError) {
+                    console.warn("[Estoque-IA] Falha ao conectar ao proxy Vercel. Tentando fallback local direto...", fetchError.message);
+                    
+                    // Fallback para o daemon local rodando na porta 11435
+                    const localDaemonUrl = "http://localhost:11435";
+                    let apiKeyVal = null;
+                    
+                    try {
+                        const { data: configs } = await window.supabaseClient
+                            .from('config_sistema')
+                            .select('chave, valor')
+                            .in('chave', ['ollama_api_key']);
+                        if (configs) {
+                            const keyConfig = configs.find(c => c.chave === 'ollama_api_key');
+                            if (keyConfig) apiKeyVal = keyConfig.valor;
+                        }
+                    } catch (dbErr) {
+                        console.error("[Estoque-IA] Erro ao buscar API key local do Supabase:", dbErr);
+                    }
+
+                    const localHeaders = { "Content-Type": "application/json" };
+                    if (apiKeyVal) {
+                        localHeaders["Authorization"] = `Bearer ${apiKeyVal}`;
+                    }
+
+                    let localResponse;
+                    try {
+                        localResponse = await fetch(`${localDaemonUrl}/api/process`, {
+                            method: "POST",
+                            headers: localHeaders,
+                            body: JSON.stringify({
+                                prompt: `<INPUT_USUARIO>${text}</INPUT_USUARIO>`,
+                                stream: false
+                            })
+                        });
+                    } catch (localFetchErr) {
+                        console.error("[Estoque-IA] Falha ao conectar no daemon local:", localFetchErr);
+                        throw new Error("O serviço de IA local (daemon) não está em execução.\n\nCertifique-se de iniciar o serviço executando o arquivo 'iniciar-servico-local.bat' no seu PC e garanta que o Ollama esteja rodando.");
+                    }
+
+                    if (!localResponse.ok) {
+                        const errText = await localResponse.text();
+                        throw new Error(`O daemon local retornou um erro (${localResponse.status}): ${errText}`);
+                    }
+
+                    const localData = await localResponse.json();
+                    const responseText = (localData.response || '').trim();
+                    
+                    let rawParsed;
+                    try {
+                        rawParsed = JSON.parse(responseText);
+                    } catch (parseErr) {
+                        throw new Error("A IA local não retornou um JSON válido. Tente reformular a frase.");
+                    }
+
+                    if (!Array.isArray(rawParsed)) {
+                        throw new Error("A IA local retornou um formato inesperado (esperado: array JSON).");
+                    }
+
+                    validated = rawParsed;
+                } else {
+                    // Repassa erros lógicos (ex: 503, 401, 429)
+                    throw fetchError;
                 }
-                if (response.status === 429) {
-                    throw new Error("Muitas requisições. Aguarde um minuto antes de tentar novamente.");
-                }
-                throw new Error(result.error || "Erro ao processar com a IA.");
             }
-
-            // Server already validated the output (VULN-02) — we receive clean items
-            const validated = result.items;
-            const warnings = result.warnings || [];
 
             if (warnings.length > 0) {
                 console.warn("[Estoque-IA] Warnings do servidor:", warnings);
