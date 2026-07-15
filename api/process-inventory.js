@@ -29,6 +29,44 @@ const supabase = createClient(
 );
 
 // --------------------------------------------------------------------------
+// Resolução Dinâmica do Endpoint da LLM Local via Banco de Dados
+// --------------------------------------------------------------------------
+async function resolveOllamaEndpoint() {
+    try {
+        const { data, error } = await supabase
+            .from('config_sistema')
+            .select('chave, valor')
+            .in('chave', ['ollama_url', 'ollama_status', 'ollama_api_key']);
+
+        if (error) {
+            console.error('[process-inventory] Erro ao consultar config_sistema no Supabase:', error.message);
+            return { url: OLLAMA_URL, apiKey: null, isTunnel: false };
+        }
+
+        const config = {};
+        if (data) {
+            data.forEach(item => {
+                config[item.chave] = item.valor;
+            });
+        }
+
+        // Se o status for online e houver uma URL de túnel válida, use-a
+        if (config.ollama_status === 'online' && config.ollama_url) {
+            return {
+                url: config.ollama_url,
+                apiKey: config.ollama_api_key || null,
+                isTunnel: true
+            };
+        }
+    } catch (err) {
+        console.error('[process-inventory] Erro ao resolver endpoint dinâmico:', err.message);
+    }
+
+    // Fallback padrão para ambiente de desenvolvimento local
+    return { url: OLLAMA_URL, apiKey: null, isTunnel: false };
+}
+
+// --------------------------------------------------------------------------
 // Rate limiting em memória (por IP, por instância serverless)
 // --------------------------------------------------------------------------
 const rateLimitMap = new Map();
@@ -217,17 +255,28 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Texto ficou vazio após sanitização.' });
     }
 
-    // --- Chamar o Ollama (server-side) ---
-    console.log(`[process-inventory] Enviando para Ollama: model=${OLLAMA_MODEL}, chars=${sanitizedText.length}`);
+    // --- Resolver Endpoint da LLM ---
+    const { url: targetUrl, apiKey: tunnelApiKey, isTunnel } = await resolveOllamaEndpoint();
+    console.log(`[process-inventory] Resolvido endpoint: url=${targetUrl}, isTunnel=${isTunnel}`);
+
+    // --- Chamar o Ollama (server-side ou túnel local) ---
+    console.log(`[process-inventory] Enviando requisição de IA: model=${OLLAMA_MODEL}, chars=${sanitizedText.length}`);
 
     let ollamaResponse;
     try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), OLLAMA_TIMEOUT_MS);
 
-        ollamaResponse = await fetch(`${OLLAMA_URL}/api/generate`, {
+        const fetchUrl = isTunnel ? `${targetUrl}/api/process` : `${targetUrl}/api/generate`;
+        const headers = { 'Content-Type': 'application/json' };
+        
+        if (isTunnel && tunnelApiKey) {
+            headers['Authorization'] = `Bearer ${tunnelApiKey}`;
+        }
+
+        ollamaResponse = await fetch(fetchUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: headers,
             body: JSON.stringify({
                 model: OLLAMA_MODEL,
                 prompt: `<INPUT_USUARIO>${sanitizedText}</INPUT_USUARIO>`,
@@ -238,18 +287,19 @@ export default async function handler(req, res) {
 
         clearTimeout(timeoutId);
     } catch (fetchError) {
-        // Ollama não acessível (esperado em produção na Vercel)
-        console.warn('[process-inventory] Ollama inacessível:', fetchError.message);
+        console.warn('[process-inventory] Falha ao conectar no endpoint Ollama:', fetchError.message);
         return res.status(503).json({
-            error: 'Processamento por IA indisponível. O servidor Ollama não está acessível neste ambiente.',
-            hint: 'Esta funcionalidade requer que o Ollama esteja rodando localmente. Use "vercel dev" no mesmo PC.'
+            error: 'Processamento por IA temporariamente indisponível.',
+            hint: isTunnel
+                ? 'Certifique-se de que o computador que hospeda o Ollama local está ligado e com o daemon ativo.'
+                : 'Esta funcionalidade requer que o Ollama esteja rodando localmente. Se estiver no ar, use "vercel dev" para testar localmente.'
         });
     }
 
     if (!ollamaResponse.ok) {
-        console.error(`[process-inventory] Ollama retornou status ${ollamaResponse.status}`);
+        console.error(`[process-inventory] Endpoint retornou status ${ollamaResponse.status}`);
         return res.status(502).json({
-            error: 'Erro na comunicação com o Ollama. Verifique se o serviço está rodando e se o modelo "processador-estoque" foi criado.'
+            error: 'O serviço de IA local retornou um erro ou está ocupado. Tente novamente em instantes.'
         });
     }
 

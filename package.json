@@ -4,6 +4,10 @@
   "private": true,
   "description": "Cardápio digital e painel de gestão - Bolos da Palloma",
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.1"
+    "@supabase/supabase-js": "^2.110.1",
+    "express": "^4.18.2",
+    "localtunnel": "^2.0.2",
+    "ngrok": "^5.0.0-beta.1",
+    "dotenv": "^16.0.3"
   }
 }
