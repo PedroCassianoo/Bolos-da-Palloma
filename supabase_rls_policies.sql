@@ -112,6 +112,34 @@ BEGIN
 END $$;
 
 -- ==========================================================================
+-- TABELA DE AUDITORIA: estoque_log (VULN-12)
+-- ==========================================================================
+
+CREATE TABLE IF NOT EXISTS estoque_log (
+    id BIGSERIAL PRIMARY KEY,
+    insumo_id BIGINT REFERENCES insumos(id),
+    acao TEXT NOT NULL,
+    quantidade_alterada NUMERIC NOT NULL,
+    quantidade_anterior NUMERIC NOT NULL,
+    quantidade_nova NUMERIC NOT NULL,
+    origem TEXT NOT NULL DEFAULT 'ia',
+    input_original TEXT,
+    usuario_id UUID,
+    criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE estoque_log ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Authenticated users can view estoque_log" ON estoque_log;
+DROP POLICY IF EXISTS "Authenticated users can insert estoque_log" ON estoque_log;
+
+CREATE POLICY "Authenticated users can view estoque_log" ON estoque_log
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Authenticated users can insert estoque_log" ON estoque_log
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- ==========================================================================
 -- FUNÇÃO RPC: Atualização atômica de estoque (VULN-11)
 -- ==========================================================================
 -- Processa todas as movimentações em uma única transação.
@@ -128,6 +156,9 @@ DECLARE
     item_nome TEXT;
     results JSONB := '[]'::JSONB;
 BEGIN
+    -- Define a origem como 'ia' para a transação local, evitando log duplicado no trigger
+    PERFORM set_config('app.current_origin', 'ia', true);
+
     FOR item IN SELECT * FROM jsonb_array_elements(movimentacoes)
     LOOP
         -- Busca o insumo por nome (fuzzy match limitado a 1 resultado)
@@ -160,19 +191,14 @@ BEGIN
         -- Atualiza por ID exato
         UPDATE insumos SET quantidade = new_qty WHERE id = item_id;
 
-        -- Registra no log de auditoria (se a tabela existir)
-        BEGIN
-            INSERT INTO estoque_log (
-                insumo_id, acao, quantidade_alterada,
-                quantidade_anterior, quantidade_nova, origem, input_original
-            ) VALUES (
-                item_id, item->>'acao', (item->>'quantidade')::NUMERIC,
-                current_qty, new_qty, 'ia', movimentacoes::TEXT
-            );
-        EXCEPTION WHEN undefined_table THEN
-            -- Tabela de log ainda não existe, ignora silenciosamente
-            NULL;
-        END;
+        -- Registra no log de auditoria
+        INSERT INTO estoque_log (
+            insumo_id, acao, quantidade_alterada,
+            quantidade_anterior, quantidade_nova, origem, input_original
+        ) VALUES (
+            item_id, item->>'acao', (item->>'quantidade')::NUMERIC,
+            current_qty, new_qty, 'ia', movimentacoes::TEXT
+        );
 
         results := results || jsonb_build_object(
             'produto', item_nome,
@@ -187,32 +213,61 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==========================================================================
--- TABELA DE AUDITORIA: estoque_log (VULN-12)
+-- TRIGGER DE AUDITORIA: Auditoria automática de outras alterações (VULN-12)
 -- ==========================================================================
 
-CREATE TABLE IF NOT EXISTS estoque_log (
-    id BIGSERIAL PRIMARY KEY,
-    insumo_id BIGINT REFERENCES insumos(id),
-    acao TEXT NOT NULL,
-    quantidade_alterada NUMERIC NOT NULL,
-    quantidade_anterior NUMERIC NOT NULL,
-    quantidade_nova NUMERIC NOT NULL,
-    origem TEXT NOT NULL DEFAULT 'ia',
-    input_original TEXT,
-    usuario_id UUID,
-    criado_em TIMESTAMPTZ DEFAULT NOW()
-);
+CREATE OR REPLACE FUNCTION audit_insumos_changes()
+RETURNS TRIGGER AS $$
+DECLARE
+    current_origin TEXT;
+BEGIN
+    -- Verifica se a mudança veio da RPC 'atualizar_estoque' (IA)
+    BEGIN
+        current_origin := current_setting('app.current_origin', true);
+    EXCEPTION WHEN OTHERS THEN
+        current_origin := NULL;
+    END;
 
-ALTER TABLE estoque_log ENABLE ROW LEVEL SECURITY;
+    IF (current_origin = 'ia') THEN
+        -- Ignora, pois a RPC já registra o log detalhado
+        RETURN NEW;
+    END IF;
 
-DROP POLICY IF EXISTS "Authenticated users can view estoque_log" ON estoque_log;
-DROP POLICY IF EXISTS "Authenticated users can insert estoque_log" ON estoque_log;
+    IF (TG_OP = 'INSERT') THEN
+        INSERT INTO estoque_log (insumo_id, acao, quantidade_alterada, quantidade_anterior, quantidade_nova, origem)
+        VALUES (NEW.id, 'adicionar', NEW.quantidade, 0, NEW.quantidade, 'manual_insert');
+    ELSIF (TG_OP = 'UPDATE') THEN
+        -- Só registra se a quantidade mudou
+        IF (NEW.quantidade <> OLD.quantidade) THEN
+            DECLARE
+                diff NUMERIC := NEW.quantidade - OLD.quantidade;
+                action_type TEXT := 'update';
+            BEGIN
+                IF (diff > 0) THEN
+                    action_type := 'adicionar';
+                ELSE
+                    action_type := 'remover';
+                    diff := ABS(diff);
+                END IF;
 
-CREATE POLICY "Authenticated users can view estoque_log" ON estoque_log
-  FOR SELECT USING (auth.role() = 'authenticated');
+                INSERT INTO estoque_log (insumo_id, acao, quantidade_alterada, quantidade_anterior, quantidade_nova, origem)
+                VALUES (NEW.id, action_type, diff, OLD.quantidade, NEW.quantidade, 'manual_update');
+            END;
+        END IF;
+    ELSIF (TG_OP = 'DELETE') THEN
+        INSERT INTO estoque_log (insumo_id, acao, quantidade_alterada, quantidade_anterior, quantidade_nova, origem)
+        VALUES (OLD.id, 'remover', OLD.quantidade, OLD.quantidade, 0, 'manual_delete');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE POLICY "Authenticated users can insert estoque_log" ON estoque_log
-  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+DROP TRIGGER IF EXISTS trg_audit_insumos ON insumos;
+
+CREATE TRIGGER trg_audit_insumos
+AFTER INSERT OR UPDATE OR DELETE ON insumos
+FOR EACH ROW
+EXECUTE FUNCTION audit_insumos_changes();
 
 -- ==========================================================================
 -- FIM DO SCRIPT
