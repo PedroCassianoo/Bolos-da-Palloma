@@ -190,24 +190,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (isNetworkError) {
                     console.warn("[Estoque-IA] Falha ao conectar ao proxy Vercel. Tentando fallback local direto...", fetchError.message);
                     
-                    // Fallback para o daemon local rodando na porta 11435
-                    const localDaemonUrl = "http://localhost:11435";
+                    // Fallback para o daemon local rodando na porta 11435 ou via túnel público do Ngrok
+                    let localDaemonUrl = "http://localhost:11435";
                     let apiKeyVal = null;
                     
                     try {
                         const { data: configs } = await window.supabaseClient
                             .from('config_sistema')
                             .select('chave, valor')
-                            .in('chave', ['ollama_api_key']);
+                            .in('chave', ['ollama_api_key', 'ollama_url']);
                         if (configs) {
                             const keyConfig = configs.find(c => c.chave === 'ollama_api_key');
+                            const urlConfig = configs.find(c => c.chave === 'ollama_url');
                             if (keyConfig) apiKeyVal = keyConfig.valor;
+                            if (urlConfig && urlConfig.valor) localDaemonUrl = urlConfig.valor;
                         }
                     } catch (dbErr) {
-                        console.error("[Estoque-IA] Erro ao buscar API key local do Supabase:", dbErr);
+                        console.error("[Estoque-IA] Erro ao buscar configurações locais do Supabase:", dbErr);
                     }
 
-                    const localHeaders = { "Content-Type": "application/json" };
+                    const localHeaders = { 
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "true"
+                    };
                     if (apiKeyVal) {
                         localHeaders["Authorization"] = `Bearer ${apiKeyVal}`;
                     }

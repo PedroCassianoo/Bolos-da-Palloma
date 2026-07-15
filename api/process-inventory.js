@@ -268,7 +268,10 @@ export default async function handler(req, res) {
         const timeoutId = setTimeout(() => controller.abort(), OLLAMA_TIMEOUT_MS);
 
         const fetchUrl = isTunnel ? `${targetUrl}/api/process` : `${targetUrl}/api/generate`;
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = { 
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+        };
         
         if (isTunnel && tunnelApiKey) {
             headers['Authorization'] = `Bearer ${tunnelApiKey}`;
