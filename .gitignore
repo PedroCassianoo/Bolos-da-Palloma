@@ -16,3 +16,8 @@ Thumbs.db
 
 
 .vercel
+
+# Graphify
+graphify-8/
+graphify-out/cost.json
+graphify-out/cache/

@@ -1,0 +1,292 @@
+{
+  ".agents/skills/deploy-sync/scripts/deploy-sync.ps1": {
+    "mtime": 1784078211.9063656,
+    "ast_hash": "2b2a6cf6d7db9baf64647e9953d62a59",
+    "semantic_hash": "2b2a6cf6d7db9baf64647e9953d62a59"
+  },
+  ".agents/skills/deploy-sync/scripts/deploy-sync.sh": {
+    "mtime": 1784078073.435222,
+    "ast_hash": "d505afa7bc6f1f9240fdd402f79392d6",
+    "semantic_hash": "d505afa7bc6f1f9240fdd402f79392d6"
+  },
+  "api/process-inventory.js": {
+    "mtime": 1784153924.3317459,
+    "ast_hash": "3d5c54c7340b2c50a893f02c400e9000",
+    "semantic_hash": "3d5c54c7340b2c50a893f02c400e9000"
+  },
+  "api/register-sale.js": {
+    "mtime": 1783293608.2442944,
+    "ast_hash": "7b2de56434979a796bd2fdea3d98195e",
+    "semantic_hash": "7b2de56434979a796bd2fdea3d98195e"
+  },
+  "app.js": {
+    "mtime": 1784157542.1288097,
+    "ast_hash": "0684661772b5651454c29b731d3c3709",
+    "semantic_hash": ""
+  },
+  "assets/js/estoque-ia.js": {
+    "mtime": 1784081295.3192153,
+    "ast_hash": "0679fd44dd3e5cb4dcbec4d43a14608a",
+    "semantic_hash": "0679fd44dd3e5cb4dcbec4d43a14608a"
+  },
+  "assets/js/estoque-lista.js": {
+    "mtime": 1783984016.5604334,
+    "ast_hash": "9b8ec1dacb2d883e53925bc2ab98dd6b",
+    "semantic_hash": "9b8ec1dacb2d883e53925bc2ab98dd6b"
+  },
+  "assets/js/nav-helper.js": {
+    "mtime": 1783454148.3427095,
+    "ast_hash": "39e87839d64e9aea5d8e58a31b774b6a",
+    "semantic_hash": "39e87839d64e9aea5d8e58a31b774b6a"
+  },
+  "assets/js/vui.js": {
+    "mtime": 1784081097.7493763,
+    "ast_hash": "83eb092dccdb3f7db97060f3ae48ae76",
+    "semantic_hash": "83eb092dccdb3f7db97060f3ae48ae76"
+  },
+  "package.json": {
+    "mtime": 1784074399.6912696,
+    "ast_hash": "0ef73a9b71c9dd3c214df2fbc6ab90aa",
+    "semantic_hash": "0ef73a9b71c9dd3c214df2fbc6ab90aa"
+  },
+  "painel.js": {
+    "mtime": 1783458424.3110535,
+    "ast_hash": "9d6f7cbc80121b9d2f2442fbbb9d3d2a",
+    "semantic_hash": "9d6f7cbc80121b9d2f2442fbbb9d3d2a"
+  },
+  "scripts/configurar-inicializacao.ps1": {
+    "mtime": 1784074367.85786,
+    "ast_hash": "19c0b3b991c32f052ef1b94d93d439bb",
+    "semantic_hash": "19c0b3b991c32f052ef1b94d93d439bb"
+  },
+  "scripts/local-llm-daemon.js": {
+    "mtime": 1784079213.5682628,
+    "ast_hash": "ccfac2c699e3ee5e49f5f33352521e50",
+    "semantic_hash": "ccfac2c699e3ee5e49f5f33352521e50"
+  },
+  "scripts/test-vui-mobile-fix.js": {
+    "mtime": 1784081576.5630226,
+    "ast_hash": "2e0a3bfeb7ed6630e15053a3bf6f5dc8",
+    "semantic_hash": "2e0a3bfeb7ed6630e15053a3bf6f5dc8"
+  },
+  "supabase-config.js": {
+    "mtime": 1783441607.4467986,
+    "ast_hash": "756fcf10cb8fc7689e4aa79ceb4ec2bc",
+    "semantic_hash": "756fcf10cb8fc7689e4aa79ceb4ec2bc"
+  },
+  "supabase_rls_policies.sql": {
+    "mtime": 1784079062.436311,
+    "ast_hash": "0fd1acd6dc070aa5974743a98210534d",
+    "semantic_hash": "0fd1acd6dc070aa5974743a98210534d"
+  },
+  "vercel.json": {
+    "mtime": 1784081072.670544,
+    "ast_hash": "eba39e12bb8721b6aa47d2aadc36d5b9",
+    "semantic_hash": "eba39e12bb8721b6aa47d2aadc36d5b9"
+  },
+  ".agents/rules/graphify.md": {
+    "mtime": 1784154938.43866,
+    "ast_hash": "a0e4d192b9e2e17256124dbfc8e24e6a",
+    "semantic_hash": "a0e4d192b9e2e17256124dbfc8e24e6a"
+  },
+  ".agents/skills/code-review/SKILL.md": {
+    "mtime": 1783556200.200345,
+    "ast_hash": "74c38bc6ba76bc67f466ba2582dff06c",
+    "semantic_hash": "74c38bc6ba76bc67f466ba2582dff06c"
+  },
+  ".agents/skills/deploy-sync/SKILL.md": {
+    "mtime": 1784078069.339741,
+    "ast_hash": "5eefd171afc229999c460fba21189cb3",
+    "semantic_hash": "5eefd171afc229999c460fba21189cb3"
+  },
+  ".agents/skills/saas-qa-tester/SKILL.md": {
+    "mtime": 1783556540.4274468,
+    "ast_hash": "6003f1b6221cfbb3b85699e6787bc7c1",
+    "semantic_hash": "6003f1b6221cfbb3b85699e6787bc7c1"
+  },
+  ".agents/workflows/graphify.md": {
+    "mtime": 1784154938.4396698,
+    "ast_hash": "637776aa6f7496d069afe7520c845c8a",
+    "semantic_hash": "637776aa6f7496d069afe7520c845c8a"
+  },
+  "README.md": {
+    "mtime": 1783462564.5005658,
+    "ast_hash": "a7b2d9e3807281807702b30b66e1be1a",
+    "semantic_hash": "a7b2d9e3807281807702b30b66e1be1a"
+  },
+  "SECURITY_AUDIT.md": {
+    "mtime": 1783985556.6039722,
+    "ast_hash": "3a8ca6c12f988bb66b5f8b87e92a8497",
+    "semantic_hash": "3a8ca6c12f988bb66b5f8b87e92a8497"
+  },
+  "docs/latest_patch_notes.txt": {
+    "mtime": 1784153938.200977,
+    "ast_hash": "0a1e3809712b82b9c77290467aa7d435",
+    "semantic_hash": "0a1e3809712b82b9c77290467aa7d435"
+  },
+  "estoque.html": {
+    "mtime": 1783983900.533297,
+    "ast_hash": "96fe30a6e793f2fc19868e814bcd4f1c",
+    "semantic_hash": "96fe30a6e793f2fc19868e814bcd4f1c"
+  },
+  "features_status.md": {
+    "mtime": 1783980444.2497752,
+    "ast_hash": "0404ca968a0474634ae77e91e4749893",
+    "semantic_hash": "0404ca968a0474634ae77e91e4749893"
+  },
+  "git_diff_painel_css.txt": {
+    "mtime": 1782775388.9349945,
+    "ast_hash": "a0b884e93fad8eff202be4b319e52f72",
+    "semantic_hash": "a0b884e93fad8eff202be4b319e52f72"
+  },
+  "index.html": {
+    "mtime": 1784157550.6975048,
+    "ast_hash": "17e76aa6c9b63e55786f66768d95c07f",
+    "semantic_hash": ""
+  },
+  "painel.html": {
+    "mtime": 1783461720.2122533,
+    "ast_hash": "c62c99f0de1f7ecaa61522a5e13aebe8",
+    "semantic_hash": "c62c99f0de1f7ecaa61522a5e13aebe8"
+  },
+  "pedidos.html": {
+    "mtime": 1783458937.3708978,
+    "ast_hash": "09ca4cd8cfbc05c6aec3191d71a14d0d",
+    "semantic_hash": "09ca4cd8cfbc05c6aec3191d71a14d0d"
+  },
+  "receitas.html": {
+    "mtime": 1783461315.7010422,
+    "ast_hash": "ac2d391ada75063e3fdb2628f578eb33",
+    "semantic_hash": "ac2d391ada75063e3fdb2628f578eb33"
+  },
+  "robots.txt": {
+    "mtime": 1783291998.29529,
+    "ast_hash": "d8403a2ed867ea6b250eacba7b5e5327",
+    "semantic_hash": "d8403a2ed867ea6b250eacba7b5e5327"
+  },
+  "vers\u00e3o_3.0_seguranca_revisada.md": {
+    "mtime": 1783300099.803193,
+    "ast_hash": "dfc37d3a9dfe63cc8093543dc1fd825f",
+    "semantic_hash": "dfc37d3a9dfe63cc8093543dc1fd825f"
+  },
+  "vers\u00e3o_3.5_novas_funcionalidades.md": {
+    "mtime": 1783462568.078277,
+    "ast_hash": "455f66a4abccbc1216e66e04baaa80c4",
+    "semantic_hash": "455f66a4abccbc1216e66e04baaa80c4"
+  },
+  "assets/icons/plus.svg": {
+    "mtime": 1783456640.1690488,
+    "ast_hash": "efa1721930713bddb891d8e7d265498b",
+    "semantic_hash": "efa1721930713bddb891d8e7d265498b"
+  },
+  "assets/icons/pulse-active.svg": {
+    "mtime": 1783456643.7706835,
+    "ast_hash": "6151d055b2eab3450fbd1872707fa895",
+    "semantic_hash": "6151d055b2eab3450fbd1872707fa895"
+  },
+  "assets/images/bolo_cenoura.png": {
+    "mtime": 1781134575.5676253,
+    "ast_hash": "20c5bd58acf0461ddb0cd0712f8e1bf8",
+    "semantic_hash": "20c5bd58acf0461ddb0cd0712f8e1bf8"
+  },
+  "assets/images/bolo_cenoura_brigadeiro.jpg": {
+    "mtime": 1782772153.2395103,
+    "ast_hash": "ea9c4e4a16ae59aa249e5b567624413f",
+    "semantic_hash": "ea9c4e4a16ae59aa249e5b567624413f"
+  },
+  "assets/images/bolo_fuba_goiabada.jpg": {
+    "mtime": 1782771532.058885,
+    "ast_hash": "623432fa3f2b8809b68dd4e2304d7cc1",
+    "semantic_hash": "623432fa3f2b8809b68dd4e2304d7cc1"
+  },
+  "assets/images/bolo_morango.png": {
+    "mtime": 1781134551.273161,
+    "ast_hash": "8f002af9557183f726b5be14bbd8fb71",
+    "semantic_hash": "8f002af9557183f726b5be14bbd8fb71"
+  },
+  "assets/images/bolo_ninho_morango.jpg": {
+    "mtime": 1782771532.0614605,
+    "ast_hash": "b926b981e8c1c52211daa9fef07312a7",
+    "semantic_hash": "b926b981e8c1c52211daa9fef07312a7"
+  },
+  "assets/images/bolo_red_velvet.jpg": {
+    "mtime": 1782771532.0604308,
+    "ast_hash": "c2505bebb4622e548f983eb63b960b07",
+    "semantic_hash": "c2505bebb4622e548f983eb63b960b07"
+  },
+  "assets/images/bolo_trufado_chocolate.jpg": {
+    "mtime": 1782772153.2431424,
+    "ast_hash": "967ca5946816fdde5910198633327f62",
+    "semantic_hash": "967ca5946816fdde5910198633327f62"
+  },
+  "assets/images/bolo_vulcao.png": {
+    "mtime": 1781134538.9946938,
+    "ast_hash": "49116181e9087a4e7373ab483a9ce2d5",
+    "semantic_hash": "49116181e9087a4e7373ab483a9ce2d5"
+  },
+  "assets/images/bolo_vulcao_ninho_nutella.jpg": {
+    "mtime": 1782772153.2421098,
+    "ast_hash": "ee974665328bb306e9f38fcc98b2119b",
+    "semantic_hash": "ee974665328bb306e9f38fcc98b2119b"
+  },
+  "assets/images/brownie_supremo.jpg": {
+    "mtime": 1782771532.0630739,
+    "ast_hash": "7d3fa05e7dcd5c0a014cd7390eebc27e",
+    "semantic_hash": "7d3fa05e7dcd5c0a014cd7390eebc27e"
+  },
+  "assets/images/copo_felicidade.png": {
+    "mtime": 1781134563.9535034,
+    "ast_hash": "5a3e5516136af36880cb4ec1e2d6236e",
+    "semantic_hash": "5a3e5516136af36880cb4ec1e2d6236e"
+  },
+  "assets/images/copo_felicidade_morango.jpg": {
+    "mtime": 1782772153.240546,
+    "ast_hash": "40259a26f1233b7b057a4ba77ab8fac2",
+    "semantic_hash": "40259a26f1233b7b057a4ba77ab8fac2"
+  },
+  "assets/images/logo.png": {
+    "mtime": 1781135649.0712976,
+    "ast_hash": "fa95d36bc2c74a13336c6a707eaadd6d",
+    "semantic_hash": "fa95d36bc2c74a13336c6a707eaadd6d"
+  },
+  "assets/images/logo_icon.png": {
+    "mtime": 1781135816.3820512,
+    "ast_hash": "db0c708c423845ac3ea05d7c9dcbaf14",
+    "semantic_hash": "db0c708c423845ac3ea05d7c9dcbaf14"
+  },
+  "assets/images/whatsapp_icon.png": {
+    "mtime": 1781136165.1845858,
+    "ast_hash": "edaeecd8acc38ab7efb3112f6f2cf9a4",
+    "semantic_hash": "edaeecd8acc38ab7efb3112f6f2cf9a4"
+  },
+  "assets/js/animations.js": {
+    "mtime": 1784157491.5275238,
+    "ast_hash": "46687a340bb47f77f8cd1ec3770a9348",
+    "semantic_hash": ""
+  },
+  "assets/js/cart.js": {
+    "mtime": 1784157500.1370375,
+    "ast_hash": "378dc73cdefc67229ab6fa2c3839718b",
+    "semantic_hash": ""
+  },
+  "assets/js/checkout.js": {
+    "mtime": 1784157531.4469607,
+    "ast_hash": "87e9eb8605e6d1726a748828262a6325",
+    "semantic_hash": ""
+  },
+  "assets/js/products.js": {
+    "mtime": 1784157473.1843987,
+    "ast_hash": "52782e6fd52d50b707b0e65feddae83e",
+    "semantic_hash": ""
+  },
+  "assets/js/ui.js": {
+    "mtime": 1784157511.8617601,
+    "ast_hash": "2d2ac9993d8edcc6cb58c7b815242436",
+    "semantic_hash": ""
+  },
+  "assets/js/utils.js": {
+    "mtime": 1784157481.735613,
+    "ast_hash": "7b937c786ea14a94ca09237474665df2",
+    "semantic_hash": ""
+  }
+}
