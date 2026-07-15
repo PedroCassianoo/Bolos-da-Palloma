@@ -72,10 +72,38 @@ document.addEventListener("DOMContentLoaded", () => {
             setVuiState(2); // Volta ao estado inicial ao finalizar
         };
     } else {
+        // Browser does NOT support native Speech Recognition (iOS Safari, Firefox Mobile, etc.)
         console.warn("Navegador não suporta Web Speech API.");
+        
+        // Inject a visible notification banner near the VUI button
+        const noticeEl = document.createElement("div");
+        noticeEl.className = "vui-unsupported-notice";
+        noticeEl.innerHTML = `
+            <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">mic_off</span>
+            Gravação de voz não é suportada neste navegador. Use o <strong>Google Chrome no Android</strong> para usar o comando de voz.
+        `;
+        noticeEl.style.cssText = "position:fixed;bottom:100px;right:16px;left:16px;z-index:9998;" +
+            "background:#2d1b00;color:#ffddb3;padding:12px 16px;border-radius:12px;" +
+            "font-size:13px;line-height:1.5;box-shadow:0 4px 12px rgba(0,0,0,.3);" +
+            "display:none;max-width:400px;margin-left:auto;";
+        document.body.appendChild(noticeEl);
+
+        // Show the notice when user taps the mic button
+        vuiBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            noticeEl.style.display = "block";
+            // Auto-hide after 6 seconds
+            clearTimeout(noticeEl._hideTimer);
+            noticeEl._hideTimer = setTimeout(() => {
+                noticeEl.style.display = "none";
+            }, 6000);
+        });
+
+        // Skip the rest of the click handler setup below
+        return;
     }
 
-    // Click Handler para o Microfone
+    // Click Handler para o Microfone (only reached when Speech API IS available)
     vuiBtn.addEventListener("click", (e) => {
         e.preventDefault();
         
@@ -90,10 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 } catch (e) {
                     console.error("Microfone já está ativo.");
                 }
-            } else {
-                alert("Seu navegador não suporta gravação de voz nativa.");
-                // Simulação fallback
-                document.dispatchEvent(new CustomEvent('vui-speech-submit'));
             }
         } else if (currentState === 3) {
             // Se estiver gravando e clicar de novo, para a gravação

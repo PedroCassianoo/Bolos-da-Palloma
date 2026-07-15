@@ -16,7 +16,6 @@ import { createClient } from '@supabase/supabase-js';
 // --------------------------------------------------------------------------
 // Configuração
 // --------------------------------------------------------------------------
-const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = 'processador-estoque';
 const OLLAMA_TIMEOUT_MS = 60000; // 60s timeout para chamadas ao Ollama
 
@@ -40,7 +39,7 @@ async function resolveOllamaEndpoint() {
 
         if (error) {
             console.error('[process-inventory] Erro ao consultar config_sistema no Supabase:', error.message);
-            return { url: OLLAMA_URL, apiKey: null, isTunnel: false };
+            return { url: null, apiKey: null, isTunnel: false };
         }
 
         const config = {};
@@ -62,8 +61,9 @@ async function resolveOllamaEndpoint() {
         console.error('[process-inventory] Erro ao resolver endpoint dinâmico:', err.message);
     }
 
-    // Fallback padrão para ambiente de desenvolvimento local
-    return { url: OLLAMA_URL, apiKey: null, isTunnel: false };
+    // Daemon is offline or no tunnel URL configured — do NOT fallback to localhost
+    // (localhost from Vercel's servers points to Vercel itself, not the user's PC)
+    return { url: null, apiKey: null, isTunnel: false };
 }
 
 // --------------------------------------------------------------------------
@@ -259,6 +259,15 @@ export default async function handler(req, res) {
     const { url: targetUrl, apiKey: tunnelApiKey, isTunnel } = await resolveOllamaEndpoint();
     console.log(`[process-inventory] Resolvido endpoint: url=${targetUrl}, isTunnel=${isTunnel}`);
 
+    // --- Guard: If no valid endpoint was resolved, the daemon is offline ---
+    if (!targetUrl) {
+        console.warn('[process-inventory] Nenhum endpoint LLM disponível. Daemon offline.');
+        return res.status(503).json({
+            error: 'daemon_offline',
+            message: 'O serviço de IA local não está ativo. Inicie o "iniciar-servico-local.bat" no seu computador e certifique-se de que o Ollama esteja rodando.'
+        });
+    }
+
     // --- Chamar o Ollama (server-side ou túnel local) ---
     console.log(`[process-inventory] Enviando requisição de IA: model=${OLLAMA_MODEL}, chars=${sanitizedText.length}`);
 
@@ -292,10 +301,8 @@ export default async function handler(req, res) {
     } catch (fetchError) {
         console.warn('[process-inventory] Falha ao conectar no endpoint Ollama:', fetchError.message);
         return res.status(503).json({
-            error: 'Processamento por IA temporariamente indisponível.',
-            hint: isTunnel
-                ? 'Certifique-se de que o computador que hospeda o Ollama local está ligado e com o daemon ativo.'
-                : 'Esta funcionalidade requer que o Ollama esteja rodando localmente. Se estiver no ar, use "vercel dev" para testar localmente.'
+            error: 'daemon_offline',
+            message: 'O serviço de IA local não está respondendo. Verifique se o computador está ligado e o "iniciar-servico-local.bat" está em execução.'
         });
     }
 
