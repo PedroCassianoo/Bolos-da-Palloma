@@ -279,7 +279,7 @@ export default async function handler(req, res) {
         const fetchUrl = isTunnel ? `${targetUrl}/api/process` : `${targetUrl}/api/generate`;
         const headers = { 
             'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
+            'ngrok-skip-browser-warning': '69420'
         };
         
         if (isTunnel && tunnelApiKey) {
