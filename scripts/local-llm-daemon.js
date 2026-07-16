@@ -297,8 +297,8 @@ function transcribeAudio(audioBase64) {
             
             console.log(`🎙️ [Whisper] Áudio gravado temporariamente em: ${inputFilename}`);
             
-            // Define o modelo Whisper a partir do ambiente ou usa 'turbo' como padrão
-            const whisperModel = process.env.WHISPER_MODEL || 'turbo';
+            // Define o modelo Whisper a partir do ambiente ou usa 'base' como padrão
+            const whisperModel = process.env.WHISPER_MODEL || 'base';
             
             // Executa o comando CLI do Whisper do Python
             const cmd = `whisper "${inputFilename}" --model "${whisperModel}" --language Portuguese --output_format txt --output_dir "${tempDir}"`;

@@ -163,7 +163,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!response.ok) {
                 if (response.status === 503) {
                     const serverMsg = result.message || "O serviço de transcrição/IA local não está ativo.";
-                    showDaemonOfflineBanner(serverMsg);
+                    window.vuiUseNativeFallback = true;
+                    showDaemonOfflineBanner(serverMsg + " (Alternado para comando de voz nativo do navegador)");
                     throw new Error(serverMsg);
                 }
                 if (response.status === 401) {
@@ -196,7 +197,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error(error);
-            alert("Falha ao processar comando de voz: " + error.message);
+            window.vuiUseNativeFallback = true;
+            alert("Falha ao processar comando de voz: " + error.message + "\n\nO microfone foi alternado para usar o reconhecimento nativo do navegador.");
             aiLoading.classList.add("hidden");
             aiLoading.classList.remove("flex");
         } finally {

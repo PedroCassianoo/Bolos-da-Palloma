@@ -183,7 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
         vuiContainer.classList.remove("vui-show-tooltip");
         
         if (currentState === 2) {
-            if (canRecord) {
+            const useNative = window.vuiUseNativeFallback && recognition;
+            if (canRecord && !useNative) {
                 startRecording();
             } else if (recognition) {
                 try {
