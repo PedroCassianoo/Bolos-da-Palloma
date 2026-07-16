@@ -184,16 +184,21 @@ document.addEventListener("DOMContentLoaded", () => {
         vuiContainer.classList.remove("vui-show-tooltip");
         
         if (currentState === 2) {
-            const useNative = window.vuiUseNativeFallback && recognition;
-            if (canRecord && !useNative) {
-                startRecording();
-            } else if (recognition) {
+            // Prioriza o reconhecimento de voz nativo do navegador (Web Speech API)
+            // por ser instantâneo, leve e evitar timeouts de funções serverless da Vercel.
+            if (recognition && !window.vuiForceLocalWhisper) {
                 try {
                     recognition.start();
                 } catch (err) {
-                    console.error("Microfone nativo falhou:", err);
-                    setVuiState(2);
+                    console.error("Reconhecimento nativo falhou, tentando gravação local:", err);
+                    if (canRecord) {
+                        startRecording();
+                    } else {
+                        setVuiState(2);
+                    }
                 }
+            } else if (canRecord) {
+                startRecording();
             } else {
                 noticeEl.style.display = "block";
                 clearTimeout(noticeEl._hideTimer);
@@ -224,11 +229,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function injectVUIHtml() {
+        // Detecta suporte ao reconhecimento nativo
+        const hasNative = !!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+        const tooltipText = hasNative ? "Comando de voz (Navegador)" : "Comando de voz (Whisper)";
+
         // Build floating container
         const container = document.createElement("div");
         container.className = "vui-container";
         container.innerHTML = `
-            <div class="vui-tooltip">Voice message</div>
+            <div class="vui-tooltip">${tooltipText}</div>
             <button class="vui-btn vui-state-2" aria-label="Microfone / Enviar">
                 <div class="vui-inner-circle">
                     <!-- Black Arrow Icon (State 1) -->
