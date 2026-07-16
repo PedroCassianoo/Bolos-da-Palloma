@@ -10,9 +10,9 @@
     "semantic_hash": "d505afa7bc6f1f9240fdd402f79392d6"
   },
   "api/process-inventory.js": {
-    "mtime": 1784153924.3317459,
-    "ast_hash": "3d5c54c7340b2c50a893f02c400e9000",
-    "semantic_hash": "3d5c54c7340b2c50a893f02c400e9000"
+    "mtime": 1784161070.4518073,
+    "ast_hash": "3bf16a7a6e25a6f97f6772540f420915",
+    "semantic_hash": ""
   },
   "api/register-sale.js": {
     "mtime": 1783293608.2442944,
@@ -25,14 +25,14 @@
     "semantic_hash": ""
   },
   "assets/js/estoque-ia.js": {
-    "mtime": 1784081295.3192153,
-    "ast_hash": "0679fd44dd3e5cb4dcbec4d43a14608a",
-    "semantic_hash": "0679fd44dd3e5cb4dcbec4d43a14608a"
+    "mtime": 1784162628.346083,
+    "ast_hash": "b860bcc5f80cfdee3ac78fd2dff1b983",
+    "semantic_hash": ""
   },
   "assets/js/estoque-lista.js": {
-    "mtime": 1783984016.5604334,
-    "ast_hash": "9b8ec1dacb2d883e53925bc2ab98dd6b",
-    "semantic_hash": "9b8ec1dacb2d883e53925bc2ab98dd6b"
+    "mtime": 1784162634.8458872,
+    "ast_hash": "132533166ef7a1f667c049845bd22348",
+    "semantic_hash": ""
   },
   "assets/js/nav-helper.js": {
     "mtime": 1783454148.3427095,
@@ -40,9 +40,9 @@
     "semantic_hash": "39e87839d64e9aea5d8e58a31b774b6a"
   },
   "assets/js/vui.js": {
-    "mtime": 1784081097.7493763,
-    "ast_hash": "83eb092dccdb3f7db97060f3ae48ae76",
-    "semantic_hash": "83eb092dccdb3f7db97060f3ae48ae76"
+    "mtime": 1784162655.481591,
+    "ast_hash": "0404de4a860746be401063424f161e76",
+    "semantic_hash": ""
   },
   "package.json": {
     "mtime": 1784074399.6912696,
@@ -60,9 +60,9 @@
     "semantic_hash": "19c0b3b991c32f052ef1b94d93d439bb"
   },
   "scripts/local-llm-daemon.js": {
-    "mtime": 1784079213.5682628,
-    "ast_hash": "ccfac2c699e3ee5e49f5f33352521e50",
-    "semantic_hash": "ccfac2c699e3ee5e49f5f33352521e50"
+    "mtime": 1784161661.2123861,
+    "ast_hash": "67fe571406b054c3cdd74b385bd27e31",
+    "semantic_hash": ""
   },
   "scripts/test-vui-mobile-fix.js": {
     "mtime": 1784081576.5630226,
@@ -120,9 +120,9 @@
     "semantic_hash": "3a8ca6c12f988bb66b5f8b87e92a8497"
   },
   "docs/latest_patch_notes.txt": {
-    "mtime": 1784153938.200977,
-    "ast_hash": "0a1e3809712b82b9c77290467aa7d435",
-    "semantic_hash": "0a1e3809712b82b9c77290467aa7d435"
+    "mtime": 1784161711.6333103,
+    "ast_hash": "6341d8ffc19cd4a1857078f7a1338f95",
+    "semantic_hash": ""
   },
   "estoque.html": {
     "mtime": 1783983900.533297,
@@ -287,6 +287,11 @@
   "assets/js/utils.js": {
     "mtime": 1784157481.735613,
     "ast_hash": "7b937c786ea14a94ca09237474665df2",
+    "semantic_hash": ""
+  },
+  "scripts/test-whisper-integration.js": {
+    "mtime": 1784161125.5735557,
+    "ast_hash": "0be3378ceaa16b6ea3b0134388ae633a",
     "semantic_hash": ""
   }
 }

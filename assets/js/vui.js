@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     noticeEl.className = "vui-unsupported-notice";
     noticeEl.innerHTML = `
         <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">mic_off</span>
-        Seu navegador não suporta gravação de voz. Tente usar o <strong>Google Chrome</strong>.
+        Seu navegador não suporta gravação de voz. Tente usar o <strong>Google Chrome no Android</strong> ou desktop.
     `;
     noticeEl.style.cssText = "position:fixed;bottom:100px;right:16px;left:16px;z-index:9998;" +
         "background:#2d1b00;color:#ffddb3;padding:12px 16px;border-radius:12px;" +
@@ -130,9 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     // Dispara evento contendo o áudio gravado em base64
                     console.log("🎙️ Áudio gravado com sucesso. Enviando para transcrição...");
-                    document.dispatchEvent(new CustomEvent('vui-audio-recorded', {
+                    const recordedEvent = new CustomEvent('vui-audio-recorded', {
                         detail: { audio: base64Audio }
-                    }));
+                    });
+                    document.dispatchEvent(recordedEvent);
                 };
                 
                 if (audioStream) {

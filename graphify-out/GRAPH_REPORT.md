@@ -1,16 +1,16 @@
 # Graph Report - Bolos da Palloma  (2026-07-15)
 
 ## Corpus Check
-- 33 files · ~187,044 words
+- 34 files · ~189,344 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 289 nodes · 389 edges · 42 communities (36 shown, 6 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)
+- 302 nodes · 404 edges · 44 communities (38 shown, 6 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `82d33449`
+- Built from commit: `aa3766ea`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -39,6 +39,8 @@
 - ui.js
 - supabase_rls_policies.sql
 - cart.js
+- estoque-ia.js
+- test-whisper-integration.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `2. Resumo de Alterações por Arquivo (Diff Resumido)` - 14 edges
@@ -67,7 +69,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (42 total, 6 thin omitted)
+## Communities (44 total, 6 thin omitted)
 
 ### Community 0 - "Client Digital Menu (app.js)"
 Cohesion: 0.12
@@ -82,16 +84,16 @@ Cohesion: 0.16
 Nodes (23): 1. Histórico e Checklist de Correções, 2. Resumo de Alterações por Arquivo (Diff Resumido), 3. Políticas Ativas Pós-Auditoria (pg_policies), api/process-inventory.js [NOVO — VULN-09], api/register-sale.js [NOVO], app.js, assets/js/estoque-ia.js [MODIFICADO — VULN-09], Auditoria de Segurança — versão_3.0_seguranca_revisada (+15 more)
 
 ### Community 3 - "AI-Assisted Stock Voice Interface (estoque-ia.js)"
-Cohesion: 0.20
-Nodes (3): escapeHTML(), renderPreview(), showDaemonOfflineBanner()
+Cohesion: 0.27
+Nodes (3): setVuiState(), startRecording(), stopRecording()
 
 ### Community 4 - "Security & Version Revision (3.0)"
 Cohesion: 0.19
 Nodes (19): 1. Histórico e Checklist de Correções, 2. Resumo de Alterações por Arquivo (Diff Resumido), 3. Políticas Ativas Pós-Auditoria (pg_policies), api/register-sale.js [NOVO], app.js, Auditoria de Segurança — versão_3.0_seguranca_revisada, index.html, Item 1: Políticas de RLS (Row Level Security) no Supabase (+11 more)
 
 ### Community 5 - "Local LLM Daemon (Ollama Server)"
-Cohesion: 0.15
-Nodes (14): app, checkOllamaRunning(), { createClient }, crypto, dotenv, { exec }, express, main() (+6 more)
+Cohesion: 0.13
+Nodes (16): app, checkOllamaRunning(), { createClient }, crypto, dotenv, { exec }, express, fs (+8 more)
 
 ### Community 6 - "Project Dependencies & Manifests (package.json)"
 Cohesion: 0.12
@@ -141,8 +143,16 @@ Nodes (33): btnSubmitOrder, cartBadgeCount, cartDrawer, cartItemsList, cartOverl
 Cohesion: 0.32
 Nodes (6): audit_insumos_changes(), "Custos & Preços", estoque_log, "insumos", trg_audit_insumos, "vendas"
 
+### Community 42 - "estoque-ia.js"
+Cohesion: 0.43
+Nodes (5): escapeHTML(), getAccessToken(), getActiveSupabaseClient(), renderPreview(), showDaemonOfflineBanner()
+
+### Community 43 - "test-whisper-integration.js"
+Cohesion: 0.33
+Nodes (4): { createClient }, dotenv, path, supabase
+
 ## Knowledge Gaps
-- **70 isolated node(s):** `deploy-sync.sh script`, `supabase`, `rateLimitMap`, `INJECTION_PATTERNS`, `supabase` (+65 more)
+- **76 isolated node(s):** `deploy-sync.sh script`, `supabase`, `rateLimitMap`, `INJECTION_PATTERNS`, `supabase` (+71 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -150,9 +160,11 @@ Nodes (6): audit_insumos_changes(), "Custos & Preços", estoque_log, "insumos", 
 _Questions this graph is uniquely positioned to answer:_
 
 - **What connects `deploy-sync.sh script`, `supabase`, `rateLimitMap` to the rest of the system?**
-  _70 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _76 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Client Digital Menu (app.js)` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
+- **Should `Local LLM Daemon (Ollama Server)` be split into smaller, more focused modules?**
+  _Cohesion score 0.12631578947368421 - nodes in this community are weakly interconnected._
 - **Should `Project Dependencies & Manifests (package.json)` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._
 - **Should `ui.js` be split into smaller, more focused modules?**

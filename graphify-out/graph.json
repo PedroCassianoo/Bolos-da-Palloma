@@ -440,8 +440,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "assets_js_estoque_ia",
-      "community": 3,
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "community": 42,
+      "community_name": "estoque-ia.js",
       "norm_label": "estoque-ia.js"
     },
     {
@@ -451,8 +451,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "assets_js_estoque_ia_escapehtml",
-      "community": 3,
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "community": 42,
+      "community_name": "estoque-ia.js",
       "norm_label": "escapehtml()"
     },
     {
@@ -462,30 +462,52 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "assets_js_estoque_ia_showdaemonofflinebanner",
-      "community": 3,
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "community": 42,
+      "community_name": "estoque-ia.js",
       "norm_label": "showdaemonofflinebanner()"
+    },
+    {
+      "label": "getActiveSupabaseClient()",
+      "file_type": "code",
+      "source_file": "assets/js/estoque-ia.js",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "assets_js_estoque_ia_getactivesupabaseclient",
+      "community": 42,
+      "community_name": "estoque-ia.js",
+      "norm_label": "getactivesupabaseclient()"
+    },
+    {
+      "label": "updateAuthUI()",
+      "file_type": "code",
+      "source_file": "assets/js/estoque-ia.js",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "assets_js_estoque_ia_updateauthui",
+      "community": 42,
+      "community_name": "estoque-ia.js",
+      "norm_label": "updateauthui()"
     },
     {
       "label": "getAccessToken()",
       "file_type": "code",
       "source_file": "assets/js/estoque-ia.js",
-      "source_location": "L106",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "assets_js_estoque_ia_getaccesstoken",
-      "community": 3,
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "community": 42,
+      "community_name": "estoque-ia.js",
       "norm_label": "getaccesstoken()"
     },
     {
       "label": "renderPreview()",
       "file_type": "code",
       "source_file": "assets/js/estoque-ia.js",
-      "source_location": "L380",
+      "source_location": "L503",
       "_origin": "ast",
       "id": "assets_js_estoque_ia_renderpreview",
-      "community": 3,
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "community": 42,
+      "community_name": "estoque-ia.js",
       "norm_label": "renderpreview()"
     },
     {
@@ -1050,10 +1072,32 @@
       "norm_label": "vui.js"
     },
     {
+      "label": "startRecording()",
+      "file_type": "code",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "assets_js_vui_startrecording",
+      "community": 3,
+      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "norm_label": "startrecording()"
+    },
+    {
+      "label": "stopRecording()",
+      "file_type": "code",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L172",
+      "_origin": "ast",
+      "id": "assets_js_vui_stoprecording",
+      "community": 3,
+      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "norm_label": "stoprecording()"
+    },
+    {
       "label": "setVuiState()",
       "file_type": "code",
       "source_file": "assets/js/vui.js",
-      "source_location": "L132",
+      "source_location": "L217",
       "_origin": "ast",
       "id": "assets_js_vui_setvuistate",
       "community": 3,
@@ -1064,7 +1108,7 @@
       "label": "injectVUIHtml()",
       "file_type": "code",
       "source_file": "assets/js/vui.js",
-      "source_location": "L141",
+      "source_location": "L226",
       "_origin": "ast",
       "id": "assets_js_vui_injectvuihtml",
       "community": 3,
@@ -1611,10 +1655,32 @@
       "norm_label": "dotenv"
     },
     {
+      "label": "fs",
+      "file_type": "code",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "scripts_local_llm_daemon_fs",
+      "community": 5,
+      "community_name": "Local LLM Daemon (Ollama Server)",
+      "norm_label": "fs"
+    },
+    {
+      "label": "os",
+      "file_type": "code",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "scripts_local_llm_daemon_os",
+      "community": 5,
+      "community_name": "Local LLM Daemon (Ollama Server)",
+      "norm_label": "os"
+    },
+    {
       "label": "{ createClient }",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L10",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_createclient",
       "community": 5,
@@ -1625,7 +1691,7 @@
       "label": "supabase",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L23",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_supabase",
       "community": 5,
@@ -1636,7 +1702,7 @@
       "label": "app",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L25",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_app",
       "community": 5,
@@ -1647,7 +1713,7 @@
       "label": "checkOllamaRunning()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L47",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_checkollamarunning",
       "community": 5,
@@ -1658,7 +1724,7 @@
       "label": "verifyAndBuildModel()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L59",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_verifyandbuildmodel",
       "community": 5,
@@ -1669,7 +1735,7 @@
       "label": "setupApiKey()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L111",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_setupapikey",
       "community": 5,
@@ -1680,7 +1746,7 @@
       "label": "startTunnel()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L142",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_starttunnel",
       "community": 5,
@@ -1691,7 +1757,7 @@
       "label": "updateSupabaseStatus()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L234",
+      "source_location": "L236",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_updatesupabasestatus",
       "community": 5,
@@ -1702,7 +1768,7 @@
       "label": "requireApiKey()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L255",
+      "source_location": "L257",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_requireapikey",
       "community": 5,
@@ -1710,10 +1776,21 @@
       "norm_label": "requireapikey()"
     },
     {
+      "label": "transcribeAudio()",
+      "file_type": "code",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L282",
+      "_origin": "ast",
+      "id": "scripts_local_llm_daemon_transcribeaudio",
+      "community": 5,
+      "community_name": "Local LLM Daemon (Ollama Server)",
+      "norm_label": "transcribeaudio()"
+    },
+    {
       "label": "main()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L317",
+      "source_location": "L433",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_main",
       "community": 5,
@@ -1724,7 +1801,7 @@
       "label": "shutdown()",
       "file_type": "code",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L370",
+      "source_location": "L486",
       "_origin": "ast",
       "id": "scripts_local_llm_daemon_shutdown",
       "community": 5,
@@ -1873,6 +1950,72 @@
       "community": 7,
       "community_name": "Voice Interface Mobile Testing",
       "norm_label": "handler503section"
+    },
+    {
+      "label": "test-whisper-integration.js",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "test-whisper-integration.js"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration_path",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "path"
+    },
+    {
+      "label": "dotenv",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration_dotenv",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "dotenv"
+    },
+    {
+      "label": "{ createClient }",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration_createclient",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "{ createclient }"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration_supabase",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "supabase"
+    },
+    {
+      "label": "runTests()",
+      "file_type": "code",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "scripts_test_whisper_integration_runtests",
+      "community": 43,
+      "community_name": "test-whisper-integration.js",
+      "norm_label": "runtests()"
     },
     {
       "label": "supabase-config.js",
@@ -2926,8 +3069,8 @@
       "source_location": "L1",
       "community": 1,
       "norm_label": "plus.svg",
-      "id": "assets_icons_plus",
-      "community_name": "Back-Office Inventory Management"
+      "community_name": "Back-Office Inventory Management",
+      "id": "assets_icons_plus"
     },
     {
       "label": "pulse-active.svg",
@@ -2936,8 +3079,8 @@
       "source_location": "L1",
       "community": 1,
       "norm_label": "pulse-active.svg",
-      "id": "assets_icons_pulse_active",
-      "community_name": "Back-Office Inventory Management"
+      "community_name": "Back-Office Inventory Management",
+      "id": "assets_icons_pulse_active"
     },
     {
       "label": "bolo_cenoura.png",
@@ -2946,8 +3089,8 @@
       "source_location": "L1",
       "community": 22,
       "norm_label": "bolo_cenoura.png",
-      "id": "assets_images_bolo_cenoura",
-      "community_name": "Bolo de Cenoura Asset"
+      "community_name": "Bolo de Cenoura Asset",
+      "id": "assets_images_bolo_cenoura"
     },
     {
       "label": "bolo_cenoura_brigadeiro.jpg",
@@ -2956,8 +3099,8 @@
       "source_location": "L1",
       "community": 23,
       "norm_label": "bolo_cenoura_brigadeiro.jpg",
-      "id": "assets_images_bolo_cenoura_brigadeiro",
-      "community_name": "Bolo de Cenoura com Brigadeiro Asset"
+      "community_name": "Bolo de Cenoura com Brigadeiro Asset",
+      "id": "assets_images_bolo_cenoura_brigadeiro"
     },
     {
       "label": "bolo_fuba_goiabada.jpg",
@@ -2966,8 +3109,8 @@
       "source_location": "L1",
       "community": 24,
       "norm_label": "bolo_fuba_goiabada.jpg",
-      "id": "assets_images_bolo_fuba_goiabada",
-      "community_name": "Bolo de Fub\u00e1 com Goiabada Asset"
+      "community_name": "Bolo de Fub\u00e1 com Goiabada Asset",
+      "id": "assets_images_bolo_fuba_goiabada"
     },
     {
       "label": "bolo_morango.png",
@@ -2976,8 +3119,8 @@
       "source_location": "L1",
       "community": 25,
       "norm_label": "bolo_morango.png",
-      "id": "assets_images_bolo_morango",
-      "community_name": "Bolo de Morango Asset"
+      "community_name": "Bolo de Morango Asset",
+      "id": "assets_images_bolo_morango"
     },
     {
       "label": "bolo_ninho_morango.jpg",
@@ -2986,8 +3129,8 @@
       "source_location": "L1",
       "community": 26,
       "norm_label": "bolo_ninho_morango.jpg",
-      "id": "assets_images_bolo_ninho_morango",
-      "community_name": "Bolo de Ninho com Morango Asset"
+      "community_name": "Bolo de Ninho com Morango Asset",
+      "id": "assets_images_bolo_ninho_morango"
     },
     {
       "label": "bolo_red_velvet.jpg",
@@ -2996,8 +3139,8 @@
       "source_location": "L1",
       "community": 27,
       "norm_label": "bolo_red_velvet.jpg",
-      "id": "assets_images_bolo_red_velvet",
-      "community_name": "Bolo Red Velvet Asset"
+      "community_name": "Bolo Red Velvet Asset",
+      "id": "assets_images_bolo_red_velvet"
     },
     {
       "label": "bolo_trufado_chocolate.jpg",
@@ -3006,8 +3149,8 @@
       "source_location": "L1",
       "community": 28,
       "norm_label": "bolo_trufado_chocolate.jpg",
-      "id": "assets_images_bolo_trufado_chocolate",
-      "community_name": "Bolo Trufado de Chocolate Asset"
+      "community_name": "Bolo Trufado de Chocolate Asset",
+      "id": "assets_images_bolo_trufado_chocolate"
     },
     {
       "label": "bolo_vulcao.png",
@@ -3016,8 +3159,8 @@
       "source_location": "L1",
       "community": 29,
       "norm_label": "bolo_vulcao.png",
-      "id": "assets_images_bolo_vulcao",
-      "community_name": "Bolo Vulc\u00e3o Asset"
+      "community_name": "Bolo Vulc\u00e3o Asset",
+      "id": "assets_images_bolo_vulcao"
     },
     {
       "label": "bolo_vulcao_ninho_nutella.jpg",
@@ -3026,8 +3169,8 @@
       "source_location": "L1",
       "community": 30,
       "norm_label": "bolo_vulcao_ninho_nutella.jpg",
-      "id": "assets_images_bolo_vulcao_ninho_nutella",
-      "community_name": "Bolo Vulc\u00e3o de Ninho com Nutella Asset"
+      "community_name": "Bolo Vulc\u00e3o de Ninho com Nutella Asset",
+      "id": "assets_images_bolo_vulcao_ninho_nutella"
     },
     {
       "label": "brownie_supremo.jpg",
@@ -3036,8 +3179,8 @@
       "source_location": "L1",
       "community": 31,
       "norm_label": "brownie_supremo.jpg",
-      "id": "assets_images_brownie_supremo",
-      "community_name": "Brownie Supremo Asset"
+      "community_name": "Brownie Supremo Asset",
+      "id": "assets_images_brownie_supremo"
     },
     {
       "label": "copo_felicidade.png",
@@ -3046,8 +3189,8 @@
       "source_location": "L1",
       "community": 32,
       "norm_label": "copo_felicidade.png",
-      "id": "assets_images_copo_felicidade",
-      "community_name": "Copo da Felicidade Asset"
+      "community_name": "Copo da Felicidade Asset",
+      "id": "assets_images_copo_felicidade"
     },
     {
       "label": "copo_felicidade_morango.jpg",
@@ -3056,8 +3199,8 @@
       "source_location": "L1",
       "community": 33,
       "norm_label": "copo_felicidade_morango.jpg",
-      "id": "assets_images_copo_felicidade_morango",
-      "community_name": "Copo da Felicidade de Morango Asset"
+      "community_name": "Copo da Felicidade de Morango Asset",
+      "id": "assets_images_copo_felicidade_morango"
     },
     {
       "label": "logo.png",
@@ -3066,8 +3209,8 @@
       "source_location": "L1",
       "community": 0,
       "norm_label": "logo.png",
-      "id": "assets_images_logo",
-      "community_name": "Client Digital Menu (app.js)"
+      "community_name": "Client Digital Menu (app.js)",
+      "id": "assets_images_logo"
     },
     {
       "label": "logo_icon.png",
@@ -3076,8 +3219,8 @@
       "source_location": "L1",
       "community": 0,
       "norm_label": "logo_icon.png",
-      "id": "assets_images_logo_icon",
-      "community_name": "Client Digital Menu (app.js)"
+      "community_name": "Client Digital Menu (app.js)",
+      "id": "assets_images_logo_icon"
     },
     {
       "label": "whatsapp_icon.png",
@@ -3086,8 +3229,8 @@
       "source_location": "L1",
       "community": 34,
       "norm_label": "whatsapp_icon.png",
-      "id": "assets_images_whatsapp_icon",
-      "community_name": "WhatsApp Icon Asset"
+      "community_name": "WhatsApp Icon Asset",
+      "id": "assets_images_whatsapp_icon"
     },
     {
       "label": "latest_patch_notes.txt",
@@ -3096,8 +3239,8 @@
       "source_location": "L1",
       "community": 35,
       "norm_label": "latest_patch_notes.txt",
-      "id": "docs_latest_patch_notes",
-      "community_name": "Latest Patch Notes Log"
+      "community_name": "Latest Patch Notes Log",
+      "id": "docs_latest_patch_notes"
     },
     {
       "label": "estoque.html",
@@ -3106,8 +3249,8 @@
       "source_location": "L1",
       "community": 3,
       "norm_label": "estoque.html",
-      "id": "estoque",
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)"
+      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "id": "estoque"
     },
     {
       "label": "git_diff_painel_css.txt",
@@ -3116,8 +3259,8 @@
       "source_location": "L1",
       "community": 36,
       "norm_label": "git_diff_painel_css.txt",
-      "id": "git_diff_painel_css",
-      "community_name": "Panel CSS Git Diff"
+      "community_name": "Panel CSS Git Diff",
+      "id": "git_diff_painel_css"
     },
     {
       "label": "index.html",
@@ -3126,8 +3269,8 @@
       "source_location": "L1",
       "community": 0,
       "norm_label": "index.html",
-      "id": "index",
-      "community_name": "Client Digital Menu (app.js)"
+      "community_name": "Client Digital Menu (app.js)",
+      "id": "index"
     },
     {
       "label": "pedidos.html",
@@ -3136,8 +3279,8 @@
       "source_location": "L1",
       "community": 3,
       "norm_label": "pedidos.html",
-      "id": "pedidos",
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)"
+      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "id": "pedidos"
     },
     {
       "label": "receitas.html",
@@ -3146,8 +3289,8 @@
       "source_location": "L1",
       "community": 3,
       "norm_label": "receitas.html",
-      "id": "receitas",
-      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)"
+      "community_name": "AI-Assisted Stock Voice Interface (estoque-ia.js)",
+      "id": "receitas"
     },
     {
       "label": "robots.txt",
@@ -3156,8 +3299,8 @@
       "source_location": "L1",
       "community": 21,
       "norm_label": "robots.txt",
-      "id": "robots",
-      "community_name": "Robots.txt Indexing Control"
+      "community_name": "Robots.txt Indexing Control",
+      "id": "robots"
     },
     {
       "label": "Bloqueia indexa\u00e7\u00e3o do painel de gest\u00e3o por buscadores",
@@ -3166,8 +3309,8 @@
       "source_location": "L1",
       "community": 21,
       "norm_label": "bloqueia indexacao do painel de gestao por buscadores",
-      "id": "robots_bloqueia_indexa\u00e7\u00e3o_do_painel_de_gest\u00e3o_por_buscadores",
-      "community_name": "Robots.txt Indexing Control"
+      "community_name": "Robots.txt Indexing Control",
+      "id": "robots_bloqueia_indexa\u00e7\u00e3o_do_painel_de_gest\u00e3o_por_buscadores"
     }
   ],
   "links": [
@@ -3319,7 +3462,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "api/process-inventory.js",
-      "source_location": "L259",
+      "source_location": "L271",
       "weight": 1.0,
       "_origin": "ast",
       "source": "api_process_inventory_handler",
@@ -3343,7 +3486,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "api/process-inventory.js",
-      "source_location": "L252",
+      "source_location": "L254",
       "weight": 1.0,
       "_origin": "ast",
       "source": "api_process_inventory_handler",
@@ -3379,7 +3522,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "api/process-inventory.js",
-      "source_location": "L346",
+      "source_location": "L365",
       "weight": 1.0,
       "_origin": "ast",
       "source": "api_process_inventory_handler",
@@ -3730,7 +3873,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "assets/js/estoque-ia.js",
-      "source_location": "L106",
+      "source_location": "L153",
       "weight": 1.0,
       "_origin": "ast",
       "source": "assets_js_estoque_ia",
@@ -3741,7 +3884,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "assets/js/estoque-ia.js",
-      "source_location": "L380",
+      "source_location": "L84",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_estoque_ia",
+      "target": "assets_js_estoque_ia_getactivesupabaseclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/estoque-ia.js",
+      "source_location": "L503",
       "weight": 1.0,
       "_origin": "ast",
       "source": "assets_js_estoque_ia",
@@ -3760,6 +3914,17 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/estoque-ia.js",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_estoque_ia",
+      "target": "assets_js_estoque_ia_updateauthui",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "embeds",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -3774,7 +3939,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "assets/js/estoque-ia.js",
-      "source_location": "L400",
+      "source_location": "L523",
       "weight": 1.0,
       "_origin": "ast",
       "source": "assets_js_estoque_ia_renderpreview",
@@ -3791,6 +3956,18 @@
       "_origin": "ast",
       "source": "assets_js_estoque_ia_showdaemonofflinebanner",
       "target": "assets_js_estoque_ia_escapehtml",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/estoque-ia.js",
+      "source_location": "L154",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_estoque_ia_getaccesstoken",
+      "target": "assets_js_estoque_ia_getactivesupabaseclient",
       "confidence_score": 1.0
     },
     {
@@ -4402,7 +4579,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "assets/js/vui.js",
-      "source_location": "L141",
+      "source_location": "L226",
       "weight": 1.0,
       "_origin": "ast",
       "source": "assets_js_vui",
@@ -4413,11 +4590,33 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "assets/js/vui.js",
-      "source_location": "L132",
+      "source_location": "L217",
       "weight": 1.0,
       "_origin": "ast",
       "source": "assets_js_vui",
       "target": "assets_js_vui_setvuistate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_vui",
+      "target": "assets_js_vui_startrecording",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L172",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_vui",
+      "target": "assets_js_vui_stoprecording",
       "confidence_score": 1.0
     },
     {
@@ -4439,6 +4638,30 @@
       "weight": 1.0,
       "source": "receitas",
       "target": "assets_js_vui"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L145",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_vui_startrecording",
+      "target": "assets_js_vui_setvuistate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "assets/js/vui.js",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "assets_js_vui_stoprecording",
+      "target": "assets_js_vui_setvuistate",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -5401,7 +5624,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L25",
+      "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5412,7 +5635,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L47",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5423,7 +5646,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L10",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5478,11 +5701,33 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L317",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_local_llm_daemon",
+      "target": "scripts_local_llm_daemon_fs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L433",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
       "target": "scripts_local_llm_daemon_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_local_llm_daemon",
+      "target": "scripts_local_llm_daemon_os",
       "confidence_score": 1.0
     },
     {
@@ -5500,7 +5745,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L277",
+      "source_location": "L367",
       "weight": 1.0,
       "_origin": "ast",
       "context": "argument",
@@ -5512,7 +5757,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L111",
+      "source_location": "L113",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5523,7 +5768,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L406",
+      "source_location": "L522",
       "weight": 1.0,
       "_origin": "ast",
       "context": "argument",
@@ -5535,7 +5780,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L142",
+      "source_location": "L144",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5546,7 +5791,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5557,7 +5802,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L234",
+      "source_location": "L282",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_local_llm_daemon",
+      "target": "scripts_local_llm_daemon_transcribeaudio",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/local-llm-daemon.js",
+      "source_location": "L236",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5568,7 +5824,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L59",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon",
@@ -5580,7 +5836,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L323",
+      "source_location": "L439",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon_main",
@@ -5592,7 +5848,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L333",
+      "source_location": "L449",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon_main",
@@ -5604,7 +5860,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L340",
+      "source_location": "L456",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon_main",
@@ -5616,7 +5872,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L348",
+      "source_location": "L464",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon_main",
@@ -5628,7 +5884,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "scripts/local-llm-daemon.js",
-      "source_location": "L351",
+      "source_location": "L467",
       "weight": 1.0,
       "_origin": "ast",
       "source": "scripts_local_llm_daemon_main",
@@ -5765,6 +6021,61 @@
       "_origin": "ast",
       "source": "scripts_test_vui_mobile_fix",
       "target": "scripts_test_vui_mobile_fix_vuijs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_test_whisper_integration",
+      "target": "scripts_test_whisper_integration_createclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_test_whisper_integration",
+      "target": "scripts_test_whisper_integration_dotenv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_test_whisper_integration",
+      "target": "scripts_test_whisper_integration_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_test_whisper_integration",
+      "target": "scripts_test_whisper_integration_runtests",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/test-whisper-integration.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "scripts_test_whisper_integration",
+      "target": "scripts_test_whisper_integration_supabase",
       "confidence_score": 1.0
     },
     {
@@ -5915,9 +6226,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "agents_rules_graphify",
-      "target": "agents_rules_graphify_graphify"
+      "target": "agents_rules_graphify_graphify",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -5926,9 +6237,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "agents_skills_code_review_skill",
-      "target": "agents_skills_code_review_skill_code_review_skill"
+      "target": "agents_skills_code_review_skill_code_review_skill",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6019,9 +6330,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "agents_skills_deploy_sync_skill",
-      "target": "agents_skills_deploy_sync_skill_saas_automated_commit_deploy_docs_sync_skill"
+      "target": "agents_skills_deploy_sync_skill_saas_automated_commit_deploy_docs_sync_skill",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6136,9 +6447,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "agents_skills_saas_qa_tester_skill",
-      "target": "agents_skills_saas_qa_tester_skill_saas_qa_test_automation_skill"
+      "target": "agents_skills_saas_qa_tester_skill_saas_qa_test_automation_skill",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6190,9 +6501,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "agents_workflows_graphify",
-      "target": "agents_workflows_graphify_workflow_graphify"
+      "target": "agents_workflows_graphify_workflow_graphify",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6211,9 +6522,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "readme",
-      "target": "readme_bolos_da_palloma_vers\u00e3o_3_5"
+      "target": "readme_bolos_da_palloma_vers\u00e3o_3_5",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6387,9 +6698,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "security_audit",
-      "target": "security_audit_auditoria_de_seguran\u00e7a_vers\u00e3o_3_0_seguranca_revisada"
+      "target": "security_audit_auditoria_de_seguran\u00e7a_vers\u00e3o_3_0_seguranca_revisada",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6830,9 +7141,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "features_status",
-      "target": "features_status_status_de_implementa\u00e7\u00e3o_das_funcionalidades_bolos_da_palloma"
+      "target": "features_status_status_de_implementa\u00e7\u00e3o_das_funcionalidades_bolos_da_palloma",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6935,9 +7246,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "vers\u00e3o_3_0_seguranca_revisada",
-      "target": "vers\u00e3o_3_0_seguranca_revisada_auditoria_de_seguran\u00e7a_vers\u00e3o_3_0_seguranca_revisada"
+      "target": "vers\u00e3o_3_0_seguranca_revisada_auditoria_de_seguran\u00e7a_vers\u00e3o_3_0_seguranca_revisada",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -7304,9 +7615,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
-      "confidence_score": 1.0,
       "source": "vers\u00e3o_3_5_novas_funcionalidades",
-      "target": "vers\u00e3o_3_5_novas_funcionalidades_relat\u00f3rio_de_funcionalidades_e_auditoria_vers\u00e3o_3_5_novas_funcionalidades"
+      "target": "vers\u00e3o_3_5_novas_funcionalidades_relat\u00f3rio_de_funcionalidades_e_auditoria_vers\u00e3o_3_5_novas_funcionalidades",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -7433,5 +7744,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "82d334499c3f86e5828116fb53369da195b8192f"
+  "built_at_commit": "aa3766ea40f76bc69bbc3f01502a15fb789126df"
 }

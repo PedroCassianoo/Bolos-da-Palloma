@@ -40,5 +40,7 @@
   "38": "ui.js",
   "39": "supabase_rls_policies.sql",
   "40": "utils.js",
-  "41": "cart.js"
+  "41": "cart.js",
+  "42": "estoque-ia.js",
+  "43": "test-whisper-integration.js"
 }

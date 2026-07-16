@@ -18,14 +18,15 @@ window.carregarEstoque = async function() {
     const tbody = document.getElementById("estoque-lista-tbody");
     if (!tbody) return;
 
-    if (!window.supabaseClient) {
+    const client = window.supabaseClient || (window.parent && window.parent.supabaseClient);
+    if (!client) {
         console.warn("[Lista Mestra] Supabase não inicializado.");
         tbody.innerHTML = `<tr><td colspan="6" class="px-8 py-4 text-center text-on-surface-variant">Erro de conexão com o banco de dados.</td></tr>`;
         return;
     }
 
     try {
-        const { data: insumos, error } = await window.supabaseClient
+        const { data: insumos, error } = await client
             .from("insumos")
             .select("*")
             .order("nome");

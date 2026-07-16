@@ -78,25 +78,72 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ===== VULN-06: AUTH GATING =====
     // Require authenticated Supabase session before allowing any operations.
-    // Without this, the page is accessible to anyone with the URL.
+    // We check both the iframe's supabaseClient and the parent window's supabaseClient.
     let currentSession = null;
 
-    if (window.supabaseClient) {
-        try {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (!session) {
-                console.warn("[Estoque-IA] Usuário não autenticado. Redirecionando para login.");
-                // Disable all interactive elements
-                aiSubmitBtn.disabled = true;
-                aiInput.disabled = true;
-                aiInput.placeholder = "Faça login no painel para usar esta funcionalidade.";
-                if (ocrFab) ocrFab.style.display = 'none';
-                return;
-            }
-            currentSession = session;
-        } catch (authError) {
-            console.error("[Estoque-IA] Erro ao verificar sessão:", authError);
+    function getActiveSupabaseClient() {
+        if (window.supabaseClient) {
+            return window.supabaseClient;
         }
+        if (window.parent && window.parent.supabaseClient) {
+            return window.parent.supabaseClient;
+        }
+        return null;
+    }
+
+    function updateAuthUI(session) {
+        if (session) {
+            aiSubmitBtn.disabled = false;
+            aiInput.disabled = false;
+            aiInput.placeholder = "Ex: Adicionei 5 kg de morangos...";
+            if (ocrFab) ocrFab.style.display = '';
+        } else {
+            aiSubmitBtn.disabled = true;
+            aiInput.disabled = true;
+            aiInput.placeholder = "Faça login no painel para usar esta funcionalidade.";
+            if (ocrFab) ocrFab.style.display = 'none';
+        }
+    }
+
+    // Subscribe to auth state changes on both local and parent clients
+    if (window.supabaseClient) {
+        window.supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log("[Estoque-IA] Mudança no estado de auth local:", event);
+            currentSession = session;
+            updateAuthUI(session);
+            if (session && typeof window.carregarEstoque === 'function') {
+                window.carregarEstoque();
+            }
+        });
+    }
+
+    if (window.parent && window.parent.supabaseClient) {
+        window.parent.supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log("[Estoque-IA] Mudança no estado de auth do pai:", event);
+            currentSession = session;
+            updateAuthUI(session);
+            if (session && typeof window.carregarEstoque === 'function') {
+                window.carregarEstoque();
+            }
+        });
+    }
+
+    // Initial check
+    const activeClient = getActiveSupabaseClient();
+    if (activeClient) {
+        try {
+            const { data: { session } } = await activeClient.auth.getSession();
+            currentSession = session;
+            updateAuthUI(session);
+            if (session && typeof window.carregarEstoque === 'function') {
+                window.carregarEstoque();
+            }
+        } catch (err) {
+            console.error("[Estoque-IA] Erro ao obter sessão inicial:", err);
+            updateAuthUI(null);
+        }
+    } else {
+        updateAuthUI(null);
     }
 
     /**
@@ -104,9 +151,10 @@ document.addEventListener("DOMContentLoaded", async () => {
      * Refreshes the session if needed to avoid expired tokens.
      */
     async function getAccessToken() {
-        if (!window.supabaseClient) return null;
+        const client = getActiveSupabaseClient();
+        if (!client) return null;
         try {
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            const { data: { session } } = await client.auth.getSession();
             if (session) {
                 currentSession = session;
                 return session.access_token;
@@ -328,11 +376,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         aiConfirmBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">autorenew</span> Salvando...';
 
         try {
-            if (window.supabaseClient) {
+            const client = getActiveSupabaseClient();
+            if (client) {
                 // ===== VULN-11: Try atomic batch update via RPC first =====
                 let usedRpc = false;
                 try {
-                    const { data: rpcResult, error: rpcError } = await window.supabaseClient.rpc(
+                    const { data: rpcResult, error: rpcError } = await client.rpc(
                         'atualizar_estoque',
                         { movimentacoes: currentParsedData }
                     );
@@ -365,7 +414,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     for (const item of currentParsedData) {
                         // ===== VULN-07: Fetch by fuzzy match but use ID for update =====
-                        const { data: fetchItem, error: fetchError } = await window.supabaseClient
+                        const { data: fetchItem, error: fetchError } = await client
                             .from('insumos')
                             .select('id, nome, quantidade')
                             .ilike('nome', `%${item.produto}%`)
@@ -402,7 +451,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         }
 
                         // ===== VULN-07: Update by exact primary key =====
-                        const { error: updateError } = await window.supabaseClient
+                        const { error: updateError } = await client
                             .from('insumos')
                             .update({ quantidade: novaQuantidade })
                             .eq('id', fetchItem.id);

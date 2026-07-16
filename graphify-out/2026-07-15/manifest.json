@@ -20,9 +20,9 @@
     "semantic_hash": "7b2de56434979a796bd2fdea3d98195e"
   },
   "app.js": {
-    "mtime": 1783293719.6420093,
-    "ast_hash": "11711a16a484ee34ebd684530be31857",
-    "semantic_hash": "11711a16a484ee34ebd684530be31857"
+    "mtime": 1784157542.1288097,
+    "ast_hash": "0684661772b5651454c29b731d3c3709",
+    "semantic_hash": ""
   },
   "assets/js/estoque-ia.js": {
     "mtime": 1784081295.3192153,
@@ -140,9 +140,9 @@
     "semantic_hash": "a0b884e93fad8eff202be4b319e52f72"
   },
   "index.html": {
-    "mtime": 1783298324.7773576,
-    "ast_hash": "1ed941e70fbfd011a7635a229e3c1f25",
-    "semantic_hash": "1ed941e70fbfd011a7635a229e3c1f25"
+    "mtime": 1784157550.6975048,
+    "ast_hash": "17e76aa6c9b63e55786f66768d95c07f",
+    "semantic_hash": ""
   },
   "painel.html": {
     "mtime": 1783461720.2122533,
@@ -258,5 +258,35 @@
     "mtime": 1781136165.1845858,
     "ast_hash": "edaeecd8acc38ab7efb3112f6f2cf9a4",
     "semantic_hash": "edaeecd8acc38ab7efb3112f6f2cf9a4"
+  },
+  "assets/js/animations.js": {
+    "mtime": 1784157491.5275238,
+    "ast_hash": "46687a340bb47f77f8cd1ec3770a9348",
+    "semantic_hash": ""
+  },
+  "assets/js/cart.js": {
+    "mtime": 1784157500.1370375,
+    "ast_hash": "378dc73cdefc67229ab6fa2c3839718b",
+    "semantic_hash": ""
+  },
+  "assets/js/checkout.js": {
+    "mtime": 1784157531.4469607,
+    "ast_hash": "87e9eb8605e6d1726a748828262a6325",
+    "semantic_hash": ""
+  },
+  "assets/js/products.js": {
+    "mtime": 1784157473.1843987,
+    "ast_hash": "52782e6fd52d50b707b0e65feddae83e",
+    "semantic_hash": ""
+  },
+  "assets/js/ui.js": {
+    "mtime": 1784157511.8617601,
+    "ast_hash": "2d2ac9993d8edcc6cb58c7b815242436",
+    "semantic_hash": ""
+  },
+  "assets/js/utils.js": {
+    "mtime": 1784157481.735613,
+    "ast_hash": "7b937c786ea14a94ca09237474665df2",
+    "semantic_hash": ""
   }
 }
