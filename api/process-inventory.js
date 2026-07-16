@@ -280,55 +280,79 @@ export default async function handler(req, res) {
         });
     }
 
-    // --- Chamar o Ollama/Whisper (server-side ou túnel local) ---
+    // --- Chamar o Ollama/Whisper (server-side ou túnel local) com Retry Automático ---
     console.log(`[process-inventory] Enviando requisição de IA: model=${OLLAMA_MODEL}, tipo=${audio ? 'audio' : 'text'}`);
 
-    let ollamaResponse;
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), OLLAMA_TIMEOUT_MS);
+    const fetchUrl = isTunnel ? `${targetUrl}/api/process` : `${targetUrl}/api/generate`;
+    const headers = { 
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '69420'
+    };
+    
+    if (isTunnel && tunnelApiKey) {
+        headers['Authorization'] = `Bearer ${tunnelApiKey}`;
+    }
 
-        const fetchUrl = isTunnel ? `${targetUrl}/api/process` : `${targetUrl}/api/generate`;
-        const headers = { 
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': '69420'
-        };
-        
-        if (isTunnel && tunnelApiKey) {
-            headers['Authorization'] = `Bearer ${tunnelApiKey}`;
+    const reqBody = {
+        model: OLLAMA_MODEL,
+        stream: false
+    };
+
+    if (audio) {
+        reqBody.audio = audio;
+    } else {
+        reqBody.prompt = `<INPUT_USUARIO>${sanitizedText}</INPUT_USUARIO>`;
+    }
+
+    let ollamaResponse = null;
+    let attempts = 2; // Tentativa inicial + 1 retry
+
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), OLLAMA_TIMEOUT_MS);
+
+            ollamaResponse = await fetch(fetchUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(reqBody),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (ollamaResponse.ok) {
+                // Sucesso! Sai do loop de retry
+                break;
+            }
+
+            // Se chegou aqui, retornou status de erro (ex: 502, 503, 504)
+            const errorBody = await ollamaResponse.text();
+            console.warn(`[process-inventory] [Tentativa ${attempt}/${attempts}] Endpoint retornou status ${ollamaResponse.status}. Resposta: ${errorBody}`);
+
+            if (attempt < attempts) {
+                console.log(`[process-inventory] Aguardando 2s antes de tentar novamente...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        } catch (fetchError) {
+            console.warn(`[process-inventory] [Tentativa ${attempt}/${attempts}] Falha de rede ou timeout:`, fetchError.message);
+            
+            if (attempt === attempts) {
+                // Última tentativa falhou, retorna erro 503 daemon offline
+                return res.status(503).json({
+                    error: 'daemon_offline',
+                    message: 'O serviço de IA local não está respondendo. Verifique se o computador está ligado e o "iniciar-servico-local.bat" está em execução.'
+                });
+            }
+
+            console.log(`[process-inventory] Aguardando 2s antes de tentar novamente...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
         }
-
-        const reqBody = {
-            model: OLLAMA_MODEL,
-            stream: false
-        };
-
-        if (audio) {
-            reqBody.audio = audio;
-        } else {
-            reqBody.prompt = `<INPUT_USUARIO>${sanitizedText}</INPUT_USUARIO>`;
-        }
-
-        ollamaResponse = await fetch(fetchUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(reqBody),
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-    } catch (fetchError) {
-        console.warn('[process-inventory] Falha ao conectar no endpoint Ollama:', fetchError.message);
-        return res.status(503).json({
-            error: 'daemon_offline',
-            message: 'O serviço de IA local não está respondendo. Verifique se o computador está ligado e o "iniciar-servico-local.bat" está em execução.'
-        });
     }
 
     if (!ollamaResponse.ok) {
-        console.error(`[process-inventory] Endpoint retornou status ${ollamaResponse.status}`);
         return res.status(502).json({
-            error: 'O serviço de IA local retornou um erro ou está ocupado. Tente novamente em instantes.'
+            error: 'O serviço de IA local retornou um erro persistente ou está ocupado. Tente novamente em instantes.'
         });
     }
 
