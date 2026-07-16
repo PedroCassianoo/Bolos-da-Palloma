@@ -16,7 +16,7 @@ import { createClient } from '@supabase/supabase-js';
 // --------------------------------------------------------------------------
 // Configuração
 // --------------------------------------------------------------------------
-const OLLAMA_MODEL = 'processador-estoque';
+const OLLAMA_MODEL = 'gemma4:e4b';
 const OLLAMA_TIMEOUT_MS = 60000; // 60s timeout para chamadas ao Ollama
 
 // --------------------------------------------------------------------------
