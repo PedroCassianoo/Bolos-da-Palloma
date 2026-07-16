@@ -94,7 +94,7 @@ window.carregarEstoque = async function() {
         });
 
         // Atualiza a contagem no footer da tabela
-        const footerText = document.querySelector(".p-6.border-t.border-outline-variant\\\\/60 span");
+        const footerText = document.getElementById("estoque-total-itens");
         if (footerText) {
             footerText.textContent = `Mostrando ${insumos.length} itens (Total)`;
         }
