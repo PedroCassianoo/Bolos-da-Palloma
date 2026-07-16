@@ -131,6 +131,78 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // ===== INTEGRAÇÃO DE ÁUDIO (WHISPER) =====
+    document.addEventListener("vui-audio-recorded", async (event) => {
+        const base64Audio = event.detail.audio;
+        if (!base64Audio) return;
+
+        // Reset UI
+        aiPreviewContainer.classList.add("hidden");
+        aiLoading.classList.remove("hidden");
+        aiLoading.classList.add("flex");
+        aiSubmitBtn.disabled = true;
+
+        try {
+            const accessToken = await getAccessToken();
+            if (!accessToken) {
+                throw new Error("Sessão expirada. Faça login novamente.");
+            }
+
+            // Envia o áudio Base64 para a API do Vercel
+            const response = await fetch("/api/process-inventory", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ audio: base64Audio })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 503) {
+                    const serverMsg = result.message || "O serviço de transcrição/IA local não está ativo.";
+                    showDaemonOfflineBanner(serverMsg);
+                    throw new Error(serverMsg);
+                }
+                if (response.status === 401) {
+                    throw new Error("Sessão expirada. Faça login novamente.");
+                }
+                if (response.status === 429) {
+                    throw new Error("Muitas requisições. Aguarde um minuto.");
+                }
+                throw new Error(result.error || "Erro ao processar áudio com Whisper/IA.");
+            }
+
+            // Exibe a transcrição gerada pelo Whisper no input para que o usuário veja
+            if (result.transcription && aiInput) {
+                aiInput.value = result.transcription;
+            }
+
+            const validated = result.items;
+            if (!validated || validated.length === 0) {
+                throw new Error("Nenhum item válido identificado no áudio. Tente falar mais claro.");
+            }
+
+            currentParsedData = validated;
+
+            // Renderiza o preview dos insumos
+            renderPreview(currentParsedData);
+
+            aiLoading.classList.add("hidden");
+            aiLoading.classList.remove("flex");
+            aiPreviewContainer.classList.remove("hidden");
+
+        } catch (error) {
+            console.error(error);
+            alert("Falha ao processar comando de voz: " + error.message);
+            aiLoading.classList.add("hidden");
+            aiLoading.classList.remove("flex");
+        } finally {
+            aiSubmitBtn.disabled = false;
+        }
+    });
 
     aiSubmitBtn.addEventListener("click", async () => {
         const text = aiInput.value.trim();

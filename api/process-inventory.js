@@ -232,27 +232,39 @@ export default async function handler(req, res) {
     }
 
     // --- Validação do input ---
-    const { text } = req.body || {};
+    const { text, audio } = req.body || {};
 
-    if (!text || typeof text !== 'string') {
-        return res.status(400).json({ error: 'Campo "text" é obrigatório e deve ser uma string.' });
+    if (!text && !audio) {
+        return res.status(400).json({ error: 'Campo "text" ou "audio" é obrigatório.' });
     }
 
-    if (text.trim().length === 0) {
-        return res.status(400).json({ error: 'O texto não pode estar vazio.' });
+    let sanitizedText = '';
+    if (text) {
+        if (typeof text !== 'string') {
+            return res.status(400).json({ error: 'Campo "text" deve ser uma string.' });
+        }
+        if (text.trim().length === 0) {
+            return res.status(400).json({ error: 'O texto não pode estar vazio.' });
+        }
+        if (text.length > 1000) {
+            return res.status(400).json({
+                error: `Texto muito longo (${text.length} caracteres). Máximo: 1000.`
+            });
+        }
+        sanitizedText = sanitizeForLLM(text);
+        if (sanitizedText.length === 0) {
+            return res.status(400).json({ error: 'Texto ficou vazio após sanitização.' });
+        }
     }
 
-    if (text.length > 1000) {
-        return res.status(400).json({
-            error: `Texto muito longo (${text.length} caracteres). Máximo: 1000.`
-        });
-    }
-
-    // --- VULN-01: Sanitizar input no server ---
-    const sanitizedText = sanitizeForLLM(text);
-
-    if (sanitizedText.length === 0) {
-        return res.status(400).json({ error: 'Texto ficou vazio após sanitização.' });
+    if (audio) {
+        if (typeof audio !== 'string') {
+            return res.status(400).json({ error: 'Campo "audio" deve ser uma string Base64.' });
+        }
+        // Limita o tamanho do áudio em base64 para evitar estouro de memória (máximo ~5MB)
+        if (audio.length > 7000000) {
+            return res.status(400).json({ error: 'O arquivo de áudio enviado é muito grande. Máximo de 5MB permitido.' });
+        }
     }
 
     // --- Resolver Endpoint da LLM ---
@@ -268,8 +280,8 @@ export default async function handler(req, res) {
         });
     }
 
-    // --- Chamar o Ollama (server-side ou túnel local) ---
-    console.log(`[process-inventory] Enviando requisição de IA: model=${OLLAMA_MODEL}, chars=${sanitizedText.length}`);
+    // --- Chamar o Ollama/Whisper (server-side ou túnel local) ---
+    console.log(`[process-inventory] Enviando requisição de IA: model=${OLLAMA_MODEL}, tipo=${audio ? 'audio' : 'text'}`);
 
     let ollamaResponse;
     try {
@@ -286,14 +298,21 @@ export default async function handler(req, res) {
             headers['Authorization'] = `Bearer ${tunnelApiKey}`;
         }
 
+        const reqBody = {
+            model: OLLAMA_MODEL,
+            stream: false
+        };
+
+        if (audio) {
+            reqBody.audio = audio;
+        } else {
+            reqBody.prompt = `<INPUT_USUARIO>${sanitizedText}</INPUT_USUARIO>`;
+        }
+
         ollamaResponse = await fetch(fetchUrl, {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({
-                model: OLLAMA_MODEL,
-                prompt: `<INPUT_USUARIO>${sanitizedText}</INPUT_USUARIO>`,
-                stream: false
-            }),
+            body: JSON.stringify(reqBody),
             signal: controller.signal
         });
 
@@ -363,6 +382,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
         items: validated,
-        warnings: validationErrors
+        warnings: validationErrors,
+        transcription: data.transcription || null
     });
 }

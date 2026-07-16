@@ -3,6 +3,8 @@ const path = require('path');
 const crypto = require('crypto');
 const { exec } = require('child_process');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const os = require('os');
 
 // Carrega variáveis de ambiente do arquivo .env no diretório raiz do projeto
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -273,14 +275,122 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'online', model: MODEL_NAME });
 });
 
-// Proxy de geração da LLM
+// ==========================================================================
+// 3.5. INTEGRAÇÃO COM WHISPER (SPEECH-TO-TEXT LOCAL)
+// ==========================================================================
+
+function transcribeAudio(audioBase64) {
+    return new Promise((resolve, reject) => {
+        const tempDir = os.tmpdir();
+        const fileId = `${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+        const inputFilename = path.join(tempDir, `vui_input_${fileId}.wav`);
+        
+        // Decodifica Base64 e salva arquivo temporário de áudio
+        const base64Data = audioBase64.replace(/^data:audio\/\w+;base64,/, "");
+        const buffer = Buffer.from(base64Data, 'base64');
+        
+        fs.writeFile(inputFilename, buffer, (writeErr) => {
+            if (writeErr) {
+                console.error('❌ [Whisper] Erro ao salvar arquivo de áudio temporário:', writeErr);
+                return reject(new Error('Falha ao gravar arquivo de áudio temporário no daemon.'));
+            }
+            
+            console.log(`🎙️ [Whisper] Áudio gravado temporariamente em: ${inputFilename}`);
+            
+            // Define o modelo Whisper a partir do ambiente ou usa 'turbo' como padrão
+            const whisperModel = process.env.WHISPER_MODEL || 'turbo';
+            
+            // Executa o comando CLI do Whisper do Python
+            const cmd = `whisper "${inputFilename}" --model "${whisperModel}" --language Portuguese --output_format txt --output_dir "${tempDir}"`;
+            console.log(`🎙️ [Whisper] Rodando: ${cmd}`);
+            
+            exec(cmd, (execErr, stdout, stderr) => {
+                const outputTxtFile = path.join(tempDir, `vui_input_${fileId}.txt`);
+                
+                // Limpeza de arquivos temporários auxiliares (.wav, .txt, .srt, .vtt, .json, .tsv)
+                const cleanFiles = () => {
+                    const extensions = ['.wav', '.txt', '.json', '.srt', '.vtt', '.tsv'];
+                    extensions.forEach(ext => {
+                        const fileToDelete = path.join(tempDir, `vui_input_${fileId}${ext}`);
+                        if (fs.existsSync(fileToDelete)) {
+                            try {
+                                fs.unlinkSync(fileToDelete);
+                            } catch (e) {
+                                // Ignora erros de limpeza
+                            }
+                        }
+                    });
+                };
+                
+                if (execErr) {
+                    console.error('❌ [Whisper] Erro no comando do Whisper CLI:', execErr.message);
+                    console.error('Stderr do Whisper:', stderr);
+                    cleanFiles();
+                    
+                    // Retorna um erro informativo orientando sobre dependências
+                    return reject(new Error(
+                        'O comando "whisper" falhou. Certifique-se de que:\n' +
+                        '1. Python está instalado e no PATH.\n' +
+                        '2. FFmpeg está instalado e no PATH.\n' +
+                        '3. O pacote openai-whisper foi instalado via pip (`pip install openai-whisper`).\n' +
+                        `Erro detalhado: ${execErr.message}`
+                    ));
+                }
+                
+                // Lê a transcrição do arquivo gerado
+                if (fs.existsSync(outputTxtFile)) {
+                    try {
+                        const transcription = fs.readFileSync(outputTxtFile, 'utf8').trim();
+                        cleanFiles();
+                        resolve(transcription);
+                    } catch (readErr) {
+                        console.error('❌ [Whisper] Erro ao ler resultado da transcrição:', readErr);
+                        cleanFiles();
+                        reject(new Error('Falha ao ler o arquivo de transcrição gerado pelo Whisper.'));
+                    }
+                } else {
+                    console.warn('⚠️ [Whisper] Arquivo .txt não foi encontrado. Tentando obter transcrição a partir do stdout.');
+                    const match = stdout.replace(/\[\d+:\d+\.\d+ --> \d+:\d+\.\d+\]\s*/g, '').trim();
+                    cleanFiles();
+                    if (match) {
+                        resolve(match);
+                    } else {
+                        reject(new Error('A transcrição retornou um resultado vazio.'));
+                    }
+                }
+            });
+        });
+    });
+}
+
+// Proxy de geração da LLM (Suporta texto e áudio via Whisper)
 app.post('/api/process', requireApiKey, async (req, res) => {
     console.log(`📥 [Proxy] Recebida requisição de processamento por IA. Tamanho: ${JSON.stringify(req.body).length} bytes`);
     
-    const { prompt, model, stream } = req.body || {};
+    const { prompt, model, stream, audio } = req.body || {};
 
-    if (!prompt) {
-        return res.status(400).json({ error: 'Campo "prompt" é obrigatório.' });
+    let promptText = prompt;
+
+    // Se o payload contiver áudio Base64, transcreve com o Whisper primeiro
+    if (audio) {
+        console.log(`🎙️ [Proxy] Detectado áudio Base64. Iniciando transcrição com Whisper local...`);
+        try {
+            promptText = await transcribeAudio(audio);
+            console.log(`🎙️ [Proxy] Transcrição concluída: "${promptText}"`);
+            if (!promptText || promptText.trim().length === 0) {
+                return res.status(422).json({ error: 'O Whisper não conseguiu detectar nenhuma fala ou o áudio está em silêncio.' });
+            }
+        } catch (whisperErr) {
+            console.error('❌ [Proxy] Falha na transcrição com o Whisper local:', whisperErr.message);
+            return res.status(502).json({ 
+                error: 'Falha no serviço de transcrição (Whisper)', 
+                message: whisperErr.message 
+            });
+        }
+    }
+
+    if (!promptText) {
+        return res.status(400).json({ error: 'Campo "prompt" ou "audio" é obrigatório.' });
     }
 
     try {
@@ -289,7 +399,7 @@ app.post('/api/process', requireApiKey, async (req, res) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: model || MODEL_NAME,
-                prompt: prompt,
+                prompt: promptText.startsWith('<INPUT_USUARIO>') ? promptText : `<INPUT_USUARIO>${promptText}</INPUT_USUARIO>`,
                 stream: stream || false
             })
         });
@@ -302,6 +412,12 @@ app.post('/api/process', requireApiKey, async (req, res) => {
 
         const data = await ollamaRes.json();
         console.log(`📤 [Proxy] Resposta do Ollama retornada com sucesso.`);
+        
+        // Se transcrevemos áudio, inclui a transcrição na resposta
+        if (audio) {
+            data.transcription = promptText;
+        }
+
         res.status(200).json(data);
 
     } catch (err) {

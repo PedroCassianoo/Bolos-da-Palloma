@@ -37,24 +37,30 @@ document.addEventListener("DOMContentLoaded", () => {
         vuiContainer.classList.remove("vui-show-tooltip");
     });
 
-    // 6. Speech Recognition Logic
+    // 6. Speech Recording & Recognition Logic
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let audioStream = null;
     let recognition = null;
+
+    const canRecord = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+
+    // Inicializa Web Speech API como fallback se disponível
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'pt-BR'; // Assume português brasileiro
+        recognition.lang = 'pt-BR';
 
         recognition.onstart = function() {
-            setVuiState(3); // Estado de gravação ativa
+            setVuiState(3);
         };
 
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript;
-            console.log("Reconhecimento de voz:", transcript);
+            console.log("Reconhecimento de voz nativo:", transcript);
             
-            // Define o texto no input e submete (Integração com estoque-ia.js)
             const aiInput = document.getElementById("ai-input");
             const aiSubmitBtn = document.getElementById("ai-submit");
             if (aiInput && aiSubmitBtn) {
@@ -64,46 +70,112 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         recognition.onerror = function(event) {
-            console.error("Erro na gravação de voz:", event.error);
+            console.error("Erro no reconhecimento de voz nativo:", event.error);
             setVuiState(2);
         };
 
         recognition.onend = function() {
-            setVuiState(2); // Volta ao estado inicial ao finalizar
+            setVuiState(2);
         };
-    } else {
-        // Browser does NOT support native Speech Recognition (iOS Safari, Firefox Mobile, etc.)
-        console.warn("Navegador não suporta Web Speech API.");
-        
-        // Inject a visible notification banner near the VUI button
-        const noticeEl = document.createElement("div");
-        noticeEl.className = "vui-unsupported-notice";
-        noticeEl.innerHTML = `
-            <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">mic_off</span>
-            Gravação de voz não é suportada neste navegador. Use o <strong>Google Chrome no Android</strong> para usar o comando de voz.
-        `;
-        noticeEl.style.cssText = "position:fixed;bottom:100px;right:16px;left:16px;z-index:9998;" +
-            "background:#2d1b00;color:#ffddb3;padding:12px 16px;border-radius:12px;" +
-            "font-size:13px;line-height:1.5;box-shadow:0 4px 12px rgba(0,0,0,.3);" +
-            "display:none;max-width:400px;margin-left:auto;";
-        document.body.appendChild(noticeEl);
-
-        // Show the notice when user taps the mic button
-        vuiBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            noticeEl.style.display = "block";
-            // Auto-hide after 6 seconds
-            clearTimeout(noticeEl._hideTimer);
-            noticeEl._hideTimer = setTimeout(() => {
-                noticeEl.style.display = "none";
-            }, 6000);
-        });
-
-        // Skip the rest of the click handler setup below
-        return;
     }
 
-    // Click Handler para o Microfone (only reached when Speech API IS available)
+    // Injeta banner de navegador não suportado
+    const noticeEl = document.createElement("div");
+    noticeEl.className = "vui-unsupported-notice";
+    noticeEl.innerHTML = `
+        <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">mic_off</span>
+        Seu navegador não suporta gravação de voz. Tente usar o <strong>Google Chrome</strong>.
+    `;
+    noticeEl.style.cssText = "position:fixed;bottom:100px;right:16px;left:16px;z-index:9998;" +
+        "background:#2d1b00;color:#ffddb3;padding:12px 16px;border-radius:12px;" +
+        "font-size:13px;line-height:1.5;box-shadow:0 4px 12px rgba(0,0,0,.3);" +
+        "display:none;max-width:400px;margin-left:auto;";
+    document.body.appendChild(noticeEl);
+
+    async function startRecording() {
+        audioChunks = [];
+        try {
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            let mimeType = 'audio/webm';
+            if (MediaRecorder.isTypeSupported('audio/wav')) {
+                mimeType = 'audio/wav';
+            } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+                mimeType = 'audio/webm';
+            } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+                mimeType = 'audio/ogg';
+            } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                mimeType = 'audio/mp4';
+            } else {
+                mimeType = '';
+            }
+
+            const options = mimeType ? { mimeType } : {};
+            mediaRecorder = new MediaRecorder(audioStream, options);
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/wav' });
+                
+                // Converter para Base64 para envio na API JSON
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    const base64Audio = reader.result;
+                    
+                    // Dispara evento contendo o áudio gravado em base64
+                    console.log("🎙️ Áudio gravado com sucesso. Enviando para transcrição...");
+                    document.dispatchEvent(new CustomEvent('vui-audio-recorded', {
+                        detail: { audio: base64Audio }
+                    }));
+                };
+                
+                if (audioStream) {
+                    audioStream.getTracks().forEach(track => track.stop());
+                }
+            };
+            
+            mediaRecorder.start();
+            setVuiState(3); // Estado de gravação ativa
+            
+            // Auto-stop após 12 segundos para não sobrecarregar
+            setTimeout(() => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+            }, 12000);
+            
+        } catch (err) {
+            console.error('Erro ao iniciar gravação de áudio:', err);
+            
+            // Fallback para Web Speech se falhar o getUserMedia e for suportado
+            if (recognition) {
+                console.log('Tentando fallback para Web Speech API...');
+                try {
+                    recognition.start();
+                } catch (e) {
+                    setVuiState(2);
+                }
+            } else {
+                alert('Não foi possível acessar o microfone. Verifique as permissões de áudio do navegador.');
+                setVuiState(2);
+            }
+        }
+    }
+
+    function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+        }
+        setVuiState(2);
+    }
+
+    // Click Handler para o Microfone
     vuiBtn.addEventListener("click", (e) => {
         e.preventDefault();
         
@@ -111,20 +183,31 @@ document.addEventListener("DOMContentLoaded", () => {
         vuiContainer.classList.remove("vui-show-tooltip");
         
         if (currentState === 2) {
-            // Se estiver inativo, inicia a gravação
-            if (recognition) {
+            if (canRecord) {
+                startRecording();
+            } else if (recognition) {
                 try {
                     recognition.start();
-                } catch (e) {
-                    console.error("Microfone já está ativo.");
+                } catch (err) {
+                    console.error("Microfone nativo falhou:", err);
+                    setVuiState(2);
                 }
+            } else {
+                noticeEl.style.display = "block";
+                clearTimeout(noticeEl._hideTimer);
+                noticeEl._hideTimer = setTimeout(() => {
+                    noticeEl.style.display = "none";
+                }, 6000);
             }
         } else if (currentState === 3) {
-            // Se estiver gravando e clicar de novo, para a gravação
-            if (recognition) {
-                recognition.stop();
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                stopRecording();
+            } else if (recognition) {
+                try {
+                    recognition.stop();
+                } catch (err) {}
+                setVuiState(2);
             }
-            setVuiState(2);
         }
     });
 
